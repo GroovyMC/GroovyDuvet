@@ -1,0 +1,14 @@
+plugins {
+    alias libs.plugins.quilt.loom
+}
+
+project.archivesBaseName = "${rootProject.archivesBaseName}"
+
+configurations {
+    include
+    implementation.extendsFrom include
+}
+
+dependencies {
+    include project(':core')
+}

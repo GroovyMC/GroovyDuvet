@@ -1,0 +1,35 @@
+project.archivesBaseName = "${rootProject.archivesBaseName}-core"
+
+configurations {
+    include
+    modApi.extendsFrom include
+}
+
+dependencies {
+    include libs.mappingio
+
+    include libs.groovy
+    include libs.groovy.dateutil
+    include libs.groovy.datetime
+    include libs.groovy.json
+    /*include groovy('stdlib')
+    include groovy('ant')
+    include groovy('astbuilder')
+    include groovy('cli-picocli')
+    include groovy('contracts')
+    include groovy('datetime')
+    include groovy('dateutil')
+    include groovy('ginq')
+    include groovy('json')
+    include groovy('jsr223')
+    include groovy('macro')
+    include groovy('macro-library')
+    include groovy('nio')
+    include groovy('templates')
+    include groovy('test')
+    include groovy('test-junit5')
+    include groovy('toml')
+    include groovy('typecheckers')
+    include groovy('xml')
+    include groovy('yaml')*/
+}

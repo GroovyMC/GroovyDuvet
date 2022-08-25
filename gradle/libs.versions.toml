@@ -1,0 +1,23 @@
+[versions]
+# The latest versions are available at https://lambdaurora.dev/tools/import_quilt.html
+minecraft = "1.19.2"
+quilt_loader = "0.17.4"
+parchment_minecraft = "1.19.2"
+parchment_mappings = "2022.08.14"
+qsl = "3.0.0-beta.14+1.19.2"
+groovy = "4.0.4"
+mappingio = "0.3.0"
+
+[libraries]
+minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
+quilt_loader = { module = "org.quiltmc:quilt-loader", version.ref = "quilt_loader" }
+qsl = { module = "org.quiltmc:qsl", version.ref = "qsl" }
+mappingio = { module = "net.fabricmc:mapping-io", version.ref = "mappingio" }
+
+groovy = { module = "org.apache.groovy:groovy", version.ref = "groovy" }
+groovy_datetime = { module = "org.apache.groovy:groovy-datetime", version.ref = "groovy" }
+groovy_dateutil = { module = "org.apache.groovy:groovy-dateutil", version.ref = "groovy" }
+groovy_json = { module = "org.apache.groovy:groovy-json", version.ref = "groovy" }
+
+[plugins]
+quilt_loom = { id = "org.quiltmc.loom", version = "0.12.+" }

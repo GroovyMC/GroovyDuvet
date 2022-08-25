@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "quilt_loader": {
+    "group": "io.github.lukebemish.quiltgroovywrapper",
+    "id": "quiltgroovywrapper",
+    "version": "1.0.0",
+    "metadata": {
+      "name": "Quilt Groovy Wrapper",
+      "description": "",
+      "contributors": {
+        "Luke Bemish": "Author"
+      },
+      "license": "MIT"
+    },
+    "intermediate_mappings": "net.fabricmc:intermediary",
+    "depends": [
+      {
+        "id": "quilt_loader",
+        "versions": ">=0.17.0"
+      },
+      {
+        "id": "quiltgroovywrapper_core",
+        "versions": ">=1.0.0"
+      }
+    ]
+  }
+}
