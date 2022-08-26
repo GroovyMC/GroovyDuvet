@@ -11,6 +11,9 @@ import org.quiltmc.loader.api.ModContainer
 import org.quiltmc.loader.api.QuiltLoader
 import org.quiltmc.loader.impl.launch.common.QuiltLauncherBase
 
+import java.lang.reflect.Method
+import java.lang.reflect.Modifier
+
 @CompileStatic
 class GroovyAdapter implements LanguageAdapter {
     GroovyAdapter() {
@@ -39,14 +42,26 @@ class GroovyAdapter implements LanguageAdapter {
         if (Script.isAssignableFrom(c)) {
             try {
                 // Different logic for scripts
-                Script script = (Script) c.getDeclaredConstructor().newInstance()
                 if (parts.size() == 1) {
-                    Object o = script.run()
-                    if (o === null) {
-                        throw new LanguageAdapterException("Scripts evaluated without a local variable to capture must return a value to be cast to the entrypoint class!")
+                    List<Method> methods = type.declaredMethods.findAll {(it.modifiers && Modifier.ABSTRACT !== 0) }
+                    if (methods.size() == 1) {
+                        Method method = methods.get(0)
+                        List<String> argNames = method.parameters.collect {it.name}
+
+                        return (T) DefaultTypeTransformation.castToType({ Object... args ->
+                            Script script = (Script) c.getDeclaredConstructor().newInstance()
+                            Map bindings = [:]
+                            for (int i : 0..<argNames.size()) {
+                                bindings[argNames[i]] = args[i]
+                            }
+                            script.binding = new Binding(bindings)
+                            script.run()
+                        }, type)
+                    } else {
+                        throw new LanguageAdapterException("Scripts evaluated without a local variable to capture may only be used for entrypoints with a single abstract method!")
                     }
-                    return (T) DefaultTypeTransformation.castToType(o, type)
                 } else {
+                    Script script = (Script) c.getDeclaredConstructor().newInstance()
                     script.run()
                     return (T) DefaultTypeTransformation.castToType(script.evaluate(parts[1]), type)
                 }
