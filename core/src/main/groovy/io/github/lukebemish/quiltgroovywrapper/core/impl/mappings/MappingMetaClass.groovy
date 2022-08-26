@@ -5,6 +5,7 @@ import org.apache.groovy.util.BeanUtils
 import org.codehaus.groovy.reflection.CachedField
 import org.codehaus.groovy.reflection.GeneratedMetaMethod
 import org.codehaus.groovy.runtime.MetaClassHelper
+import org.codehaus.groovy.runtime.metaclass.MultipleSetterProperty
 
 import java.lang.reflect.Field
 import java.lang.reflect.Method
@@ -327,12 +328,20 @@ class MappingMetaClass extends DelegatingMetaClass {
             if (field !== null && !known.contains(fieldName)) {
                 Class fieldType = field.type
                 String getterName = MetaProperty.getGetterName(fieldName, fieldType)
-                String setterName = MetaProperty.getGetterName(fieldName, fieldType)
+                String setterName = MetaProperty.getSetterName(fieldName)
                 MetaMethod getter = getMetaMethod(getterName)
-                MetaMethod setter = getMetaMethod(setterName, fieldType)
-                MetaBeanProperty property = new MetaBeanProperty(fieldName, fieldType, getter, setter)
-                property.setField(new CachedField(field))
-                metaProperties[fieldName] = property
+                List<String> setters = methodMap.get(setterName)?:[]
+                if (setters.size() <= 1) {
+                    MetaMethod setter = setters.size()==0?null:getMetaMethod(setterName, fieldType)
+                    MetaBeanProperty property = new MetaBeanProperty(fieldName, fieldType, getter, setter)
+                    property.setField(new CachedField(field))
+                    metaProperties[fieldName] = property
+                } else {
+                    MultipleSetterProperty property = new MultipleSetterProperty(fieldName)
+                    property.setField(new CachedField(field))
+                    property.setGetter(getter)
+                    metaProperties[fieldName] = property
+                }
             }
             return
         }
@@ -350,10 +359,25 @@ class MappingMetaClass extends DelegatingMetaClass {
                     }
                     if (getter !== null && (method.startsWith("get") ^ getter.getReturnType()===Boolean.TYPE) && getter.parameterCount === 0) {
                         String setterName = MetaProperty.getSetterName(fieldName)
-                        MetaMethod setter = getMetaMethod(setterName, getter.getReturnType())
-                        MetaMethod metaGetter = getMetaMethod(method)
-                        MetaBeanProperty property = new MetaBeanProperty(fieldName, getter.getReturnType(), metaGetter, setter)
-                        metaProperties[fieldName] = property
+                        List<String> setters = methodMap.get(setterName)?:[]
+                        MetaMethod metaGetter = getMetaMethod(getter.name)
+                        if (setters.size() <= 1) {
+                            MetaMethod metaSetter = null
+                            if (setters.size() == 1) {
+                                try {
+                                    Method setter = theClass.getMethod(setters.get(0))
+                                    if (setter.parameterTypes.size() == 1) {
+                                        metaSetter = getMetaMethod(setters.get(0), setter.parameterTypes[0])
+                                    }
+                                } catch (NoSuchMethodException ignored) {}
+                            }
+                            MetaBeanProperty property = new MetaBeanProperty(fieldName, getter.getReturnType(), metaGetter, metaSetter)
+                            metaProperties[fieldName] = property
+                        } else {
+                            MultipleSetterProperty property = new MultipleSetterProperty(fieldName)
+                            property.setGetter(metaGetter)
+                            metaProperties[fieldName] = property
+                        }
                     }
                 }
             }
