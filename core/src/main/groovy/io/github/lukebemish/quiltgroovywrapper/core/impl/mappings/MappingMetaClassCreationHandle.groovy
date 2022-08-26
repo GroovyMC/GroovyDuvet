@@ -46,8 +46,7 @@ class MappingMetaClassCreationHandle extends MetaClassRegistry.MetaClassCreation
 
     static synchronized applyCreationHandle(LoadedMappings mappings, ClassLoader loader) {
         if (!hasWrapped) {
-            Class groovySystem = Class.forName(GROOVY_SYSTEM, true, loader)
-            MetaClassRegistry registry = groovySystem.getMethod("getMetaClassRegistry").invoke(null) as MetaClassRegistry
+            MetaClassRegistry registry = GroovySystem.metaClassRegistry
 
             if (mappings === null) throw new IllegalArgumentException("Found uninitialized runtime mappings!")
             hasWrapped = true

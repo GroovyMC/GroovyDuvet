@@ -4,6 +4,7 @@ configurations {
 }
 
 dependencies {
-    implementation project(':fatjar').configurations.namedElements
+    compileOnly project( path: ':wrapper', configuration: 'namedElements' )
+    compileOnly project( path: ':core', configuration: 'namedElements' )
     runtimeOnly project(':fatjar')
 }
