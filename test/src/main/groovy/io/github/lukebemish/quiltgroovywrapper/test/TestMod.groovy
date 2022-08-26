@@ -2,7 +2,6 @@ package io.github.lukebemish.quiltgroovywrapper.test
 
 import com.google.gson.GsonBuilder
 import com.mojang.serialization.JsonOps
-import groovy.transform.AutoFinal
 import groovy.transform.Immutable
 import io.github.lukebemish.quiltgroovywrapper.wrapper.minecraft.api.codec.CodecRetriever
 import io.github.lukebemish.quiltgroovywrapper.wrapper.minecraft.api.codec.CodecSerializable
@@ -11,7 +10,6 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.block.Blocks
 
 @Immutable
-@AutoFinal
 @CodecSerializable
 class Test {
     int i
@@ -19,7 +17,6 @@ class Test {
 }
 
 @Immutable(knownImmutableClasses = [ResourceLocation])
-@AutoFinal
 @CodecSerializable
 class Test2 {
     Test test
