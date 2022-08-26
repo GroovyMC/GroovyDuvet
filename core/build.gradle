@@ -1,4 +1,4 @@
-project.archivesBaseName = "${rootProject.archivesBaseName}-core"
+archivesBaseName ="${rootProject.name}-core"
 
 configurations {
     include
@@ -12,6 +12,7 @@ dependencies {
     include libs.groovy.dateutil
     include libs.groovy.datetime
     include libs.groovy.json
+
     /*include groovy('stdlib')
     include groovy('ant')
     include groovy('astbuilder')
@@ -33,3 +34,18 @@ dependencies {
     include groovy('xml')
     include groovy('yaml')*/
 }
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId project.group
+            artifactId project.archivesBaseName
+            version project.version
+            from components.java
+        }
+    }
+
+    repositories {
+    }
+}
+

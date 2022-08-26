@@ -7,6 +7,7 @@ parchment_mappings = "2022.08.14"
 qsl = "3.0.0-beta.14+1.19.2"
 groovy = "4.0.4"
 mappingio = "0.3.0"
+quilt_loom = "0.12.+"
 
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
@@ -14,10 +15,12 @@ quilt_loader = { module = "org.quiltmc:quilt-loader", version.ref = "quilt_loade
 qsl = { module = "org.quiltmc:qsl", version.ref = "qsl" }
 mappingio = { module = "net.fabricmc:mapping-io", version.ref = "mappingio" }
 
+quilt_loom = { module = "org.quiltmc:loom", version.ref = "quilt_loom" }
+
 groovy = { module = "org.apache.groovy:groovy", version.ref = "groovy" }
 groovy_datetime = { module = "org.apache.groovy:groovy-datetime", version.ref = "groovy" }
 groovy_dateutil = { module = "org.apache.groovy:groovy-dateutil", version.ref = "groovy" }
 groovy_json = { module = "org.apache.groovy:groovy-json", version.ref = "groovy" }
 
 [plugins]
-quilt_loom = { id = "org.quiltmc.loom", version = "0.12.+" }
+quilt_loom = { id = "org.quiltmc.loom", version.ref = "quilt_loom" }

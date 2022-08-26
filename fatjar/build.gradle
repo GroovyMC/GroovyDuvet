@@ -1,14 +1,24 @@
-plugins {
-    alias libs.plugins.quilt.loom
-}
-
-project.archivesBaseName = "${rootProject.archivesBaseName}"
+archivesBaseName = "${rootProject.name}"
 
 configurations {
-    include
-    implementation.extendsFrom include
 }
 
 dependencies {
     include project(':core')
+    implementation project(':core').configurations.namedElements
+    runtimeOnly project(':core')
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId project.group
+            artifactId project.archivesBaseName
+            version project.version
+            from components.java
+        }
+    }
+
+    repositories {
+    }
 }

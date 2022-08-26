@@ -14,5 +14,6 @@ pluginManagement {
 
 rootProject.name = 'quilt-groovy-wrapper'
 
-include ':core'
-include ':fatjar'
+include 'core'
+include 'fatjar'
+include 'test'

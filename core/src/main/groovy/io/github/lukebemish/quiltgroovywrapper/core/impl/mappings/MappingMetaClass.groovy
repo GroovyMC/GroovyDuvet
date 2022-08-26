@@ -348,7 +348,7 @@ class MappingMetaClass extends DelegatingMetaClass {
                             getter = theClass.getMethod(it)
                         } catch (NoSuchMethodException ignored) {}
                     }
-                    if (getter !== null && (method.startsWith("get") ^ getter.getReturnType()===Boolean.TYPE)) {
+                    if (getter !== null && (method.startsWith("get") ^ getter.getReturnType()===Boolean.TYPE) && getter.parameterCount === 0) {
                         String setterName = MetaProperty.getSetterName(fieldName)
                         MetaMethod setter = getMetaMethod(setterName, getter.getReturnType())
                         MetaMethod metaGetter = getMetaMethod(method)
@@ -374,7 +374,15 @@ class MappingMetaClass extends DelegatingMetaClass {
         if (methods===null) methods = []
 
         return methods.stream().map(it->super.getMetaMethod(it, args))
-                .filter(it->it!==null).findFirst().orElse(null)
+                .filter(it->it!==null)
+                .filter(it->{
+                    try {
+                        it.checkParameters(args.collect {it.class} as Class[])
+                        return true
+                    } catch (IllegalArgumentException ignored) {
+                        return false
+                    }
+                }).findFirst().orElse(null)
     }
 
     @Override
@@ -412,7 +420,15 @@ class MappingMetaClass extends DelegatingMetaClass {
         if (methods===null) methods = []
 
         return methods.stream().map(it->super.getStaticMetaMethod(it, args))
-                .filter(it->it!==null).findFirst().orElse(null)
+                .filter(it->it!==null)
+                .filter(it->{
+                    try {
+                        it.checkParameters(args.collect {it.class} as Class[])
+                        return true
+                    } catch (IllegalArgumentException ignored) {
+                        return false
+                    }
+                }).findFirst().orElse(null)
     }
 
     @Override
@@ -424,7 +440,15 @@ class MappingMetaClass extends DelegatingMetaClass {
         if (methods===null) methods = []
 
         return methods.stream().map(it->super.getStaticMetaMethod(it, argTypes))
-                .filter(it->it!==null).findFirst().orElse(null)
+                .filter(it->it!==null)
+                .filter(it->{
+                    try {
+                        it.checkParameters(argTypes)
+                        return true
+                    } catch (IllegalArgumentException ignored) {
+                        return false
+                    }
+                }).findFirst().orElse(null)
     }
 
     @Override

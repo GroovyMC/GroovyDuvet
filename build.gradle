@@ -1,4 +1,5 @@
 plugins {
+    id "com.dorongold.task-tree" version "2.1.0"
     alias libs.plugins.quilt.loom apply false
 }
 
@@ -7,17 +8,10 @@ subprojects {
     apply plugin: 'maven-publish'
     apply plugin: libs.plugins.quilt.loom.get().pluginId
 
-    //archivesBaseName = "${rootProject.archivesBaseName}-${project.name}"
-    version = rootProject.version
-    group = rootProject.group
-
-    tasks.withType(JavaCompile).configureEach {
-        it.options.encoding = "UTF-8"
-        it.options.release = 17
-    }
-
-    repositories {
-        mavenCentral()
+    jar {
+        from(rootProject.file("LICENSE")) {
+            rename { "${it}-${archivesBaseName}" }
+        }
     }
 
     dependencies {
@@ -33,30 +27,15 @@ subprojects {
         modImplementation libs.groovy
     }
 
+    tasks.withType(JavaCompile).configureEach {
+        it.options.encoding = "UTF-8"
+        it.options.release = 17
+    }
+
     java {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
         withSourcesJar()
         withJavadocJar()
-    }
-
-    jar {
-        from(rootProject.file("LICENSE")) {
-            rename { "${it}-${archivesBaseName}" }
-        }
-        archiveBaseName.set(project.archivesBaseName)
-    }
-
-    javadocJar {
-        archiveBaseName.set(project.archivesBaseName)
-    }
-
-    remapJar {
-        archiveBaseName.set(project.archivesBaseName)
-        dependsOn(project.tasks.remapSourcesJar)
-    }
-
-    remapSourcesJar {
-        archiveBaseName.set(project.archivesBaseName)
     }
 }

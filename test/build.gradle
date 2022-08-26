@@ -1,0 +1,9 @@
+archivesBaseName = "${rootProject.name}-test"
+
+configurations {
+}
+
+dependencies {
+    implementation project(':fatjar').configurations.namedElements
+    runtimeOnly project(':fatjar')
+}

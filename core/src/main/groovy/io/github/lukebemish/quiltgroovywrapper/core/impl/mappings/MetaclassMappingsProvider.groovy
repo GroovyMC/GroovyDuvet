@@ -1,5 +1,7 @@
 package io.github.lukebemish.quiltgroovywrapper.core.impl.mappings
 
+import com.google.common.collect.BiMap
+import com.google.common.collect.HashBiMap
 import groovy.json.JsonSlurper
 import groovy.transform.CompileStatic
 import net.fabricmc.api.EnvType
@@ -114,21 +116,29 @@ class MetaclassMappingsProvider {
     }
 
     private static void loadLayeredMappings() throws IOException {
-        final visitor = new LoadingVisitor()
+        final mapper = new ClassmapVisitor()
+        ProGuardReader.read(Files.newBufferedReader(OFFICIAL_FILE), mapper)
+        final visitor = new LoadingVisitor(mapper.mojToObf)
         ProGuardReader.read(Files.newBufferedReader(OFFICIAL_FILE), visitor)
         MappingMetaClassCreationHandle.applyCreationHandle(visitor.build(), this.classLoader)
     }
 
     private static class LoadingVisitor implements MappingVisitor {
         // runtime class name (with dots) to map of moj -> runtime names
-        final Map<String, Map<String, List<String>>> methods
-        final Map<String, Map<String, String>> fields
+        final Map<String, Map<String, List<String>>> methods = [:]
+        final Map<String, Map<String, String>> fields = [:]
 
-        String lastClassSrc
-        String lastMethodSrc
+        String lastClassObf
+        String lastMethodMoj
         String lastMethodDesc
-        String lastFieldSrc
+        String lastFieldMoj
         String lastFieldDesc
+
+        final BiMap<String, String> mojToObf
+
+        LoadingVisitor(BiMap<String, String> mojToObj) {
+            this.mojToObf = mojToObj
+        }
 
         @Override
         void visitNamespaces(String srcNamespace, List<String> dstNamespaces) throws IOException {
@@ -137,20 +147,19 @@ class MetaclassMappingsProvider {
 
         @Override
         boolean visitClass(String srcName) throws IOException {
-            lastClassSrc = srcName
             return true
         }
 
         @Override
         boolean visitField(String srcName, String srcDesc) throws IOException {
-            lastFieldSrc = srcName
+            lastFieldMoj = srcName
             lastFieldDesc = srcDesc
             return true
         }
 
         @Override
         boolean visitMethod(String srcName, String srcDesc) throws IOException {
-            lastMethodSrc = srcName
+            lastMethodMoj = srcName
             lastMethodDesc = srcDesc
             return true
         }
@@ -168,13 +177,16 @@ class MetaclassMappingsProvider {
         @Override
         void visitDstName(MappedElementKind targetKind, int namespace, String name) throws IOException {
             switch (targetKind) {
+                case MappedElementKind.CLASS:
+                    lastClassObf = name.replace('/','.')
+                    break
                 case MappedElementKind.METHOD:
                     methods.computeIfAbsent(getRuntimeClassName(), {[:]})
-                            .computeIfAbsent(name, {[]}).add(getRuntimeMethodName())
+                            .computeIfAbsent(lastMethodMoj, {[]}).add(getRuntimeMethodName(name))
                     break
                 case MappedElementKind.FIELD:
                     fields.computeIfAbsent(getRuntimeClassName(), {[:]})
-                            .put(name, getRuntimeFieldName())
+                            .put(lastFieldMoj, getRuntimeFieldName(name))
                     break
                 default:
                     break
@@ -187,19 +199,78 @@ class MetaclassMappingsProvider {
         }
 
         String getRuntimeClassName() {
-            QuiltLoader.mappingResolver.mapClassName(OFFICIAL_NAMESPACE, lastClassSrc)
+            QuiltLoader.mappingResolver.mapClassName(OFFICIAL_NAMESPACE, lastClassObf)
         }
 
-        String getRuntimeMethodName() {
-            QuiltLoader.mappingResolver.mapMethodName(OFFICIAL_NAMESPACE, getRuntimeClassName(), lastMethodSrc, lastMethodDesc)
+        String getRuntimeMethodName(String obf) {
+            QuiltLoader.mappingResolver.mapMethodName(OFFICIAL_NAMESPACE, lastClassObf, obf, descMojToObf(lastMethodDesc))
         }
 
-        String getRuntimeFieldName() {
-            QuiltLoader.mappingResolver.mapFieldName(OFFICIAL_NAMESPACE, getRuntimeClassName(), lastFieldSrc, lastFieldDesc)
+        String getRuntimeFieldName(String obf) {
+            QuiltLoader.mappingResolver.mapFieldName(OFFICIAL_NAMESPACE, lastClassObf, obf, descMojToObf(lastFieldDesc))
+        }
+
+        String descMojToObf(String moj) {
+            moj.replaceAll(/L(.*?);/,{ full, inner ->
+                "L${mojToObf[inner]?:inner};"
+            })
+        }
+
+        String descMojToRuntime(String moj) {
+            descMojToObf(moj).replaceAll(/L(.*?);/, { full, inner ->
+                "L${QuiltLoader.mappingResolver.mapClassName(OFFICIAL_NAMESPACE, (inner as String).replace('/','.')).replace('.','/')};"
+            })
         }
 
         LoadedMappings build() {
             return new LoadedMappings(methods, fields)
+        }
+    }
+
+    private static class ClassmapVisitor implements MappingVisitor {
+        BiMap<String, String> mojToObf = HashBiMap.create()
+
+        String lastClassMoj
+
+        @Override
+        void visitNamespaces(String srcNamespace, List<String> dstNamespaces) throws IOException {
+
+        }
+
+        @Override
+        boolean visitClass(String srcName) throws IOException {
+            return lastClassMoj = srcName
+        }
+
+        @Override
+        boolean visitField(String srcName, String srcDesc) throws IOException {
+            return false
+        }
+
+        @Override
+        boolean visitMethod(String srcName, String srcDesc) throws IOException {
+            return false
+        }
+
+        @Override
+        boolean visitMethodArg(int argPosition, int lvIndex, String srcName) throws IOException {
+            return false
+        }
+
+        @Override
+        boolean visitMethodVar(int lvtRowIndex, int lvIndex, int startOpIdx, String srcName) throws IOException {
+            return false
+        }
+
+        @Override
+        void visitDstName(MappedElementKind targetKind, int namespace, String name) throws IOException {
+            if (targetKind == MappedElementKind.CLASS)
+                mojToObf[lastClassMoj] = name
+        }
+
+        @Override
+        void visitComment(MappedElementKind targetKind, String comment) throws IOException {
+
         }
     }
 }
