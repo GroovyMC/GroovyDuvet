@@ -20,21 +20,25 @@ package io.github.lukebemish.quiltgroovywrapper.test
 import com.google.gson.GsonBuilder
 import com.mojang.serialization.Codec
 import com.mojang.serialization.JsonOps
+import groovy.transform.CompileStatic
 import groovy.transform.Immutable
 import groovy.transform.KnownImmutable
 import groovy.transform.TupleConstructor
-import io.github.lukebemish.quiltgroovywrapper.wrapper.minecraft.api.codec.CodecRetriever
-import io.github.lukebemish.quiltgroovywrapper.wrapper.minecraft.api.codec.CodecSerializable
-import io.github.lukebemish.quiltgroovywrapper.wrapper.minecraft.api.codec.ExposeCodec
+import io.github.lukebemish.quiltgroovywrapper.wrapper.minecraft.api.codec.*
 import net.minecraft.core.Registry
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.util.valueproviders.IntProvider
+import net.minecraft.util.valueproviders.UniformInt
 import net.minecraft.world.level.block.Blocks
 
-@Immutable
+@Immutable(knownImmutableClasses = [Optional])
 @CodecSerializable
+@CompileStatic
 class Test {
     int i
     String value
+    @WithCodec(value = { IntProvider.NON_NEGATIVE_CODEC }, path = WithCodecPath.LIST) List<IntProvider> ints
+    @WithCodec(value = { IntProvider.NON_NEGATIVE_CODEC }, path = WithCodecPath.OPTIONAL) Optional<IntProvider> maybeInt
 }
 
 @KnownImmutable
@@ -50,20 +54,22 @@ class Test3 {
     }
 }
 
-@Immutable(knownImmutableClasses = [ResourceLocation])
+@Immutable(knownImmutableClasses = [ResourceLocation,IntProvider])
 @CodecSerializable
 class Test2 {
     Test test
     ResourceLocation rl
     List<Test3> test3
+    @WithCodec({ IntProvider.POSITIVE_CODEC }) IntProvider intProvider
 }
 
 final GSON = new GsonBuilder().setPrettyPrinting().create()
 
 final json = CodecRetriever[Test2].encodeStart(JsonOps.INSTANCE, new Test2(
-        new Test(12,"stuff"),
+        new Test(12,"stuff",[UniformInt.of(1,2)],Optional.of(UniformInt.of(4,5))),
         Registry.BLOCK.getKey(Blocks.DIRT),
-        [new Test3(new char[] {'t','e','s','t'})]
+        [new Test3(new char[] {'t','e','s','t'})],
+        UniformInt.of(3,6)
 )).getOrThrow(false, {})
 
 println GSON.toJson(json)
