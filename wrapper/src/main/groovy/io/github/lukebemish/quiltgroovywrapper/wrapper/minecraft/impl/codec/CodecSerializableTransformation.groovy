@@ -26,7 +26,7 @@ import static org.codehaus.groovy.ast.ClassHelper.makeWithoutCaching
 class CodecSerializableTransformation extends AbstractASTTransformation implements TransformWithPriority {
 
     static final ClassNode MY_TYPE = makeWithoutCaching(CodecSerializable)
-    static final ClassNode EXPOSE_TYPE = makeWithoutCaching(ExposesCodec)
+    static final ClassNode EXPOSES_TYPE = makeWithoutCaching(ExposesCodec)
     static final String CODEC = 'com.mojang.serialization.Codec'
     static final ClassNode CODEC_NODE = makeWithoutCaching(CODEC)
     static final String RECORD_CODEC_BUILDER = 'com.mojang.serialization.codecs.RecordCodecBuilder'
@@ -78,10 +78,7 @@ class CodecSerializableTransformation extends AbstractASTTransformation implemen
         Expression[] grouping = new Expression[assembler.parameters.size()]
 
         for (int i = 0; i < assembler.parameters.size(); i++) {
-            FieldNode field = parent.getField(assembler.parameters[i].name)
-            if (field == null || field.static)
-                throw new RuntimeException('Codec-serializable classes must have a field matching each constructor parameter')
-            grouping[i] = assembleExpression(parent, assembler.parameters[i], field)
+            grouping[i] = assembleExpression(parent, assembler.parameters[i])
         }
 
         Expression grouped = new MethodCallExpression(new VariableExpression('i',INSTANCE_NODE),'group',new ArgumentListExpression(grouping))
@@ -96,6 +93,11 @@ class CodecSerializableTransformation extends AbstractASTTransformation implemen
         ClassNode wrappedNode = makeWithoutCaching(CODEC)
         wrappedNode.redirect = resolvedCodec
         parent.addField(fieldName, Modifier.PUBLIC | Modifier.STATIC | Modifier.FINAL, wrappedNode, initialValue)
+        List<AnnotationNode> exposes = parent.annotations.findAll {it.classNode == EXPOSES_TYPE}
+        if (exposes.size() == 0)
+            parent.addAnnotation(new AnnotationNode(EXPOSES_TYPE).tap {
+                addMember('value', new ConstantExpression(fieldName))
+            })
     }
 
     static Object getMemberValue(AnnotationNode node, String name) {
@@ -108,39 +110,24 @@ class CodecSerializableTransformation extends AbstractASTTransformation implemen
         return getMemberValue(node, name)?:defaultVal
     }
 
-    static Expression assembleExpression(ClassNode parent, Parameter parameter, FieldNode field) {
-        if (unresolveOptional(field.type) != unresolveOptional(parameter.type) || (isOptional(field.type) && !isOptional(parameter.type)))
-            throw new RuntimeException("Field and parameter types must match in codec-serializable classes. Got: ${parameter.type} and ${field.type}")
-
+    static Expression assembleExpression(ClassNode parent, Parameter parameter) {
         Expression baseCodec = getCodecFromType(unresolveOptional(parameter.type))
         Expression fieldOf
         if (!isOptional(parameter.type))
             fieldOf = new MethodCallExpression(baseCodec, 'fieldOf', new ArgumentListExpression(new ConstantExpression(parameter.name)))
         else
             fieldOf = new MethodCallExpression(baseCodec, 'optionalFieldOf', new ArgumentListExpression(new ConstantExpression(parameter.name)))
-        Expression forGetter
 
         ClassNode redirected = makeWithoutCaching(parent.name)
         redirected.redirect = parent
 
-        if (isOptional(field.type) || !isOptional(parameter.type))
-            forGetter = new MethodCallExpression(fieldOf, 'forGetter', new ArgumentListExpression(
-                    new LambdaExpression(new Parameter[] {new Parameter(redirected, 'it')}, new ReturnStatement(
-                            new PropertyExpression(new VariableExpression('it', redirected), parameter.name)
-                    )).tap {
-                        variableScope = new VariableScope()
-                    }
-            ))
-        else
-            forGetter = new MethodCallExpression(fieldOf, 'forGetter', new ArgumentListExpression(
-                    new LambdaExpression(new Parameter[] {new Parameter(redirected, 'it')}, new ReturnStatement(
-                            new StaticMethodCallExpression(OPTIONAL, 'ofNullable', new ArgumentListExpression(
-                                    new PropertyExpression(new VariableExpression('it', redirected), parameter.name)
-                            ))
-                    )).tap {
-                        variableScope = new VariableScope()
-                    }
-            ))
+        Expression forGetter = new MethodCallExpression(fieldOf, 'forGetter', new ArgumentListExpression(
+                new LambdaExpression(new Parameter[] {new Parameter(redirected, 'it')}, new ReturnStatement(
+                        new PropertyExpression(new VariableExpression('it', redirected), parameter.name)
+                )).tap {
+                    variableScope = new VariableScope()
+                }
+        ))
         return forGetter
     }
 
@@ -230,7 +217,7 @@ class CodecSerializableTransformation extends AbstractASTTransformation implemen
                     new MethodReferenceExpression(new ClassExpression(clazz), new ConstantExpression('values')))
         }
         List<String> givenFields = clazz.annotations.findAll {it.getClassNode() == MY_TYPE }.collect {(String) getMemberValue(it, 'property', DEFAULT_CODEC_PROPERTY)}
-        givenFields.addAll clazz.annotations.findAll { it.getClassNode() == EXPOSE_TYPE }.collect { (String) getMemberValue(it, 'value', '') }.findAll {it != ''}
+        givenFields.addAll clazz.annotations.findAll { it.getClassNode() == EXPOSES_TYPE }.collect { (String) getMemberValue(it, 'value', '') }.findAll {it != ''}
         if (givenFields.size() >= 1) {
             return new PropertyExpression(new ClassExpression(clazz), givenFields[0])
         }
