@@ -1,17 +1,23 @@
 plugins {
     id "com.dorongold.task-tree" version "2.1.0"
     alias libs.plugins.quilt.loom apply false
+    id 'org.cadixdev.licenser' version '0.6.1' apply false
 }
 
 subprojects {
     apply plugin: 'groovy'
     apply plugin: 'maven-publish'
     apply plugin: libs.plugins.quilt.loom.get().pluginId
+    apply plugin: 'org.cadixdev.licenser'
 
     jar {
         from(rootProject.file("LICENSE")) {
             rename { "${it}-${archivesBaseName}" }
         }
+    }
+
+    license {
+        header = rootProject.file('LICENSE-header')
     }
 
     dependencies {
