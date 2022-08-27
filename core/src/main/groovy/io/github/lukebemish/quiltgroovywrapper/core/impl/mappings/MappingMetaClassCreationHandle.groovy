@@ -23,8 +23,6 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap
 @CompileStatic
 class MappingMetaClassCreationHandle extends MetaClassRegistry.MetaClassCreationHandle {
 
-    private static final String GROOVY_SYSTEM = "groovy.lang.GroovySystem"
-
     final LoadedMappings mappings
 
     private static boolean hasWrapped = false
@@ -61,7 +59,7 @@ class MappingMetaClassCreationHandle extends MetaClassRegistry.MetaClassCreation
         }
     }
 
-    static synchronized applyCreationHandle(LoadedMappings mappings, ClassLoader loader) {
+    static synchronized applyCreationHandle(LoadedMappings mappings) {
         if (!hasWrapped) {
             MetaClassRegistry registry = GroovySystem.metaClassRegistry
 

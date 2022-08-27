@@ -137,7 +137,7 @@ class MetaclassMappingsProvider {
         ProGuardReader.read(Files.newBufferedReader(OFFICIAL_FILE), mapper)
         final visitor = new LoadingVisitor(mapper.mojToObf)
         ProGuardReader.read(Files.newBufferedReader(OFFICIAL_FILE), visitor)
-        MappingMetaClassCreationHandle.applyCreationHandle(visitor.build(), this.classLoader)
+        MappingMetaClassCreationHandle.applyCreationHandle(visitor.build())
     }
 
     private static class LoadingVisitor implements MappingVisitor {

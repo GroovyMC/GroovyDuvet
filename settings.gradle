@@ -8,6 +8,10 @@ pluginManagement {
             name = "Fabric"
             url = uri("https://maven.fabricmc.net/")
         }
+        maven {
+            name = "TheModdingInquisition"
+            url = 'https://maven.moddinginquisition.org/releases'
+        }
         gradlePluginPortal()
     }
 }
