@@ -17,7 +17,7 @@ subprojects {
     }
 
     license {
-        header = rootProject.file('LICENSE-header')
+        header = rootProject.file('header.txt')
     }
 
     dependencies {
