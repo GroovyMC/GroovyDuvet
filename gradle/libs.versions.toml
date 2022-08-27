@@ -13,6 +13,7 @@ quilt_loom = "0.12.+"
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
 quilt_loader = { module = "org.quiltmc:quilt-loader", version.ref = "quilt_loader" }
 qsl = { module = "org.quiltmc:qsl", version.ref = "qsl" }
+
 mappingio = { module = "net.fabricmc:mapping-io", version.ref = "mappingio" }
 
 quilt_loom = { module = "org.quiltmc:loom", version.ref = "quilt_loom" }

@@ -2,6 +2,7 @@ package io.github.lukebemish.quiltgroovywrapper.wrapper.minecraft.impl.codec
 
 import groovy.transform.CompileStatic
 import io.github.lukebemish.quiltgroovywrapper.wrapper.minecraft.api.codec.CodecSerializable
+import io.github.lukebemish.quiltgroovywrapper.wrapper.minecraft.api.codec.ExposesCodec
 import org.codehaus.groovy.ast.*
 import org.codehaus.groovy.ast.expr.*
 import org.codehaus.groovy.ast.stmt.ReturnStatement
@@ -25,6 +26,7 @@ import static org.codehaus.groovy.ast.ClassHelper.makeWithoutCaching
 class CodecSerializableTransformation extends AbstractASTTransformation implements TransformWithPriority {
 
     static final ClassNode MY_TYPE = makeWithoutCaching(CodecSerializable)
+    static final ClassNode EXPOSE_TYPE = makeWithoutCaching(ExposesCodec)
     static final String CODEC = 'com.mojang.serialization.Codec'
     static final ClassNode CODEC_NODE = makeWithoutCaching(CODEC)
     static final String RECORD_CODEC_BUILDER = 'com.mojang.serialization.codecs.RecordCodecBuilder'
@@ -228,6 +230,7 @@ class CodecSerializableTransformation extends AbstractASTTransformation implemen
                     new MethodReferenceExpression(new ClassExpression(clazz), new ConstantExpression('values')))
         }
         List<String> givenFields = clazz.annotations.findAll {it.getClassNode() == MY_TYPE }.collect {(String) getMemberValue(it, 'property', DEFAULT_CODEC_PROPERTY)}
+        givenFields.addAll clazz.annotations.findAll { it.getClassNode() == EXPOSE_TYPE }.collect { (String) getMemberValue(it, 'value', '') }.findAll {it != ''}
         if (givenFields.size() >= 1) {
             return new PropertyExpression(new ClassExpression(clazz), givenFields[0])
         }
