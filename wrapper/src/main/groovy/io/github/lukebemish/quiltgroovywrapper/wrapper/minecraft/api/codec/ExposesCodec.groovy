@@ -15,7 +15,8 @@ import java.lang.annotation.Target
 @CompileStatic
 @interface ExposesCodec {
     /**
-     * The name of the property at which the codec is stored.
+     * The name of the property at which the codec is stored. If the annotated class is {@code A}, the value should
+     * point to a property of type {@code Codec<A>}.
      */
     String value()
 }
