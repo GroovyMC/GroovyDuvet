@@ -4,7 +4,10 @@ configurations {
 }
 
 dependencies {
-    compileOnly project( path: ':wrapper', configuration: 'namedElements' )
+    compileOnly project( path: ':wrapper:minecraft', configuration: 'namedElements' )
     compileOnly project( path: ':core', configuration: 'namedElements' )
-    runtimeOnly project(':fatjar')
+
+    runtimeOnly project( path: ':fatjar', configuration: 'namedElements' )
+    runtimeOnly project( path: ':core', configuration: 'namedElements' )
+    runtimeOnly project( path: ':wrapper:minecraft', configuration: 'namedElements' )
 }

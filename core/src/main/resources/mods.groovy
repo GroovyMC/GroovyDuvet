@@ -16,18 +16,18 @@
  */
 
 ModsDotGroovy.make {
-    issueTrackerUrl = 'https://github.com/lukebemish/quilt-groovy-wrapper/issues'
+    issueTrackerUrl = 'https://github.com/lukebemish/groovy-wrapper/issues'
     license = 'LGPL-3.0-or-later'
     mod {
-        modId = 'quiltgroovywrapper_core'
+        modId = 'groovywrapper_core'
         version = this.version
         group = this.group
-        displayName = 'Quilt Groovy Wrapper: Core'
-        description = 'Core module for Quilt Groovy Wrapper'
+        displayName = 'GroovyWrapper: Core'
+        description = 'Core module for GroovyWrapper'
         author 'Luke Bemish'
         intermediate_mappings = "net.fabricmc:intermediary"
         language_adapters = [
-                'groovy': 'io.github.lukebemish.quiltgroovywrapper.core.impl.GroovyAdapter'
+                'groovy': 'io.github.lukebemish.groovywrapper.core.impl.GroovyAdapter'
         ]
         dependencies {
             quiltLoader = ">=${this.quiltLoaderVersion}"
@@ -35,6 +35,6 @@ ModsDotGroovy.make {
             minecraft = ">=${this.minecraftVersion}"
             minecraft = "<1.${this.minecraftVersion.split(/\./)[1] as int+1}.0"
         }
-        displayUrl = 'https://github.com/lukebemish/quilt-groovy-wrapper'
+        displayUrl = 'https://github.com/lukebemish/groovy-wrapper'
     }
 }

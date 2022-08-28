@@ -1,0 +1,55 @@
+plugins {
+    id 'net.minecraftforge.gradle' version '5.1.+'
+}
+
+archivesBaseName ="${rootProject.name}-forge"
+
+minecraft {
+    mappings channel: 'official', version: '1.19.2'
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.19.2-43.1.1'
+
+    implementation libs.groovy
+}
+
+jar {
+    manifest {
+        attributes([
+                'FMLModType': 'GAMELIBRARY'
+        ])
+    }
+}
+jar.finalizedBy('reobfJar')
+
+def wrapperSources = project(':wrapper:minecraft').sourceSets.main.allGroovy
+
+tasks.withType(AbstractCompile) {
+    source = wrapperSources
+}
+
+tasks.sourcesJar {
+    from wrapperSources
+}
+
+tasks.groovydoc {
+    source = wrapperSources
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId project.group
+            artifactId project.archivesBaseName
+            version project.version
+            from components.java
+        }
+    }
+    repositories {
+    }
+}
+
+tasks.withType(JavaCompile).each {
+    it.enabled = false
+}

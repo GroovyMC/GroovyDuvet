@@ -12,13 +12,19 @@ pluginManagement {
             name = "TheModdingInquisition"
             url = 'https://maven.moddinginquisition.org/releases'
         }
+        maven {
+            name = 'Minecraft Forge'
+            url = 'https://maven.minecraftforge.net/'
+        }
         gradlePluginPortal()
     }
 }
 
-rootProject.name = 'quilt-groovy-wrapper'
+rootProject.name = 'groovy-wrapper'
 
 include 'core'
 include 'fatjar'
 include 'test'
-include 'wrapper'
+include 'wrapper:minecraft'
+
+include 'forge'

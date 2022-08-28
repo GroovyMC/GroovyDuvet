@@ -1,16 +1,8 @@
-archivesBaseName = "${rootProject.name}"
-
-configurations {
-}
+archivesBaseName ="${rootProject.name}-vanilla-wrapper"
 
 dependencies {
-    include project(':core')
     compileOnly project( path: ':core', configuration: 'namedElements' )
     runtimeOnly project(':core')
-
-    include project(':wrapper:minecraft')
-    compileOnly project( path: ':wrapper:minecraft', configuration: 'namedElements' )
-    runtimeOnly project(':wrapper:minecraft')
 }
 
 publishing {
@@ -26,3 +18,4 @@ publishing {
     repositories {
     }
 }
+

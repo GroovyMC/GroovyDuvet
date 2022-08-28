@@ -5,12 +5,35 @@ plugins {
     id 'io.github.groovymc.modsdotgroovy' version '1.1.0' apply false
 }
 
+subprojects.findAll { !(it.name in ['wrapper','forge'])  }.each { p ->
+    p.with {
+        apply plugin: libs.plugins.quilt.loom.get().pluginId
+        apply plugin: 'io.github.groovymc.modsdotgroovy'
+
+        modsDotGroovy {
+            dslVersion = '1.1.1'
+            platform 'quilt'
+        }
+
+        dependencies {
+            minecraft libs.minecraft
+            mappings loom.layered() {
+                officialMojangMappings()
+                parchment("org.parchmentmc.data:parchment-${libs.versions.parchment.minecraft.get()}:${libs.versions.parchment.mappings.get()}@zip")
+            }
+            modImplementation libs.quilt.loader
+
+            modImplementation libs.qsl
+
+            modImplementation libs.groovy
+        }
+    }
+}
+
 subprojects {
     apply plugin: 'groovy'
     apply plugin: 'maven-publish'
-    apply plugin: libs.plugins.quilt.loom.get().pluginId
     apply plugin: 'org.cadixdev.licenser'
-    apply plugin: 'io.github.groovymc.modsdotgroovy'
 
     jar {
         from(rootProject.file("LICENSE")) {
@@ -22,24 +45,6 @@ subprojects {
         header = rootProject.file('header.txt')
     }
 
-    modsDotGroovy {
-        dslVersion = '1.1.1'
-        platform 'quilt'
-    }
-
-    dependencies {
-        minecraft libs.minecraft
-        mappings loom.layered() {
-            officialMojangMappings()
-            parchment("org.parchmentmc.data:parchment-${libs.versions.parchment.minecraft.get()}:${libs.versions.parchment.mappings.get()}@zip")
-        }
-        modImplementation libs.quilt.loader
-
-        modImplementation libs.qsl
-
-        modImplementation libs.groovy
-    }
-
     tasks.withType(JavaCompile).configureEach {
         it.options.encoding = "UTF-8"
         it.options.release = 17
@@ -49,6 +54,16 @@ subprojects {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
         withSourcesJar()
-        withJavadocJar()
+    }
+
+    task groovydocJar(type: Jar, dependsOn: groovydoc ) {
+        classifier 'javadoc' // must use javadoc classifier to be able to deploy to Sonatype
+        from groovydoc.destinationDir
+    }
+
+    tasks.build.dependsOn(tasks.groovydocJar)
+
+    artifacts {
+        archives groovydocJar
     }
 }

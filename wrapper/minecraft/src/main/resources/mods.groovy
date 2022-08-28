@@ -19,11 +19,11 @@ ModsDotGroovy.make {
     issueTrackerUrl = 'https://github.com/lukebemish/groovy-wrapper/issues'
     license = 'LGPL-3.0-or-later'
     mod {
-        modId = 'groovywrapper'
+        modId = 'groovywrapper_vanilla_wrapper'
         version = this.version
         group = this.group
-        displayName = 'GroovyWrapper'
-        description = 'Language adapter and wrapper libraries for Groovy on Quilt'
+        displayName = 'GroovyWrapper: Vanilla Wrappers'
+        description = 'Wrapper module for GroovyWrapper with platform-independent wrappers'
         author 'Luke Bemish'
         intermediate_mappings = "net.fabricmc:intermediary"
         dependencies {
@@ -32,7 +32,6 @@ ModsDotGroovy.make {
             minecraft = ">=${this.minecraftVersion}"
             minecraft = "<1.${this.minecraftVersion.split(/\./)[1] as int+1}.0"
             groovywrapper_core = ">=${this.version}"
-            groovywrapper_vanilla_wrapper = ">=${this.version}"
         }
         displayUrl = 'https://github.com/lukebemish/groovy-wrapper'
     }
