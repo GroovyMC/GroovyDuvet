@@ -20,7 +20,7 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'groovy-duvet'
+rootProject.name = 'groovyduvet'
 
 include 'core'
 include 'fatjar'

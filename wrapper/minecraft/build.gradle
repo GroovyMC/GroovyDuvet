@@ -1,4 +1,4 @@
-archivesBaseName ="${rootProject.name}-vanilla-wrapper"
+archivesBaseName ="${rootProject.name}-wrapper-minecraft"
 
 dependencies {
     compileOnly project( path: ':core', configuration: 'namedElements' )

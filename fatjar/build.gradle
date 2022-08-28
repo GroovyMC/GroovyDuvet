@@ -6,7 +6,7 @@ configurations {
 dependencies {
     include project(':core')
     compileOnly project( path: ':core', configuration: 'namedElements' )
-    runtimeOnly project(':core')
+    modRuntimeOnly project(':core')
 
     include project(':wrapper:minecraft')
     compileOnly project( path: ':wrapper:minecraft', configuration: 'namedElements' )
@@ -19,7 +19,8 @@ publishing {
             groupId project.group
             artifactId project.archivesBaseName
             version project.version
-            artifacts = [remapJar, remapSourcesJar, rootProject.tasks.groovydocJar]
+            from components.java
+            artifact rootProject.tasks.groovydocJar
         }
     }
 
