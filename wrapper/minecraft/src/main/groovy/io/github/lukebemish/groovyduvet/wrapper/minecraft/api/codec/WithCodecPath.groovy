@@ -15,7 +15,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.lukebemish.groovywrapper.wrapper.minecraft.api.codec
+package io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec
 
 /**
  * These path elements can be used with {@link WithCodec} to target individual nested type parameters with a codec.

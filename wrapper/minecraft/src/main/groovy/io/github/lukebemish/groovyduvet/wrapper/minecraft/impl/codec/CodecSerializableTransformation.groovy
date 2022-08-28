@@ -15,10 +15,13 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.lukebemish.groovywrapper.wrapper.minecraft.impl.codec
+package io.github.lukebemish.groovyduvet.wrapper.minecraft.impl.codec
 
 
 import groovy.transform.CompileStatic
+import io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.CodecSerializable
+import io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.ExposesCodec
+import io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodec
 import org.apache.groovy.util.BeanUtils
 import org.codehaus.groovy.ast.*
 import org.codehaus.groovy.ast.expr.*
@@ -43,9 +46,9 @@ import static org.codehaus.groovy.ast.ClassHelper.makeWithoutCaching
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
 class CodecSerializableTransformation extends AbstractASTTransformation implements TransformWithPriority {
 
-    static final ClassNode MY_TYPE = makeWithoutCaching(io.github.lukebemish.groovywrapper.wrapper.minecraft.api.codec.CodecSerializable)
-    static final ClassNode EXPOSES_TYPE = makeWithoutCaching(io.github.lukebemish.groovywrapper.wrapper.minecraft.api.codec.ExposesCodec)
-    static final ClassNode WITH_TYPE = makeWithoutCaching(io.github.lukebemish.groovywrapper.wrapper.minecraft.api.codec.WithCodec)
+    static final ClassNode MY_TYPE = makeWithoutCaching(CodecSerializable)
+    static final ClassNode EXPOSES_TYPE = makeWithoutCaching(ExposesCodec)
+    static final ClassNode WITH_TYPE = makeWithoutCaching(WithCodec)
     static final String CODEC = 'com.mojang.serialization.Codec'
     static final ClassNode CODEC_NODE = makeWithoutCaching(CODEC)
     static final String RECORD_CODEC_BUILDER = 'com.mojang.serialization.codecs.RecordCodecBuilder'
@@ -131,7 +134,7 @@ class CodecSerializableTransformation extends AbstractASTTransformation implemen
         annotations.addAll(parameter.annotations)
         annotations.addAll(field?.annotations?:[])
         annotations.addAll(getter?.annotations?:[])
-        List<io.github.lukebemish.groovywrapper.wrapper.minecraft.api.codec.WithCodecPath> path = (isOptional(parameter.type))?([io.github.lukebemish.groovywrapper.wrapper.minecraft.api.codec.WithCodecPath.OPTIONAL]):([])
+        List<io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodecPath> path = (isOptional(parameter.type))?([io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodecPath.OPTIONAL]):([])
         Expression baseCodec = getCodecFromType(unresolveOptional(parameter.type),annotations,path)
         Expression fieldOf
         if (!isOptional(parameter.type))
@@ -177,36 +180,36 @@ class CodecSerializableTransformation extends AbstractASTTransformation implemen
             return member
     }
 
-    static List<io.github.lukebemish.groovywrapper.wrapper.minecraft.api.codec.WithCodecPath> getMemberCodecPath(AnnotationNode anno, String name) {
+    static List<io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodecPath> getMemberCodecPath(AnnotationNode anno, String name) {
         Expression expr = anno.getMember(name)
         if (expr == null) {
             return []
         }
         if (expr instanceof ListExpression) {
             final ListExpression listExpression = (ListExpression) expr
-            List<io.github.lukebemish.groovywrapper.wrapper.minecraft.api.codec.WithCodecPath> list = new ArrayList<>();
+            List<io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodecPath> list = new ArrayList<>();
             for (Expression itemExpr : listExpression.getExpressions()) {
                 if (itemExpr instanceof ConstantExpression) {
-                    io.github.lukebemish.groovywrapper.wrapper.minecraft.api.codec.WithCodecPath value = parseSingleExpr(itemExpr)
+                    io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodecPath value = parseSingleExpr(itemExpr)
                     if (value != null) list.add(value)
                 }
             }
             return list
         }
-        io.github.lukebemish.groovywrapper.wrapper.minecraft.api.codec.WithCodecPath single = parseSingleExpr(expr)
+        io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodecPath single = parseSingleExpr(expr)
         return single==null?([]):([single])
     }
 
-    static io.github.lukebemish.groovywrapper.wrapper.minecraft.api.codec.WithCodecPath parseSingleExpr(Expression itemExpr) {
+    static io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodecPath parseSingleExpr(Expression itemExpr) {
         if (itemExpr instanceof VariableExpression) {
-            return io.github.lukebemish.groovywrapper.wrapper.minecraft.api.codec.WithCodecPath.valueOf(itemExpr.text)
+            return io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodecPath.valueOf(itemExpr.text)
         } else if (itemExpr instanceof PropertyExpression) {
-            return io.github.lukebemish.groovywrapper.wrapper.minecraft.api.codec.WithCodecPath.valueOf(itemExpr.propertyAsString)
+            return io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodecPath.valueOf(itemExpr.propertyAsString)
         }
         return null
     }
 
-    Expression getCodecFromType(ClassNode clazz, List<AnnotationNode> context, List<io.github.lukebemish.groovywrapper.wrapper.minecraft.api.codec.WithCodecPath> path) {
+    Expression getCodecFromType(ClassNode clazz, List<AnnotationNode> context, List<io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodecPath> path) {
         List<Expression> specifiedClosure = new ArrayList<>(context.findAll {it.getClassNode() == WITH_TYPE }
                 .findAll {getMemberCodecPath(it, 'path') == path}
                 .collect {getMemberClassValue(it, 'value')}.findAll {it !== null}.unique().collect {new ConstructorCallExpression(it, new ArgumentListExpression())})
@@ -244,7 +247,7 @@ class CodecSerializableTransformation extends AbstractASTTransformation implemen
                 throw new RuntimeException('Constructor parameters and their matching fields in codec-serializable classes may not use a raw List')
             }
             ClassNode child = clazz.genericsTypes[0].type
-            Expression childExpression = getCodecFromType(child,context,path+[io.github.lukebemish.groovywrapper.wrapper.minecraft.api.codec.WithCodecPath.LIST])
+            Expression childExpression = getCodecFromType(child,context,path+[io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodecPath.LIST])
             return new MethodCallExpression(childExpression, 'listOf', new ArgumentListExpression())
         }
         if (clazz == ClassHelper.MAP_TYPE) {
@@ -253,8 +256,8 @@ class CodecSerializableTransformation extends AbstractASTTransformation implemen
             }
             ClassNode key = clazz.genericsTypes[0].type
             ClassNode value = clazz.genericsTypes[0].type
-            Expression keyExpression = getCodecFromType(key,context,path+[io.github.lukebemish.groovywrapper.wrapper.minecraft.api.codec.WithCodecPath.MAP_KEY])
-            Expression valueExpression = getCodecFromType(value,context,path+[io.github.lukebemish.groovywrapper.wrapper.minecraft.api.codec.WithCodecPath.MAP_VAL])
+            Expression keyExpression = getCodecFromType(key,context,path+[io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodecPath.MAP_KEY])
+            Expression valueExpression = getCodecFromType(value,context,path+[io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodecPath.MAP_VAL])
             return new StaticMethodCallExpression(CODEC_NODE, 'unboundedMap', new ArgumentListExpression(
                     keyExpression, valueExpression
             ))
@@ -265,8 +268,8 @@ class CodecSerializableTransformation extends AbstractASTTransformation implemen
             }
             ClassNode left = clazz.genericsTypes[0].type
             ClassNode right = clazz.genericsTypes[0].type
-            Expression leftExpression = getCodecFromType(left,context,path+[io.github.lukebemish.groovywrapper.wrapper.minecraft.api.codec.WithCodecPath.PAIR_FIRST])
-            Expression rightExpression = getCodecFromType(right,context,path+[io.github.lukebemish.groovywrapper.wrapper.minecraft.api.codec.WithCodecPath.PAIR_SECOND])
+            Expression leftExpression = getCodecFromType(left,context,path+[io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodecPath.PAIR_FIRST])
+            Expression rightExpression = getCodecFromType(right,context,path+[io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodecPath.PAIR_SECOND])
             return new StaticMethodCallExpression(CODEC_NODE, 'pair', new ArgumentListExpression(
                     leftExpression, rightExpression
             ))
@@ -277,8 +280,8 @@ class CodecSerializableTransformation extends AbstractASTTransformation implemen
             }
             ClassNode left = clazz.genericsTypes[0].type
             ClassNode right = clazz.genericsTypes[0].type
-            Expression leftExpression = getCodecFromType(left,context,path+[io.github.lukebemish.groovywrapper.wrapper.minecraft.api.codec.WithCodecPath.EITHER_LEFT])
-            Expression rightExpression = getCodecFromType(right,context,path+[io.github.lukebemish.groovywrapper.wrapper.minecraft.api.codec.WithCodecPath.EITHER_RIGHT])
+            Expression leftExpression = getCodecFromType(left,context,path+[io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodecPath.EITHER_LEFT])
+            Expression rightExpression = getCodecFromType(right,context,path+[io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodecPath.EITHER_RIGHT])
             return new StaticMethodCallExpression(CODEC_NODE, 'either', new ArgumentListExpression(
                     leftExpression, rightExpression
             ))

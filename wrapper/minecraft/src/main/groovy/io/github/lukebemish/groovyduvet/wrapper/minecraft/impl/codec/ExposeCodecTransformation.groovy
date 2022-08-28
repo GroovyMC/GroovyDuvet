@@ -15,7 +15,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.lukebemish.groovywrapper.wrapper.minecraft.impl.codec
+package io.github.lukebemish.groovyduvet.wrapper.minecraft.impl.codec
 
 import groovy.transform.CompileStatic
 import org.apache.groovy.util.BeanUtils
@@ -33,8 +33,8 @@ import static org.codehaus.groovy.ast.ClassHelper.makeWithoutCaching
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
 class ExposeCodecTransformation extends AbstractASTTransformation {
 
-    static final ClassNode MY_TYPE = makeWithoutCaching(io.github.lukebemish.groovywrapper.wrapper.minecraft.api.codec.ExposeCodec)
-    static final ClassNode TARGET_TYPE = makeWithoutCaching(io.github.lukebemish.groovywrapper.wrapper.minecraft.api.codec.ExposesCodec)
+    static final ClassNode MY_TYPE = makeWithoutCaching(io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.ExposeCodec)
+    static final ClassNode TARGET_TYPE = makeWithoutCaching(io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.ExposesCodec)
     static final ClassNode CODEC_NODE = makeWithoutCaching('com.mojang.serialization.Codec')
 
     @Override

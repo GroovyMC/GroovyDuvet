@@ -16,14 +16,14 @@
  */
 
 ModsDotGroovy.make {
-    issueTrackerUrl = 'https://github.com/lukebemish/groovy-wrapper/issues'
+    issueTrackerUrl = 'https://github.com/lukebemish/groovy-duvet/issues'
     license = 'LGPL-3.0-or-later'
     mod {
-        modId = 'groovywrapper_test'
+        modId = 'groovyduvet_test'
         version = this.version
         group = this.group
-        displayName = 'GroovyWrapper Test Mod'
-        description = 'Test Mod for GroovyWrapper'
+        displayName = 'GroovyDuvet Test Mod'
+        description = 'Test Mod for GroovyDuvet'
         author 'Luke Bemish'
         intermediate_mappings = "net.fabricmc:intermediary"
         dependencies {
@@ -31,13 +31,13 @@ ModsDotGroovy.make {
             // See https://github.com/QuiltMC/quilt-loader/issues/110
             minecraft = ">=${this.minecraftVersion}"
             minecraft = "<1.${this.minecraftVersion.split(/\./)[1] as int+1}.0"
-            groovywrapper = ">=${this.version}"
+            groovyduvet = ">=${this.version}"
         }
-        displayUrl = 'https://github.com/lukebemish/groovy-wrapper'
+        displayUrl = 'https://github.com/lukebemish/groovy-duvet'
         entrypoints {
             init = adapted {
-                adapter = 'groovywrapper'
-                value = 'io.github.lukebemish.groovywrapper.test.TestMod'
+                adapter = 'groovyduvet'
+                value = 'io.github.lukebemish.groovyduvet.test.TestMod'
             }
         }
     }

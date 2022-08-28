@@ -44,6 +44,18 @@ tasks.sourcesJar {
     from wrapperSources
 }
 
+groovydoc {
+    use = true
+    docTitle = "GroovyDuvet v${version} - Forge API"
+}
+
+task groovydocJar(type: Jar, dependsOn: groovydoc ) {
+    classifier 'javadoc' // must use javadoc classifier to be able to deploy to Sonatype
+    from groovydoc.destinationDir
+}
+
+tasks.build.dependsOn(tasks.groovydocJar)
+
 tasks.groovydoc {
     source = wrapperSources
 }
@@ -54,7 +66,7 @@ publishing {
             groupId project.group
             artifactId project.archivesBaseName
             version project.version
-            from components.java
+            artifacts = [jar, sourcesJar, groovydocJar]
         }
     }
     repositories {

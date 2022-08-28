@@ -15,7 +15,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.lukebemish.groovywrapper.wrapper.minecraft.api.codec
+package io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec
 
 import com.mojang.datafixers.util.Pair
 import com.mojang.serialization.DataResult

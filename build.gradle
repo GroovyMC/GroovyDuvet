@@ -1,5 +1,7 @@
 plugins {
     id "com.dorongold.task-tree" version "2.1.0"
+    id 'groovy'
+    id 'maven-publish'
     alias libs.plugins.quilt.loom apply false
     id 'org.cadixdev.licenser' version '0.6.1' apply false
     id 'io.github.groovymc.modsdotgroovy' version '1.1.0' apply false
@@ -7,6 +9,8 @@ plugins {
 
 subprojects.findAll { !(it.name in ['wrapper','forge'])  }.each { p ->
     p.with {
+        apply plugin: 'groovy'
+        apply plugin: 'maven-publish'
         apply plugin: libs.plugins.quilt.loom.get().pluginId
         apply plugin: 'io.github.groovymc.modsdotgroovy'
 
@@ -30,40 +34,60 @@ subprojects.findAll { !(it.name in ['wrapper','forge'])  }.each { p ->
     }
 }
 
-subprojects {
-    apply plugin: 'groovy'
-    apply plugin: 'maven-publish'
-    apply plugin: 'org.cadixdev.licenser'
+subprojects.findAll { !(it.name in ['wrapper'])  }.each { p ->
+    p.with {
+        apply plugin: 'groovy'
+        apply plugin: 'maven-publish'
+        apply plugin: 'org.cadixdev.licenser'
 
-    jar {
-        from(rootProject.file("LICENSE")) {
-            rename { "${it}-${archivesBaseName}" }
+        jar {
+            from(rootProject.file("LICENSE")) {
+                rename { "${it}-${archivesBaseName}" }
+            }
+        }
+
+        license {
+            header = rootProject.file('header.txt')
+        }
+
+        tasks.withType(JavaCompile).configureEach {
+            it.options.encoding = "UTF-8"
+            it.options.release = 17
+        }
+
+        java {
+            sourceCompatibility = JavaVersion.VERSION_17
+            targetCompatibility = JavaVersion.VERSION_17
+            withSourcesJar()
         }
     }
+}
 
-    license {
-        header = rootProject.file('header.txt')
-    }
-
-    tasks.withType(JavaCompile).configureEach {
-        it.options.encoding = "UTF-8"
-        it.options.release = 17
-    }
-
-    java {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-        withSourcesJar()
-    }
-
-    task groovydocJar(type: Jar, dependsOn: groovydoc ) {
-        classifier 'javadoc' // must use javadoc classifier to be able to deploy to Sonatype
-        from groovydoc.destinationDir
-    }
-
-    tasks.build.dependsOn(tasks.groovydocJar)
-
-    artifacts {
-        archives groovydocJar
+subprojects.findAll { !(it.name in ['wrapper','forge','test'])  }.each { p ->
+    p.with {
+        rootProject.groovydoc {
+            source p.sourceSets.main.allGroovy
+        }
     }
 }
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation libs.groovy
+}
+
+groovydoc {
+    use = true
+    docTitle = "GroovyDuvet v${version} - API"
+}
+
+task groovydocJar(type: Jar, dependsOn: groovydoc ) {
+    classifier 'javadoc' // must use javadoc classifier to be able to deploy to Sonatype
+    from groovydoc.destinationDir
+}
+
+tasks.build.dependsOn(tasks.groovydocJar)
+tasks.jar.enabled = false

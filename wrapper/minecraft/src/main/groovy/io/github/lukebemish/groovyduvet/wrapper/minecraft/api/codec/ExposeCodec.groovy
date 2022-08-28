@@ -15,7 +15,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.lukebemish.groovywrapper.wrapper.minecraft.api.codec
+package io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec
 
 import groovy.transform.CompileStatic
 import org.codehaus.groovy.transform.GroovyASTTransformationClass
@@ -31,7 +31,7 @@ import java.lang.annotation.Target
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target([ElementType.FIELD, ElementType.METHOD])
-@GroovyASTTransformationClass('io.github.lukebemish.groovywrapper.wrapper.minecraft.impl.codec.ExposeCodecTransformation')
+@GroovyASTTransformationClass('io.github.lukebemish.groovyduvet.wrapper.minecraft.impl.codec.ExposeCodecTransformation')
 @CompileStatic
 @interface ExposeCodec {
 }

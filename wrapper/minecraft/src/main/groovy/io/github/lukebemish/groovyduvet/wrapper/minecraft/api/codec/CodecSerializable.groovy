@@ -15,7 +15,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.lukebemish.groovywrapper.wrapper.minecraft.api.codec
+package io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec
 
 import groovy.transform.CompileStatic
 import org.codehaus.groovy.transform.GroovyASTTransformationClass
@@ -26,7 +26,7 @@ import java.lang.annotation.RetentionPolicy
 import java.lang.annotation.Target
 
 /**
- * The @CodecSerializable annotation builds a codec based on the constructor and fields of a class. The transformation
+ * The {@code @CodecSerializable} annotation builds a codec based on the constructor and properties of a class. The transformation
  * bases this codec off the class's constructor which accepts the most parameters. Each of these parameters must have
  * the same name and type as a property defined on the object. This type can be the type parameter of any
  * {@link com.mojang.serialization.codecs.PrimitiveCodec} defined in {@link com.mojang.serialization.Codec}, any other
@@ -44,7 +44,7 @@ import java.lang.annotation.Target
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target([ElementType.TYPE])
-@GroovyASTTransformationClass('io.github.lukebemish.groovywrapper.wrapper.minecraft.impl.codec.CodecSerializableTransformation')
+@GroovyASTTransformationClass('io.github.lukebemish.groovyduvet.wrapper.minecraft.impl.codec.CodecSerializableTransformation')
 @CompileStatic
 @interface CodecSerializable {
     /**

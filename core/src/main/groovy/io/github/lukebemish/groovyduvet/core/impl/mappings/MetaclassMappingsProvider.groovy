@@ -15,7 +15,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.lukebemish.groovywrapper.core.impl.mappings
+package io.github.lukebemish.groovyduvet.core.impl.mappings
 
 import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
@@ -43,7 +43,7 @@ class MetaclassMappingsProvider {
     private static final String OFFICIAL_NAMESPACE = 'official'
     private static final String RUNTIME_NAMESPACE = QuiltLoader.mappingResolver.currentRuntimeNamespace
     private static final String PISTON_META = 'https://piston-meta.mojang.com/mc/game/version_manifest_v2.json'
-    private static final Path CACHE_DIR = QuiltLoader.gameDir.resolve('mod_data/groovywrapper')
+    private static final Path CACHE_DIR = QuiltLoader.gameDir.resolve('mod_data/groovyduvet')
     private static final String MC_VERSION = QuiltLoaderImpl.INSTANCE.gameProvider.rawGameVersion
     private static final Path OFFICIAL_FILE = CACHE_DIR.resolve('official.txt')
     private static final Path VERSION_FILE = CACHE_DIR.resolve('version.json')

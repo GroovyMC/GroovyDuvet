@@ -16,13 +16,13 @@
  */
 
 ModsDotGroovy.make {
-    issueTrackerUrl = 'https://github.com/lukebemish/groovy-wrapper/issues'
+    issueTrackerUrl = 'https://github.com/lukebemish/groovy-duvet/issues'
     license = 'LGPL-3.0-or-later'
     mod {
-        modId = 'groovywrapper'
+        modId = 'groovyduvet'
         version = this.version
         group = this.group
-        displayName = 'GroovyWrapper'
+        displayName = 'GroovyDuvet'
         description = 'Language adapter and wrapper libraries for Groovy on Quilt'
         author 'Luke Bemish'
         intermediate_mappings = "net.fabricmc:intermediary"
@@ -31,11 +31,11 @@ ModsDotGroovy.make {
             // See https://github.com/QuiltMC/quilt-loader/issues/110
             minecraft = ">=${this.minecraftVersion}"
             minecraft = "<1.${this.minecraftVersion.split(/\./)[1] as int+1}.0"
-            groovywrapper_core = ">=${this.version}"
-            groovywrapper_wrapper_minecraft = ">=${this.version}"
+            groovyduvet_core = ">=${this.version}"
+            groovyduvet_wrapper_minecraft = ">=${this.version}"
         }
-        displayUrl = 'https://github.com/lukebemish/groovy-wrapper'
-        logoFile = 'assets/groovywrapper/icon.png'
+        displayUrl = 'https://github.com/lukebemish/groovy-duvet'
+        logoFile = 'assets/groovyduvet/icon.png'
     }
     modmenu = ['badges':['library']]
 }

@@ -15,7 +15,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.lukebemish.groovywrapper.test
+package io.github.lukebemish.groovyduvet.test
 
 
 import com.mojang.serialization.Codec
@@ -24,12 +24,12 @@ import groovy.transform.CompileStatic
 import groovy.transform.Immutable
 import groovy.transform.KnownImmutable
 import groovy.transform.TupleConstructor
-import io.github.lukebemish.groovywrapper.wrapper.minecraft.api.codec.CodecRetriever
-import io.github.lukebemish.groovywrapper.wrapper.minecraft.api.codec.CodecSerializable
-import io.github.lukebemish.groovywrapper.wrapper.minecraft.api.codec.ExposeCodec
-import io.github.lukebemish.groovywrapper.wrapper.minecraft.api.codec.ObjectOps
-import io.github.lukebemish.groovywrapper.wrapper.minecraft.api.codec.WithCodec
-import io.github.lukebemish.groovywrapper.wrapper.minecraft.api.codec.WithCodecPath
+import io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.CodecRetriever
+import io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.CodecSerializable
+import io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.ExposeCodec
+import io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.ObjectOps
+import io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodec
+import io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodecPath
 import net.minecraft.core.Direction
 import net.minecraft.core.Registry
 import net.minecraft.resources.ResourceLocation

@@ -19,7 +19,7 @@ publishing {
             groupId project.group
             artifactId project.archivesBaseName
             version project.version
-            from components.java
+            artifacts = [remapJar, remapSourcesJar, rootProject.tasks.groovydocJar]
         }
     }
 

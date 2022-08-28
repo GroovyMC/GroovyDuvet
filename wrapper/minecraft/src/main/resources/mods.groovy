@@ -16,14 +16,14 @@
  */
 
 ModsDotGroovy.make {
-    issueTrackerUrl = 'https://github.com/lukebemish/groovy-wrapper/issues'
+    issueTrackerUrl = 'https://github.com/lukebemish/groovy-duvet/issues'
     license = 'LGPL-3.0-or-later'
     mod {
-        modId = 'groovywrapper_wrapper_minecraft'
+        modId = 'groovyduvet_wrapper_minecraft'
         version = this.version
         group = this.group
-        displayName = 'GroovyWrapper: Minecraft Wrappers'
-        description = 'Wrapper module for GroovyWrapper with platform-independent wrappers'
+        displayName = 'GroovyDuvet: Minecraft Wrappers'
+        description = 'Wrapper module for GroovyDuvet with platform-independent wrappers'
         author 'Luke Bemish'
         intermediate_mappings = "net.fabricmc:intermediary"
         dependencies {
@@ -31,17 +31,17 @@ ModsDotGroovy.make {
             // See https://github.com/QuiltMC/quilt-loader/issues/110
             minecraft = ">=${this.minecraftVersion}"
             minecraft = "<1.${this.minecraftVersion.split(/\./)[1] as int+1}.0"
-            groovywrapper_core = ">=${this.version}"
+            groovyduvet_core = ">=${this.version}"
         }
-        displayUrl = 'https://github.com/lukebemish/groovy-wrapper'
+        displayUrl = 'https://github.com/lukebemish/groovy-duvet'
     }
     modmenu = [
             'badges':['library'],
             'parent':[
-                    'id':'groovywrapper',
-                    'name':'GroovyWrapper',
+                    'id':'groovyduvet',
+                    'name':'GroovyDuvet',
                     'description':'Language adapter and wrapper libraries for Groovy on Quilt',
-                    'icon':'assets/groovywrapper/icon.png',
+                    'icon':'assets/groovyduvet/icon.png',
                     'badges':['library']
             ]
     ]
