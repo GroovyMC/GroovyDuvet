@@ -23,7 +23,7 @@ ModsDotGroovy.make {
         version = this.version
         group = this.group
         displayName = 'GroovyDuvet'
-        description = 'Language adapter and wrapper libraries for Groovy on Quilt'
+        description = 'Language adapter and wrapper libraries for Groovy mods on Quilt'
         author 'Luke Bemish'
         intermediate_mappings = "net.fabricmc:intermediary"
         dependencies {

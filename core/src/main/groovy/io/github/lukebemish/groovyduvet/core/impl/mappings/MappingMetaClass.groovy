@@ -264,7 +264,7 @@ class MappingMetaClass extends DelegatingMetaClass {
     Object getAttribute(Object object, String attribute) {
         try {
             return super.getAttribute(object, attribute)
-        } catch (MissingPropertyException e) {
+        } catch (MissingPropertyException | MissingFieldException e) {
             if (this.fieldMap!==null) {
                 // Check whether the field is in the mappables
                 // If it is, map it and invoke that method
@@ -279,7 +279,7 @@ class MappingMetaClass extends DelegatingMetaClass {
     Object getAttribute(Class sender, Object receiver, String messageName, boolean useSuper) {
         try {
             return super.getAttribute(sender, receiver, messageName, useSuper)
-        } catch (MissingFieldException e) {
+        } catch (MissingPropertyException | MissingFieldException e) {
             if (this.fieldMap!==null) {
                 // Check whether the field is in the mappables
                 // If it is, map it and invoke that method
@@ -294,7 +294,7 @@ class MappingMetaClass extends DelegatingMetaClass {
     void setAttribute(Object object, String attribute, Object newValue) {
         try {
             super.setAttribute(object, attribute, newValue)
-        } catch (MissingFieldException e) {
+        } catch (MissingPropertyException | MissingFieldException e) {
             if (this.fieldMap!==null) {
                 // Check whether the field is in the mappables
                 // If it is, map it and invoke that method
@@ -310,7 +310,7 @@ class MappingMetaClass extends DelegatingMetaClass {
     void setAttribute(Class sender, Object receiver, String messageName, Object messageValue, boolean useSuper, boolean fromInsideClass) {
         try {
             super.setAttribute(sender, receiver, messageName, messageValue, useSuper, fromInsideClass)
-        } catch (MissingFieldException e) {
+        } catch (MissingPropertyException | MissingFieldException e) {
             
             if (this.fieldMap!==null) {
                 // Check whether the field is in the mappables
