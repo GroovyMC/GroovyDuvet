@@ -42,7 +42,7 @@ ModsDotGroovy.make {
             'parent':[
                     'id':'groovyduvet',
                     'name':'GroovyDuvet',
-                    'description':'Language adapter and wrapper libraries for Groovy on Quilt',
+                    'description':'Language adapter and wrapper libraries for Groovy mods on Quilt',
                     'icon':'assets/groovyduvet/icon.png',
                     'badges':['library']
             ]
