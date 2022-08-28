@@ -6,7 +6,7 @@ configurations {
 dependencies {
     include project(':core')
     compileOnly project( path: ':core', configuration: 'namedElements' )
-    modRuntimeOnly project(':core')
+    runtimeOnly project(':core')
 
     include project(':wrapper:minecraft')
     compileOnly project( path: ':wrapper:minecraft', configuration: 'namedElements' )
