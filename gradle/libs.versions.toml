@@ -35,7 +35,7 @@ groovy_json = { module = "org.apache.groovy:groovy-json", version.ref = "groovy"
 jackson_core = { module = "com.fasterxml.jackson.core:jackson-core", version.ref = "jackson" }
 jackson_annotations = { module = "com.fasterxml.jackson.core:jackson-annotations", version.ref = "jackson" }
 jackson_databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
-jackson_dataformat.toml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-toml", version.ref = "jackson" }
+jackson_dataformat_toml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-toml", version.ref = "jackson" }
 
 [plugins]
 quilt_loom = { id = "org.quiltmc.loom", version.ref = "quilt_loom" }
