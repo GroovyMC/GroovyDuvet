@@ -32,8 +32,10 @@ ModsDotGroovy.make {
             minecraft = ">=${this.minecraftVersion}"
             minecraft = "<1.${this.minecraftVersion.split(/\./)[1] as int+1}.0"
             groovywrapper_core = ">=${this.version}"
-            groovywrapper_vanilla_wrapper = ">=${this.version}"
+            groovywrapper_wrapper_minecraft = ">=${this.version}"
         }
         displayUrl = 'https://github.com/lukebemish/groovy-wrapper'
+        logoFile = 'assets/groovywrapper/icon.png'
     }
+    modmenu = ['badges':['library']]
 }

@@ -9,30 +9,17 @@ dependencies {
     include libs.mappingio
 
     include libs.groovy
-    include libs.groovy.dateutil
+    include libs.groovy.contracts
     include libs.groovy.datetime
+    include libs.groovy.nio
+    include libs.groovy.macro
+    include libs.groovy.macro.library
+    include libs.groovy.templates
+    include libs.groovy.typecheckers
+    include libs.groovy.dateutil
+    include libs.groovy.ginq
+    include libs.groovy.toml
     include libs.groovy.json
-
-    /*include groovy('stdlib')
-    include groovy('ant')
-    include groovy('astbuilder')
-    include groovy('cli-picocli')
-    include groovy('contracts')
-    include groovy('datetime')
-    include groovy('dateutil')
-    include groovy('ginq')
-    include groovy('json')
-    include groovy('jsr223')
-    include groovy('macro')
-    include groovy('macro-library')
-    include groovy('nio')
-    include groovy('templates')
-    include groovy('test')
-    include groovy('test-junit5')
-    include groovy('toml')
-    include groovy('typecheckers')
-    include groovy('xml')
-    include groovy('yaml')*/
 }
 
 publishing {

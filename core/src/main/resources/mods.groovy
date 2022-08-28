@@ -27,7 +27,7 @@ ModsDotGroovy.make {
         author 'Luke Bemish'
         intermediate_mappings = "net.fabricmc:intermediary"
         language_adapters = [
-                'groovy': 'io.github.lukebemish.groovywrapper.core.impl.GroovyAdapter'
+                'groovywrapper': 'io.github.lukebemish.groovywrapper.core.impl.GroovyAdapter'
         ]
         dependencies {
             quiltLoader = ">=${this.quiltLoaderVersion}"
@@ -37,4 +37,14 @@ ModsDotGroovy.make {
         }
         displayUrl = 'https://github.com/lukebemish/groovy-wrapper'
     }
+    modmenu = [
+            'badges':['library'],
+            'parent':[
+                    'id':'groovywrapper',
+                    'name':'GroovyWrapper',
+                    'description':'Language adapter and wrapper libraries for Groovy on Quilt',
+                    'icon':'assets/groovywrapper/icon.png',
+                    'badges':['library']
+            ]
+    ]
 }

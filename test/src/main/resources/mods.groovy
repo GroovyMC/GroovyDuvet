@@ -36,7 +36,7 @@ ModsDotGroovy.make {
         displayUrl = 'https://github.com/lukebemish/groovy-wrapper'
         entrypoints {
             init = adapted {
-                adapter = 'groovy'
+                adapter = 'groovywrapper'
                 value = 'io.github.lukebemish.groovywrapper.test.TestMod'
             }
         }

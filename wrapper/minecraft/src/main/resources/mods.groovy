@@ -19,10 +19,10 @@ ModsDotGroovy.make {
     issueTrackerUrl = 'https://github.com/lukebemish/groovy-wrapper/issues'
     license = 'LGPL-3.0-or-later'
     mod {
-        modId = 'groovywrapper_vanilla_wrapper'
+        modId = 'groovywrapper_wrapper_minecraft'
         version = this.version
         group = this.group
-        displayName = 'GroovyWrapper: Vanilla Wrappers'
+        displayName = 'GroovyWrapper: Minecraft Wrappers'
         description = 'Wrapper module for GroovyWrapper with platform-independent wrappers'
         author 'Luke Bemish'
         intermediate_mappings = "net.fabricmc:intermediary"
@@ -35,4 +35,14 @@ ModsDotGroovy.make {
         }
         displayUrl = 'https://github.com/lukebemish/groovy-wrapper'
     }
+    modmenu = [
+            'badges':['library'],
+            'parent':[
+                    'id':'groovywrapper',
+                    'name':'GroovyWrapper',
+                    'description':'Language adapter and wrapper libraries for Groovy on Quilt',
+                    'icon':'assets/groovywrapper/icon.png',
+                    'badges':['library']
+            ]
+    ]
 }

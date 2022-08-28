@@ -17,9 +17,9 @@
 
 package io.github.lukebemish.groovywrapper.test
 
-import com.google.gson.GsonBuilder
+
 import com.mojang.serialization.Codec
-import com.mojang.serialization.JsonOps
+import groovy.json.JsonOutput
 import groovy.transform.CompileStatic
 import groovy.transform.Immutable
 import groovy.transform.KnownImmutable
@@ -27,6 +27,7 @@ import groovy.transform.TupleConstructor
 import io.github.lukebemish.groovywrapper.wrapper.minecraft.api.codec.CodecRetriever
 import io.github.lukebemish.groovywrapper.wrapper.minecraft.api.codec.CodecSerializable
 import io.github.lukebemish.groovywrapper.wrapper.minecraft.api.codec.ExposeCodec
+import io.github.lukebemish.groovywrapper.wrapper.minecraft.api.codec.ObjectOps
 import io.github.lukebemish.groovywrapper.wrapper.minecraft.api.codec.WithCodec
 import io.github.lukebemish.groovywrapper.wrapper.minecraft.api.codec.WithCodecPath
 import net.minecraft.core.Direction
@@ -68,16 +69,16 @@ class Test2 {
     @WithCodec({ IntProvider.POSITIVE_CODEC }) IntProvider intProvider
 }
 
-final GSON = new GsonBuilder().setPrettyPrinting().create()
 
-final json = CodecRetriever[Test2].encodeStart(JsonOps.INSTANCE, new Test2(
+
+final json = CodecRetriever[Test2].encodeStart(ObjectOps.instance, new Test2(
         new Test(12,"stuff",[UniformInt.of(1,2)],Optional.of(UniformInt.of(4,5))),
         Registry.BLOCK.getKey(Blocks.DIRT),
         [new Test3(new char[] {'t','e','s','t'})],
         UniformInt.of(3,6)
 )).getOrThrow(false, {})
 
-println GSON.toJson(json)
+println JsonOutput.prettyPrint(JsonOutput.toJson(json))
 
 println CodecRetriever[Test3]
 

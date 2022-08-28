@@ -19,8 +19,16 @@ mappingio = { module = "net.fabricmc:mapping-io", version.ref = "mappingio" }
 quilt_loom = { module = "org.quiltmc:loom", version.ref = "quilt_loom" }
 
 groovy = { module = "org.apache.groovy:groovy", version.ref = "groovy" }
+groovy_contracts = { module = "org.apache.groovy:groovy-contracts", version.ref = "groovy" }
 groovy_datetime = { module = "org.apache.groovy:groovy-datetime", version.ref = "groovy" }
+groovy_nio = { module = "org.apache.groovy:groovy-nio", version.ref = "groovy" }
+groovy_macro = { module = "org.apache.groovy:groovy-macro", version.ref = "groovy" }
+groovy_macro_library = { module = "org.apache.groovy:groovy-macro-library", version.ref = "groovy" }
+groovy_templates = { module = "org.apache.groovy:groovy-templates", version.ref = "groovy" }
+groovy_typecheckers = { module = "org.apache.groovy:groovy-typecheckers", version.ref = "groovy" }
 groovy_dateutil = { module = "org.apache.groovy:groovy-dateutil", version.ref = "groovy" }
+groovy_ginq = { module = "org.apache.groovy:groovy-ginq", version.ref = "groovy" }
+groovy_toml = { module = "org.apache.groovy:groovy-toml", version.ref = "groovy" }
 groovy_json = { module = "org.apache.groovy:groovy-json", version.ref = "groovy" }
 
 [plugins]
