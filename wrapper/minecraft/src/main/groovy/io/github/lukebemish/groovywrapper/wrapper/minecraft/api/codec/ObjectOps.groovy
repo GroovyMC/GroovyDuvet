@@ -160,7 +160,7 @@ class ObjectOps implements DynamicOps<Object> {
         if (input instanceof Map) {
             final Map result = [:]
             input.entrySet().stream()
-                    .filter {key == it.key}
+                    .filter {key != it.key}
                     .iterator()
                     .each {result.put(it.key, it.value)}
             return result
