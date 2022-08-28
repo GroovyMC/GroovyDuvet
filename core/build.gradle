@@ -20,6 +20,11 @@ dependencies {
     include libs.groovy.ginq
     include libs.groovy.toml
     include libs.groovy.json
+
+    include libs.jackson.core
+    include libs.jackson.annotations
+    include libs.jackson.databind
+    include libs.jackson.dataformat.toml
 }
 
 publishing {
