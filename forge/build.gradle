@@ -12,6 +12,17 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.19.2-43.1.1'
 
     implementation libs.groovy
+    implementation libs.groovy.contracts
+    implementation libs.groovy.datetime
+    implementation libs.groovy.nio
+    implementation libs.groovy.macro
+    implementation libs.groovy.macro.library
+    implementation libs.groovy.templates
+    implementation libs.groovy.typecheckers
+    implementation libs.groovy.dateutil
+    implementation libs.groovy.ginq
+    implementation libs.groovy.toml
+    implementation libs.groovy.json
 }
 
 jar {
