@@ -5,6 +5,7 @@ GroovyDuvet is a Quilt language adapter for mods written in Groovy. It allows th
 mappings at runtime for dynamically compiled code, and provides wrappers and DSLs around Minecraft and QSL code for ease of development.
 
 ## Using
+
 To use, add the following to your `build.gradle`:
 ```gradle
 repositories {
@@ -24,3 +25,18 @@ extracted. If the entrypoint class has exactly one abstract method, GroovyDuvet 
 scripts, where the method arguments are fed into the script as local variables going `arg0`, `arg1`, etc.
 
 For a template mod using GroovyDuvet, see: [quilt-template-mod-groovy](https://github.com/lukebemish/quilt-template-mod-groovy/).
+
+## Included Groovy Modules
+
+ * stdlib
+ * contracts
+ * datetime
+ * nio
+ * macro
+ * macro-library
+ * templates
+ * typecheckers
+ * dateutil
+ * ginq
+ * toml
+ * json
