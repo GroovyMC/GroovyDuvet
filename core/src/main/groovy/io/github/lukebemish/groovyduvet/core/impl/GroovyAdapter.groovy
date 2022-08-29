@@ -28,6 +28,7 @@ import org.quiltmc.loader.api.ModContainer
 import org.quiltmc.loader.api.QuiltLoader
 import org.quiltmc.loader.impl.launch.common.QuiltLauncherBase
 
+import java.lang.reflect.Constructor
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
 
@@ -63,13 +64,15 @@ class GroovyAdapter implements LanguageAdapter {
                     List<Method> methods = type.declaredMethods.findAll {(it.modifiers && Modifier.ABSTRACT !== 0) }
                     if (methods.size() == 1) {
                         Method method = methods.get(0)
-                        List<String> argNames = method.parameters.collect {it.name}
+                        int numParams = method.parameters.size()
+
+                        Constructor ctor = c.getDeclaredConstructor()
 
                         return (T) DefaultTypeTransformation.castToType({ Object... args ->
-                            Script script = (Script) c.getDeclaredConstructor().newInstance()
+                            Script script = (Script) ctor.newInstance()
                             Map bindings = [:]
-                            for (int i : 0..<argNames.size()) {
-                                bindings[argNames[i]] = args[i]
+                            for (int i : 0..<numParams) {
+                                bindings["arg$i"] = args[i]
                             }
                             script.binding = new Binding(bindings)
                             script.run()
