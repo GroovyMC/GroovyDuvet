@@ -43,14 +43,17 @@ jar {
 }
 jar.finalizedBy('reobfJar')
 
-def wrapperSources = project(':wrapper:minecraft').sourceSets.main.allGroovy
+def wrapperGroovy = project(':wrapper:minecraft').sourceSets.main.allGroovy
+def wrapperJava = project(':wrapper:minecraft').sourceSets.main.allJava
 
 tasks.withType(AbstractCompile) {
-    source = wrapperSources
+    source wrapperGroovy
+    source wrapperJava
 }
 
 tasks.sourcesJar {
-    from wrapperSources
+    from wrapperGroovy
+    from wrapperJava
 }
 
 groovydoc {
@@ -66,7 +69,8 @@ task groovydocJar(type: Jar, dependsOn: groovydoc ) {
 tasks.build.dependsOn(tasks.groovydocJar)
 
 tasks.groovydoc {
-    source = wrapperSources
+    source wrapperGroovy
+    source wrapperJava
 }
 
 publishing {

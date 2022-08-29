@@ -17,11 +17,11 @@
 
 package io.github.lukebemish.groovyduvet.wrapper.minecraft.impl.codec
 
-
 import groovy.transform.CompileStatic
 import io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.CodecSerializable
 import io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.ExposesCodec
 import io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodec
+import io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodecPath
 import org.apache.groovy.util.BeanUtils
 import org.codehaus.groovy.ast.*
 import org.codehaus.groovy.ast.expr.*
@@ -49,6 +49,7 @@ class CodecSerializableTransformation extends AbstractASTTransformation implemen
     static final ClassNode MY_TYPE = makeWithoutCaching(CodecSerializable)
     static final ClassNode EXPOSES_TYPE = makeWithoutCaching(ExposesCodec)
     static final ClassNode WITH_TYPE = makeWithoutCaching(WithCodec)
+    static final ClassNode TUPLE_CODEC_BUILDER = makeWithoutCaching('io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.TupleCodecBuilder')
     static final String CODEC = 'com.mojang.serialization.Codec'
     static final ClassNode CODEC_NODE = makeWithoutCaching(CODEC)
     static final String RECORD_CODEC_BUILDER = 'com.mojang.serialization.codecs.RecordCodecBuilder'
@@ -90,9 +91,7 @@ class CodecSerializableTransformation extends AbstractASTTransformation implemen
         else
             throw new RuntimeException('Codec-serializable classes must have at least one constructor.')
 
-        if (assembler.parameters.size() > 16) {
-            throw new RuntimeException('RecordCodecBuilder only allows the assembly of codec with up to 16 fields; to use more, organize and nest your data structure.')
-        }
+        boolean isTooBig = assembler.parameters.size() > 16
 
         ClassNode resolvedCodec = makeWithoutCaching(CODEC)
         resolvedCodec.setGenericsTypes(new GenericsType(parent))
@@ -100,17 +99,23 @@ class CodecSerializableTransformation extends AbstractASTTransformation implemen
         Expression[] grouping = new Expression[assembler.parameters.size()]
 
         for (int i = 0; i < assembler.parameters.size(); i++) {
-            grouping[i] = assembleExpression(parent, assembler.parameters[i])
+            grouping[i] = assembleExpression(parent, assembler.parameters[i], isTooBig)
         }
 
-        Expression grouped = new MethodCallExpression(new VariableExpression('i',INSTANCE_NODE),'group',new ArgumentListExpression(grouping))
-        Statement statement = new ReturnStatement(new MethodCallExpression(grouped, 'apply',
-                new ArgumentListExpression(new VariableExpression('i',INSTANCE_NODE),
-                        new MethodReferenceExpression(new ClassExpression(parent), new ConstantExpression('new')))))
-        LambdaExpression function = new LambdaExpression(new Parameter[] {new Parameter(INSTANCE_NODE,'i')}, statement).tap {
-            variableScope = new VariableScope()
+        Expression initialValue
+        if (!isTooBig) {
+            Expression grouped = new MethodCallExpression(new VariableExpression('i', INSTANCE_NODE), 'group', new ArgumentListExpression(grouping))
+            Statement statement = new ReturnStatement(new MethodCallExpression(grouped, 'apply',
+                    new ArgumentListExpression(new VariableExpression('i', INSTANCE_NODE),
+                            new MethodReferenceExpression(new ClassExpression(parent), new ConstantExpression('new')))))
+            LambdaExpression function = new LambdaExpression(new Parameter[]{new Parameter(INSTANCE_NODE, 'i')}, statement).tap {
+                variableScope = new VariableScope()
+            }
+            initialValue = new StaticMethodCallExpression(makeWithoutCaching(RECORD_CODEC_BUILDER), 'create', new ArgumentListExpression(function))
+        } else {
+            Expression grouped = new StaticMethodCallExpression(TUPLE_CODEC_BUILDER, 'of', new ArgumentListExpression(grouping))
+            initialValue = new MethodCallExpression(grouped, 'apply', new MethodReferenceExpression(new ClassExpression(parent), new ConstantExpression('new')))
         }
-        Expression initialValue = new StaticMethodCallExpression(makeWithoutCaching(RECORD_CODEC_BUILDER),'create',new ArgumentListExpression(function))
 
         ClassNode wrappedNode = makeWithoutCaching(CODEC)
         wrappedNode.redirect = resolvedCodec
@@ -126,7 +131,7 @@ class CodecSerializableTransformation extends AbstractASTTransformation implemen
         return getMemberValue(node, name)?:defaultVal
     }
 
-    Expression assembleExpression(ClassNode parent, Parameter parameter) {
+    Expression assembleExpression(ClassNode parent, Parameter parameter, boolean isTooBig) {
         String name = parameter.name
         FieldNode field = parent.getField(name)
         MethodNode getter = parent.getMethod((ClassHelper.isPrimitiveBoolean(parameter.type) ? "is" : "get") + BeanUtils.capitalize(name))
@@ -134,7 +139,7 @@ class CodecSerializableTransformation extends AbstractASTTransformation implemen
         annotations.addAll(parameter.annotations)
         annotations.addAll(field?.annotations?:[])
         annotations.addAll(getter?.annotations?:[])
-        List<io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodecPath> path = (isOptional(parameter.type))?([io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodecPath.OPTIONAL]):([])
+        List<WithCodecPath> path = (isOptional(parameter.type))?([WithCodecPath.OPTIONAL]):([])
         Expression baseCodec = getCodecFromType(unresolveOptional(parameter.type),annotations,path)
         Expression fieldOf
         if (!isOptional(parameter.type))
@@ -145,13 +150,15 @@ class CodecSerializableTransformation extends AbstractASTTransformation implemen
         ClassNode redirected = makeWithoutCaching(parent.name)
         redirected.redirect = parent
 
-        Expression forGetter = new MethodCallExpression(fieldOf, 'forGetter', new ArgumentListExpression(
-                new LambdaExpression(new Parameter[] {new Parameter(redirected, 'it')}, new ReturnStatement(
-                        new PropertyExpression(new VariableExpression('it', redirected), parameter.name)
-                )).tap {
-                    variableScope = new VariableScope()
-                }
-        ))
+        var forGetterArg = new LambdaExpression(new Parameter[] {new Parameter(redirected, 'it')}, new ReturnStatement(
+                new PropertyExpression(new VariableExpression('it', redirected), parameter.name)
+        )).tap {
+            variableScope = new VariableScope()
+        }
+
+        Expression forGetter = isTooBig ?
+                new StaticMethodCallExpression(TUPLE_CODEC_BUILDER, 'forGetter', new ArgumentListExpression(fieldOf, forGetterArg)) :
+                new MethodCallExpression(fieldOf, 'forGetter', new ArgumentListExpression(forGetterArg))
         return forGetter
     }
 
@@ -180,36 +187,36 @@ class CodecSerializableTransformation extends AbstractASTTransformation implemen
             return member
     }
 
-    static List<io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodecPath> getMemberCodecPath(AnnotationNode anno, String name) {
+    static List<WithCodecPath> getMemberCodecPath(AnnotationNode anno, String name) {
         Expression expr = anno.getMember(name)
         if (expr == null) {
             return []
         }
         if (expr instanceof ListExpression) {
             final ListExpression listExpression = (ListExpression) expr
-            List<io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodecPath> list = new ArrayList<>();
+            List<WithCodecPath> list = new ArrayList<>();
             for (Expression itemExpr : listExpression.getExpressions()) {
                 if (itemExpr instanceof ConstantExpression) {
-                    io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodecPath value = parseSingleExpr(itemExpr)
+                    WithCodecPath value = parseSingleExpr(itemExpr)
                     if (value != null) list.add(value)
                 }
             }
             return list
         }
-        io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodecPath single = parseSingleExpr(expr)
+        WithCodecPath single = parseSingleExpr(expr)
         return single==null?([]):([single])
     }
 
-    static io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodecPath parseSingleExpr(Expression itemExpr) {
+    static WithCodecPath parseSingleExpr(Expression itemExpr) {
         if (itemExpr instanceof VariableExpression) {
-            return io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodecPath.valueOf(itemExpr.text)
+            return WithCodecPath.valueOf(itemExpr.text)
         } else if (itemExpr instanceof PropertyExpression) {
-            return io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodecPath.valueOf(itemExpr.propertyAsString)
+            return WithCodecPath.valueOf(itemExpr.propertyAsString)
         }
         return null
     }
 
-    Expression getCodecFromType(ClassNode clazz, List<AnnotationNode> context, List<io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodecPath> path) {
+    Expression getCodecFromType(ClassNode clazz, List<AnnotationNode> context, List<WithCodecPath> path) {
         List<Expression> specifiedClosure = new ArrayList<>(context.findAll {it.getClassNode() == WITH_TYPE }
                 .findAll {getMemberCodecPath(it, 'path') == path}
                 .collect {getMemberClassValue(it, 'value')}.findAll {it !== null}.unique().collect {new ConstructorCallExpression(it, new ArgumentListExpression())})
@@ -247,7 +254,7 @@ class CodecSerializableTransformation extends AbstractASTTransformation implemen
                 throw new RuntimeException('Constructor parameters and their matching fields in codec-serializable classes may not use a raw List')
             }
             ClassNode child = clazz.genericsTypes[0].type
-            Expression childExpression = getCodecFromType(child,context,path+[io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodecPath.LIST])
+            Expression childExpression = getCodecFromType(child,context,path+[WithCodecPath.LIST])
             return new MethodCallExpression(childExpression, 'listOf', new ArgumentListExpression())
         }
         if (clazz == ClassHelper.MAP_TYPE) {
@@ -256,8 +263,8 @@ class CodecSerializableTransformation extends AbstractASTTransformation implemen
             }
             ClassNode key = clazz.genericsTypes[0].type
             ClassNode value = clazz.genericsTypes[0].type
-            Expression keyExpression = getCodecFromType(key,context,path+[io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodecPath.MAP_KEY])
-            Expression valueExpression = getCodecFromType(value,context,path+[io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodecPath.MAP_VAL])
+            Expression keyExpression = getCodecFromType(key,context,path+[WithCodecPath.MAP_KEY])
+            Expression valueExpression = getCodecFromType(value,context,path+[WithCodecPath.MAP_VAL])
             return new StaticMethodCallExpression(CODEC_NODE, 'unboundedMap', new ArgumentListExpression(
                     keyExpression, valueExpression
             ))
@@ -268,8 +275,8 @@ class CodecSerializableTransformation extends AbstractASTTransformation implemen
             }
             ClassNode left = clazz.genericsTypes[0].type
             ClassNode right = clazz.genericsTypes[0].type
-            Expression leftExpression = getCodecFromType(left,context,path+[io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodecPath.PAIR_FIRST])
-            Expression rightExpression = getCodecFromType(right,context,path+[io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodecPath.PAIR_SECOND])
+            Expression leftExpression = getCodecFromType(left,context,path+[WithCodecPath.PAIR_FIRST])
+            Expression rightExpression = getCodecFromType(right,context,path+[WithCodecPath.PAIR_SECOND])
             return new StaticMethodCallExpression(CODEC_NODE, 'pair', new ArgumentListExpression(
                     leftExpression, rightExpression
             ))
@@ -280,8 +287,8 @@ class CodecSerializableTransformation extends AbstractASTTransformation implemen
             }
             ClassNode left = clazz.genericsTypes[0].type
             ClassNode right = clazz.genericsTypes[0].type
-            Expression leftExpression = getCodecFromType(left,context,path+[io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodecPath.EITHER_LEFT])
-            Expression rightExpression = getCodecFromType(right,context,path+[io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodecPath.EITHER_RIGHT])
+            Expression leftExpression = getCodecFromType(left,context,path+[WithCodecPath.EITHER_LEFT])
+            Expression rightExpression = getCodecFromType(right,context,path+[WithCodecPath.EITHER_RIGHT])
             return new StaticMethodCallExpression(CODEC_NODE, 'either', new ArgumentListExpression(
                     leftExpression, rightExpression
             ))

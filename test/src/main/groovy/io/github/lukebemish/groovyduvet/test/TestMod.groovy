@@ -17,19 +17,10 @@
 
 package io.github.lukebemish.groovyduvet.test
 
-
 import com.mojang.serialization.Codec
 import groovy.json.JsonOutput
-import groovy.transform.CompileStatic
-import groovy.transform.Immutable
-import groovy.transform.KnownImmutable
-import groovy.transform.TupleConstructor
-import io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.CodecRetriever
-import io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.CodecSerializable
-import io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.ExposeCodec
-import io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.ObjectOps
-import io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodec
-import io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.WithCodecPath
+import groovy.transform.*
+import io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.*
 import net.minecraft.core.Direction
 import net.minecraft.core.Registry
 import net.minecraft.resources.ResourceLocation
@@ -69,8 +60,6 @@ class Test2 {
     @WithCodec({ IntProvider.POSITIVE_CODEC }) IntProvider intProvider
 }
 
-
-
 final json = CodecRetriever[Test2].encodeStart(ObjectOps.instance, new Test2(
         new Test(12,"stuff",[UniformInt.of(1,2)],Optional.of(UniformInt.of(4,5))),
         Registry.BLOCK.getKey(Blocks.DIRT),
@@ -83,3 +72,34 @@ println JsonOutput.prettyPrint(JsonOutput.toJson(json))
 println CodecRetriever[Test3]
 
 println CodecRetriever[Direction]
+
+@CompileStatic
+@TupleConstructor
+@ToString
+@CodecSerializable
+class TestTupleCodecBuilder {
+    final int int0
+    final int int1
+    final int int2
+    final int int3
+    final int int4
+    final int int5
+    final int int6
+    final int int7
+    final int int8
+    final int int9
+    final int int10
+    final int int11
+    final int int12
+    final int int13
+    final int int14
+    final int int15
+    final int int16
+    final int int17
+}
+
+final map = CodecRetriever[TestTupleCodecBuilder].encodeStart(ObjectOps.instance,
+        new TestTupleCodecBuilder(1,2,3,4,5,6,7,8,9,
+                10,11,12,13,14,15,16,17,18)).getOrThrow(false, {})
+println JsonOutput.prettyPrint(JsonOutput.toJson(map))
+println CodecRetriever[TestTupleCodecBuilder].decode(ObjectOps.instance,map).getOrThrow(false, {}z)
