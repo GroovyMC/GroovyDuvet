@@ -1,3 +1,8 @@
+plugins {
+    id 'com.modrinth.minotaur' version '2.+'
+    id 'com.matthewprenger.cursegradle' version '1.4.0'
+}
+
 archivesBaseName = "${rootProject.name}"
 
 configurations {
@@ -13,6 +18,20 @@ dependencies {
     runtimeOnly project(':wrapper:minecraft')
 }
 
+jar {
+    manifest.attributes([
+            'Specification-Title': 'GroovyDuvet',
+            'Specification-Vendor': 'Luke Bemish',
+            'Specification-Version': 1,
+            'Implementation-Title':"${archivesBaseName}",
+            'Implementation-Version': project.version,
+            'Implementation-Vendor' : 'Luke Bemish',
+            'Implementation-Timestamp': new Date().format(/yyyy-MM-dd'T'HH:mm:ssZ/),
+            'GitCommit': getGitCommit(),
+            'Automatic-Module-Name': 'io.github.lukebemish.groovyduvet'
+    ])
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
@@ -25,5 +44,49 @@ publishing {
     }
 
     repositories {
+        maven {
+            name = 'ModdingInquisitionMavenRepo'
+            url = 'https://maven.moddinginquisition.org/releases'
+            credentials {
+                username = findProperty('inquisitionMavenUser') ?: ''
+                password = findProperty('inquisitionMavenPassword') ?: ''
+            }
+        }
+    }
+}
+
+curseforge {
+    if (System.getenv('CURSEFORGE_KEY') != null) {
+        apiKey = System.getenv('CURSEFORGE_KEY')
+        project {
+            id = '665821'
+            releaseType = "${project.releaseType}"
+            addGameVersion "${libs.versions.minecraft.get()}"
+            addGameVersion 'Quilt'
+            mainArtifact(remapJar) {
+                displayName = "GroovyDuvet v$project.version"
+            }
+            relations {
+                requiredDependency 'qsl'
+            }
+        }
+    }
+    options {
+        forgeGradleIntegration = false
+    }
+}
+
+if (System.getenv("MODRINTH_KEY") !== null) {
+    modrinth {
+        token = System.getenv("MODRINTH_KEY")
+        projectId = "groovyduvet"
+        versionNumber = project.version
+        versionType = "${project.releaseType}"
+        uploadFile = remapJar
+        gameVersions = ["${libs.versions.minecraft.get()}"]
+        loaders = ["quilt"]
+        dependencies {
+            required.project "qsl"
+        }
     }
 }

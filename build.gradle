@@ -7,6 +7,12 @@ plugins {
     id 'io.github.groovymc.modsdotgroovy' version '1.1.0' apply false
 }
 
+static String getGitCommit() {
+    def proc = 'git rev-parse --short HEAD'.execute()
+    proc.waitFor()
+    return proc.exitValue()? "ERROR(${proc.exitValue()})" : proc.text.trim()
+}
+
 subprojects.findAll { !(it.name in ['wrapper','forge'])  }.each { p ->
     p.with {
         apply plugin: 'groovy'
