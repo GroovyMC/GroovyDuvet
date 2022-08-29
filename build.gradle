@@ -67,16 +67,16 @@ subprojects.findAll { !(it.name in ['wrapper'])  }.each { p ->
             withSourcesJar()
         }
     }
+}
 
-    publishing {
-        repositories {
-            maven {
-                name = 'ModdingInquisitionMavenRepo'
-                url = 'https://maven.moddinginquisition.org/releases'
-                credentials {
-                    username = findProperty('inquisitionMavenUser') ?: ''
-                    password = findProperty('inquisitionMavenPassword') ?: ''
-                }
+publishing {
+    repositories {
+        maven {
+            name = 'ModdingInquisitionMavenRepo'
+            url = 'https://maven.moddinginquisition.org/releases'
+            credentials {
+                username = findProperty('inquisitionMavenUser') ?: ''
+                password = findProperty('inquisitionMavenPassword') ?: ''
             }
         }
     }
