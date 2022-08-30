@@ -31,7 +31,7 @@ import net.minecraft.world.phys.shapes.VoxelShape
 import org.codehaus.groovy.runtime.DefaultGroovyMethods
 
 @CompileStatic
-class PositionsExtension {
+class ArithmeticExtension {
     // BlockPos
     static BlockPos plus(BlockPos self, Vec3i other) {
         return self.offset(other)
@@ -409,18 +409,30 @@ class PositionsExtension {
     }
 
     // Matrix3f
+    /**
+     * WARNING: the Matrix3f extension methods provided by GroovyDuvet are copying, and <em>will</em> be slow. Use
+     * {@link Matrix3f#add} for a faster, non-copying option.
+     */
     static Matrix3f plus(Matrix3f self, Matrix3f other) {
         final copy = self.copy()
         copy.add(other)
         return copy
     }
 
+    /**
+     * WARNING: the Matrix3f extension methods provided by GroovyDuvet are copying, and <em>will</em> be slow. Use
+     * {@link Matrix3f#sub} for a faster, non-copying option.
+     */
     static Matrix3f minus(Matrix3f self, Matrix3f other) {
         final copy = self.copy()
         copy.sub(other)
         return copy
     }
 
+    /**
+     * WARNING: the Matrix3f extension methods provided by GroovyDuvet are copying, and <em>will</em> be slow. Use
+     * {@link Matrix3f#mul} for a faster, non-copying option.
+     */
     static Matrix3f multiply(Matrix3f self, Matrix3f other) {
         final copy = self.copy()
         copy.mul(other)
@@ -433,18 +445,40 @@ class PositionsExtension {
         return copy
     }
 
+    /**
+     * WARNING: the Matrix3f extension methods provided by GroovyDuvet are copying, and <em>will</em> be slow. Use
+     * {@link Matrix3f#mul} for a faster, non-copying option.
+     */
+    static Matrix3f multiply(float other, Matrix3f self) {
+        final copy = self.copy()
+        copy.mul(other)
+        return copy
+    }
+
+    /**
+     * WARNING: the Matrix3f extension methods provided by GroovyDuvet are copying, and <em>will</em> be slow. Use
+     * {@link Matrix3f#mul} for a faster, non-copying option.
+     */
     static Matrix3f multiply(Matrix3f self, Quaternion other) {
         final copy = self.copy()
         copy.mul(other)
         return copy
     }
 
+    /**
+     * WARNING: the Matrix3f extension methods provided by GroovyDuvet are copying, and <em>will</em> be slow. Use
+     * {@link Matrix3f#mul} for a faster, non-copying option.
+     */
     static Matrix3f negative(Matrix3f self) {
         final copy = self.copy()
         copy.mul(-1)
         return copy
     }
 
+    /**
+     * WARNING: the Matrix3f extension methods provided by GroovyDuvet are copying, and <em>will</em> be slow. Use
+     * {@link Matrix3f#mul} and {@link Matrix3f#invert} for a faster, non-copying option.
+     */
     static Matrix3f div(Matrix3f self, Matrix3f other) {
         final copy = self.copy()
         final inv = other.copy()
@@ -456,18 +490,30 @@ class PositionsExtension {
     }
 
     // Matrix4f
+    /**
+     * WARNING: the Matrix4f extension methods provided by GroovyDuvet are copying, and <em>will</em> be slow. Use
+     * {@link Matrix4f#add} for a faster, non-copying option.
+     */
     static Matrix4f plus(Matrix4f self, Matrix4f other) {
         final copy = self.copy()
         copy.add(other)
         return copy
     }
 
+    /**
+     * WARNING: the Matrix4f extension methods provided by GroovyDuvet are copying, and <em>will</em> be slow. Use
+     * {@link Matrix4f#subtract} for a faster, non-copying option.
+     */
     static Matrix4f minus(Matrix4f self, Matrix4f other) {
         final copy = self.copy()
         copy.subtract(other)
         return copy
     }
 
+    /**
+     * WARNING: the Matrix4f extension methods provided by GroovyDuvet are copying, and <em>will</em> be slow. Use
+     * {@link Matrix4f#multiply} for a faster, non-copying option.
+     */
     static Matrix4f negative(Matrix4f self) {
         final copy = self.copy()
         copy * -1
@@ -477,6 +523,10 @@ class PositionsExtension {
     // The 'multiply' methods on Matrix4f are left out, as methods named 'multiply' are defined on the Matrix4f class.
     // Those methods modify the matrix in-place, instead of returning a modified copy.
 
+    /**
+     * WARNING: the Matrix4f extension methods provided by GroovyDuvet are copying, and <em>will</em> be slow. Use
+     * {@link Matrix4f#multiply} and {@link Matrix4f#invert} for a faster, non-copying option.
+     */
     static Matrix4f div(Matrix4f self, Matrix4f other) {
         final copy = self.copy()
         final inv = other.copy()
