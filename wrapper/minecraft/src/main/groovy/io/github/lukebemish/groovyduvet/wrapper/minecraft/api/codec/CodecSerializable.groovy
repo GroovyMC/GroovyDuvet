@@ -36,8 +36,9 @@ import java.lang.annotation.Target
  * {@link com.mojang.datafixers.util.Pair}, or {@link com.mojang.datafixers.util.Either} parameterized with a type or
  * types that satisfy the same requirements.
  *
- * The codec is constructed with {@link com.mojang.serialization.codecs.RecordCodecBuilder}, and so the constructor is
- * limited to 16 parameters. To use more than that, reorganize and nest your data structures.
+ * If the constructor has less than 16 parameters, the constructed codec is made with
+ * {@link com.mojang.serialization.codecs.RecordCodecBuilder}. Otherwise,
+ * {@link io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.TupleCodecBuilder} is used to create it.
  *
  * The {@link ExposesCodec} annotation will be automatically applied with the proper value if it is not already present
  * on the class.
