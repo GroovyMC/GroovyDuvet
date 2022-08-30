@@ -24,11 +24,23 @@ import net.minecraft.resources.ResourceLocation
 
 @CompileStatic
 class RegistryExtension {
-    static <A> A getAt(Registry<A> registry, ResourceLocation name) {
-        return registry.get(name)
+    static <A> A getAt(Registry<A> self, ResourceLocation name) {
+        return self.get(name)
     }
 
-    static <A> A getAt(Registry<A> registry, ResourceKey<A> key) {
-        return registry.get(key)
+    static <A> A getAt(Registry<A> self, ResourceKey<A> key) {
+        return self.get(key)
+    }
+
+    static <A> void putAt(Registry<A> self, ResourceLocation name, A value) {
+        Registry.register(self, name, value)
+    }
+
+    static <A> void putAt(Registry<A> self, ResourceKey<A> key, A value) {
+        Registry.register(self, key, value)
+    }
+
+    static <A> ResourceLocation getAt(Registry<A> self, A member) {
+        return self.getKey(member)
     }
 }
