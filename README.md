@@ -41,3 +41,6 @@ For a template mod using GroovyDuvet, see: [quilt-template-mod-groovy](https://g
  * ginq
  * toml
  * json
+
+## Support
+If you are having issues using GroovyDuvet or wish to discuss contributions to the project, you may either open an issue or PR on this repo or go to the `groovy-mc` channel here: <https://discord.gg/Em7b3dv4Nk>
