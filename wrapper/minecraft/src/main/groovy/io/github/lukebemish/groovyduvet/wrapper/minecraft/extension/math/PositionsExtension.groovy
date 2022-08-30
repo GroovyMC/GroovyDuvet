@@ -25,7 +25,12 @@ import groovy.transform.CompileStatic
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Position
 import net.minecraft.core.Vec3i
+import net.minecraft.world.phys.AABB
+import net.minecraft.world.phys.Vec2
 import net.minecraft.world.phys.Vec3
+import net.minecraft.world.phys.shapes.BooleanOp
+import net.minecraft.world.phys.shapes.Shapes
+import net.minecraft.world.phys.shapes.VoxelShape
 import org.codehaus.groovy.runtime.DefaultGroovyMethods
 
 @CompileStatic
@@ -396,6 +401,82 @@ class PositionsExtension {
             default ->
                 (T) DefaultGroovyMethods.asType(self, type)
         }
+    }
+
+    // Vec2
+    static Vec2 plus(Vec2 self, Vec2 other) {
+        return new Vec2(self.x+other.x as float, self.y+other.y as float)
+    }
+
+    static Vec2 multiply(Vec2 self, double other) {
+        return new Vec2(self.x*other as float, self.y*other as float)
+    }
+
+    static Vec2 negative(Vec2 self) {
+        return self.negated()
+    }
+
+    static Vec2 div(Vec2 self, double other) {
+        return new Vec2(self.x/other as float, self.y/other as float)
+    }
+
+    static Vec2 minus(Vec2 self, Vec2 other) {
+        return new Vec2(self.x-other.x as float, self.y-other.y as float)
+    }
+
+    static Vec2 multiply(double self, Vec2 pos) {
+        return multiply(pos,self)
+    }
+
+    static <T> T asType(Vec2 self, Class<T> type) {
+        return switch (type) {
+            case Vec3i ->
+                (T) new Vec3i(self.x, self.y, 0)
+            case Vector3d ->
+                (T) new Vector3d(self.x, self.y, 0)
+            case Vec3, Position ->
+                (T) new Vec3(self.x, self.y, 0)
+            case Vector3f ->
+                (T) new Vector3f(self.x, self.y, 0)
+            case Vector4f ->
+                (T) new Vector4f(self.x, self.y, 0, 0)
+            case Quaternion ->
+                (T) Quaternion.fromXYZ(self.x, self.y, 0)
+            case BlockPos ->
+                (T) new BlockPos(self.x, self.y, 0)
+            default ->
+                (T) DefaultGroovyMethods.asType(self, type)
+        }
+    }
+
+    // AABB
+    static AABB plus(AABB self, BlockPos other) {
+        return self.move(other)
+    }
+
+    static AABB plus(AABB self, Vec3 other) {
+        return self.move(other)
+    }
+
+    // VoxelShapes
+    static VoxelShape plus(VoxelShape self, VoxelShape other) {
+        return Shapes.join(self, other, BooleanOp.OR)
+    }
+
+    static VoxelShape or(VoxelShape self, VoxelShape other) {
+        return Shapes.join(self, other, BooleanOp.OR)
+    }
+
+    static VoxelShape and(VoxelShape self, VoxelShape other) {
+        return Shapes.join(self, other, BooleanOp.AND)
+    }
+
+    static VoxelShape xor(VoxelShape self, VoxelShape other) {
+        return Shapes.join(self, other, BooleanOp.NOT_SAME)
+    }
+
+    static VoxelShape minus(VoxelShape self, VoxelShape other) {
+        return Shapes.join(self, other, BooleanOp.NOT_SECOND)
     }
 
 }
