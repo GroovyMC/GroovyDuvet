@@ -36,6 +36,12 @@ ModsDotGroovy.make {
             minecraft = "<1.${this.minecraftVersion.split(/\./)[1] as int+1}.0"
         }
         displayUrl = 'https://github.com/lukebemish/groovyduvet'
+        entrypoints {
+            pre_launch = adapted {
+                adapter = 'groovyduvet'
+                value = 'io.github.lukebemish.groovyduvet.core.impl.ExtensionLoader'
+            }
+        }
     }
     modmenu = [
             'badges':['library'],

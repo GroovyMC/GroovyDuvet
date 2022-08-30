@@ -45,6 +45,7 @@ jar.finalizedBy('reobfJar')
 
 def wrapperGroovy = project(':wrapper:minecraft').sourceSets.main.allGroovy
 def wrapperJava = project(':wrapper:minecraft').sourceSets.main.allJava
+def wrapperResources = project(':wrapper:minecraft').sourceSets.main.resources
 
 tasks.withType(AbstractCompile) {
     source wrapperGroovy
@@ -54,6 +55,13 @@ tasks.withType(AbstractCompile) {
 tasks.sourcesJar {
     from wrapperGroovy
     from wrapperJava
+    from wrapperResources
+    exclude 'mods.groovy'
+}
+
+tasks.jar {
+    from wrapperResources
+    exclude 'mods.groovy'
 }
 
 groovydoc {

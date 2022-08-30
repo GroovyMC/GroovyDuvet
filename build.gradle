@@ -54,6 +54,7 @@ subprojects.findAll { !(it.name in ['wrapper'])  }.each { p ->
 
         license {
             header = rootProject.file('header.txt')
+            exclude '**/package-info.java'
         }
 
         tasks.withType(JavaCompile).configureEach {
@@ -66,13 +67,22 @@ subprojects.findAll { !(it.name in ['wrapper'])  }.each { p ->
             targetCompatibility = JavaVersion.VERSION_17
             withSourcesJar()
         }
+
+        processResources {
+            inputs.property "version", version
+
+            filesMatching('META-INF/groovy/') {
+                expand "version": version
+            }
+        }
     }
 }
 
 subprojects.findAll { !(it.name in ['wrapper','forge','test'])  }.each { p ->
     p.with {
         rootProject.groovydoc {
-            source p.sourceSets.main.allGroovy
+            source p.sourceSets.main.allSource
+            exclude 'mods.groovy'
         }
     }
 }

@@ -102,4 +102,6 @@ final map = CodecRetriever[TestTupleCodecBuilder].encodeStart(ObjectOps.instance
         new TestTupleCodecBuilder(1,2,3,4,5,6,7,8,9,
                 10,11,12,13,14,15,16,17,18)).getOrThrow(false, {})
 println JsonOutput.prettyPrint(JsonOutput.toJson(map))
-println CodecRetriever[TestTupleCodecBuilder].decode(ObjectOps.instance,map).getOrThrow(false, {}z)
+println CodecRetriever[TestTupleCodecBuilder].decode(ObjectOps.instance,map).getOrThrow(false, {})
+
+println Registry.BLOCK[new ResourceLocation('stone')]

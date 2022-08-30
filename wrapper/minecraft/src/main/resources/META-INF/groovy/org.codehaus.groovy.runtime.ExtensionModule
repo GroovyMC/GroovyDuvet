@@ -1,0 +1,3 @@
+moduleName = groovyduvet-vanilla-extensions
+moduleVersion = ${version}
+extensionClasses = io.github.lukebemish.groovyduvet.wrapper.minecraft.extension.registry.RegistryExtension
