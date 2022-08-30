@@ -74,7 +74,7 @@ class TupleCodecBuilder {
             <T> DataResult<Pair<O, T>> decode(DynamicOps<T> ops, T input) {
                 ops.getMap(input).flatMap { map ->
                     List<DataResult> partials = []
-                    codecs.each {
+                    TupleCodecBuilder.this.codecs.each {
                         partials << it.codec.decode(ops, map)
                     }
                     var values = partials.collect { it.resultOrPartial(s -> { }) }
@@ -83,7 +83,7 @@ class TupleCodecBuilder {
                         Object[] args = values.collect { it.orElse(null) }.toArray()
                         O result = (args.inject(closure) {cl, arg -> cl.curry(arg)} as Closure<O>).call()
                         return partial ?
-                                DataResult.error("Missing ${values.findIndexValues { it.isEmpty() }.collect { codecs[it as int].codec.decoder() }}",
+                                DataResult.error("Missing ${values.findIndexValues { it.isEmpty() }.collect { TupleCodecBuilder.this.codecs[it as int].codec.decoder() }}",
                                         new Pair<>(result, input)) :
                                 DataResult.success(new Pair<>(result, input))
                     } catch (Exception e) {
