@@ -17,10 +17,7 @@
 
 package io.github.lukebemish.groovyduvet.wrapper.minecraft.extension.math
 
-import com.mojang.math.Quaternion
-import com.mojang.math.Vector3d
-import com.mojang.math.Vector3f
-import com.mojang.math.Vector4f
+import com.mojang.math.*
 import groovy.transform.CompileStatic
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Position
@@ -113,17 +110,9 @@ class PositionsExtension {
         }
     }
 
-    // Vec3
+    // Vec3/Position
     static Vec3 plus(Position self, Position other) {
         return new Vec3(self.x()+other.x(), self.y()+other.y(), self.z()+other.z())
-    }
-
-    static Vec3 plus(Position self, Vector3f other) {
-        return new Vec3(self.x()+other.x(), self.y()+other.y(), self.z()+other.z())
-    }
-
-    static Vec3 plus(Position self, Vector3d other) {
-        return new Vec3(self.x()+other.x, self.y()+other.y, self.z()+other.z)
     }
 
     static Vec3 multiply(Position self, double other) {
@@ -140,14 +129,6 @@ class PositionsExtension {
 
     static Vec3 minus(Position self, Position other) {
         return new Vec3(self.x()-other.x(), self.y()-other.y(), self.z()-other.z())
-    }
-
-    static Vec3 minus(Position self, Vector3f other) {
-        return new Vec3(self.x()-other.x(), self.y()-other.y(), self.z()-other.z())
-    }
-
-    static Vec3 minus(Position self, Vector3d other) {
-        return new Vec3(self.x()-other.x, self.y()-other.y, self.z()-other.z)
     }
 
     static Vec3 multiply(double self, Position pos) {
@@ -178,14 +159,6 @@ class PositionsExtension {
         return new Vector3d(self.x+other.x, self.y+other.y, self.z+other.z)
     }
 
-    static Vector3d plus(Vector3d self, Vector3f other) {
-        return new Vector3d(self.x+other.x(), self.y+other.y(), self.z+other.z())
-    }
-
-    static Vector3d plus(Vector3d self, Position other) {
-        return new Vector3d(self.x+other.x(), self.y+other.y(), self.z+other.z())
-    }
-
     static Vector3d multiply(Vector3d self, double other) {
         return new Vector3d(self.x*other, self.y*other, self.z*other)
     }
@@ -200,14 +173,6 @@ class PositionsExtension {
 
     static Vector3d minus(Vector3d self, Vector3d other) {
         return new Vector3d(self.x-other.x, self.y-other.y, self.z-other.z)
-    }
-
-    static Vector3d minus(Vector3d self, Vector3f other) {
-        return new Vector3d(self.x-other.x(), self.y-other.y(), self.z-other.z())
-    }
-
-    static Vector3d minus(Vector3d self, Position other) {
-        return new Vector3d(self.x-other.x(), self.y-other.y(), self.z-other.z())
     }
 
     static Vector3d multiply(double self, Vector3d pos) {
@@ -234,15 +199,7 @@ class PositionsExtension {
     }
 
     // Vector3f
-    static Vector3f plus(Vector3f self, Vector3d other) {
-        return new Vector3f(self.x()+other.x as float, self.y()+other.y as float, self.z()+other.z as float)
-    }
-
     static Vector3f plus(Vector3f self, Vector3f other) {
-        return new Vector3f(self.x()+other.x() as float, self.y()+other.y() as float, self.z()+other.z() as float)
-    }
-
-    static Vector3f plus(Vector3f self, Position other) {
         return new Vector3f(self.x()+other.x() as float, self.y()+other.y() as float, self.z()+other.z() as float)
     }
 
@@ -258,15 +215,7 @@ class PositionsExtension {
         return new Vector3f(self.x()/other as float, self.y()/other as float, self.z()/other as float)
     }
 
-    static Vector3f minus(Vector3f self, Vector3d other) {
-        return new Vector3f(self.x()-other.x as float, self.y()-other.y as float, self.z()-other.z as float)
-    }
-
     static Vector3f minus(Vector3f self, Vector3f other) {
-        return new Vector3f(self.x()-other.x() as float, self.y()-other.y() as float, self.z()-other.z() as float)
-    }
-
-    static Vector3f minus(Vector3f self, Position other) {
         return new Vector3f(self.x()-other.x() as float, self.y()-other.y() as float, self.z()-other.z() as float)
     }
 
@@ -294,20 +243,8 @@ class PositionsExtension {
     }
 
     // Vector4f
-    static Vector4f plus(Vector4f self, Vector3d other) {
-        return new Vector4f(self.x()+other.x as float, self.y()+other.y as float, self.z()+other.z as float, self.w())
-    }
-
-    static Vector4f plus(Vector4f self, Vector3f other) {
-        return new Vector4f(self.x()+other.x() as float, self.y()+other.y() as float, self.z()+other.z() as float, self.w())
-    }
-
     static Vector4f plus(Vector4f self, Vector4f other) {
         return new Vector4f(self.x()+other.x() as float, self.y()+other.y() as float, self.z()+other.z() as float, self.w()+other.w() as float)
-    }
-
-    static Vector4f plus(Vector4f self, Position other) {
-        return new Vector4f(self.x()+other.x() as float, self.y()+other.y() as float, self.z()+other.z() as float, self.w())
     }
 
     static Vector4f multiply(Vector4f self, double other) {
@@ -322,20 +259,8 @@ class PositionsExtension {
         return new Vector4f(self.x()/other as float, self.y()/other as float, self.z()/other as float, self.w()/other as float)
     }
 
-    static Vector4f minus(Vector4f self, Vector3d other) {
-        return new Vector4f(self.x()-other.x as float, self.y()-other.y as float, self.z()-other.z as float, self.w())
-    }
-
-    static Vector4f minus(Vector4f self, Vector3f other) {
-        return new Vector4f(self.x()-other.x() as float, self.y()-other.y() as float, self.z()-other.z() as float, self.w())
-    }
-
     static Vector4f minus(Vector4f self, Vector4f other) {
         return new Vector4f(self.x()-other.x() as float, self.y()-other.y() as float, self.z()-other.z() as float, self.w()-other.w() as float)
-    }
-
-    static Vector4f minus(Vector4f self, Position other) {
-        return new Vector4f(self.x()-other.x() as float, self.y()-other.y() as float, self.z()-other.z() as float, self.w())
     }
 
     static Vector4f multiply(double self, Vector4f pos) {
@@ -398,6 +323,10 @@ class PositionsExtension {
         return switch (type) {
             case Vec3, Position, Vector3d, Vector3f, Vec3i, BlockPos ->
                 (T) self.toXYZ().asType(type)
+            case Matrix3f ->
+                (T) new Matrix3f(self)
+            case Matrix4f ->
+                (T) new Matrix4f(self)
             default ->
                 (T) DefaultGroovyMethods.asType(self, type)
         }
@@ -479,4 +408,156 @@ class PositionsExtension {
         return Shapes.join(self, other, BooleanOp.NOT_SECOND)
     }
 
+    // Matrix3f
+    static Matrix3f plus(Matrix3f self, Matrix3f other) {
+        final copy = self.copy()
+        copy.add(other)
+        return copy
+    }
+
+    static Matrix3f minus(Matrix3f self, Matrix3f other) {
+        final copy = self.copy()
+        copy.sub(other)
+        return copy
+    }
+
+    static Matrix3f multiply(Matrix3f self, Matrix3f other) {
+        final copy = self.copy()
+        copy.mul(other)
+        return copy
+    }
+
+    static Matrix3f multiply(Matrix3f self, float other) {
+        final copy = self.copy()
+        copy.mul(other)
+        return copy
+    }
+
+    static Matrix3f multiply(Matrix3f self, Quaternion other) {
+        final copy = self.copy()
+        copy.mul(other)
+        return copy
+    }
+
+    static Matrix3f negative(Matrix3f self) {
+        final copy = self.copy()
+        copy.mul(-1)
+        return copy
+    }
+
+    static Matrix3f div(Matrix3f self, Matrix3f other) {
+        final copy = self.copy()
+        final inv = other.copy()
+        if (inv.invert()) {
+            copy.mul(inv)
+            return copy
+        }
+        throw new ArithmeticException("Cannot divide by matrix with determinant of less than 1.0E-6")
+    }
+
+    // Matrix4f
+    static Matrix4f plus(Matrix4f self, Matrix4f other) {
+        final copy = self.copy()
+        copy.add(other)
+        return copy
+    }
+
+    static Matrix4f minus(Matrix4f self, Matrix4f other) {
+        final copy = self.copy()
+        copy.subtract(other)
+        return copy
+    }
+
+    static Matrix4f negative(Matrix4f self) {
+        final copy = self.copy()
+        copy * -1
+        return copy
+    }
+
+    // The 'multiply' methods on Matrix4f are left out, as methods named 'multiply' are defined on the Matrix4f class.
+    // Those methods modify the matrix in-place, instead of returning a modified copy.
+
+    static Matrix4f div(Matrix4f self, Matrix4f other) {
+        final copy = self.copy()
+        final inv = other.copy()
+        if (inv.invert()) {
+            copy * inv
+            return copy
+        }
+        throw new ArithmeticException("Cannot divide by matrix with determinant of less than 1.0E-6")
+    }
+
+    static <T> T asType(Matrix4f self, Class<T> type) {
+        return switch (type) {
+            case Transformation ->
+                (T) new Transformation(self)
+            default ->
+                (T) DefaultGroovyMethods.asType(self, type)
+        }
+    }
+
+    // SymmetricGroup3
+    static int getAt(SymmetricGroup3 self, int p) {
+        return self.permutation(p)
+    }
+
+    static SymmetricGroup3 multiply(SymmetricGroup3 self, SymmetricGroup3 other) {
+        return self.compose(other)
+    }
+    
+    static SymmetricGroup3 negative(SymmetricGroup3 self) {
+        return switch(self) {
+            case SymmetricGroup3.P231 ->
+                SymmetricGroup3.P312
+            case SymmetricGroup3.P312 ->
+                SymmetricGroup3.P231
+            default ->
+                self
+        }
+    }
+
+    static <T> T asType(SymmetricGroup3 self, Class<T> type) {
+        return switch (type) {
+            case Matrix3f ->
+                (T) self.transformation()
+            default ->
+                (T) DefaultGroovyMethods.asType(self, type)
+        }
+    }
+
+    // OctahedralGroup
+    static OctahedralGroup multiply(OctahedralGroup self, OctahedralGroup other) {
+        return self.compose(other)
+    }
+
+    static OctahedralGroup negative(OctahedralGroup self) {
+        return self.inverse()
+    }
+
+    static <T> T asType(OctahedralGroup self, Class<T> type) {
+        return switch (type) {
+            case Matrix3f ->
+                (T) self.transformation()
+            default ->
+                (T) DefaultGroovyMethods.asType(self, type)
+        }
+    }
+
+    // Transformation
+    static Transformation multiply(Transformation self, Transformation other) {
+        return self.compose(other)
+    }
+
+    static Transformation negative(Transformation self) {
+        return self.inverse()
+    }
+
+    static <T> T asType(Transformation self, Class<T> type) {
+        return switch (type) {
+            case Matrix4f ->
+                (T) self.matrix
+            default ->
+                (T) DefaultGroovyMethods.asType(self, type)
+        }
+    }
 }
