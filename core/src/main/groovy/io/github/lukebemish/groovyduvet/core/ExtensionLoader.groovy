@@ -64,7 +64,7 @@ class ExtensionLoader implements PreLaunchEntrypoint {
                         properties.extensionClasses = (properties.extensionClasses as String).split(',').findAll { String s ->
                             s = s.trim()
                             try {
-                                Class.forName(s, false, ExtensionLoader.classLoader)
+                                Class.forName(s, true, ExtensionLoader.classLoader)
                                 return true
                             } catch (Exception ignored) {
                                 return false
