@@ -17,9 +17,12 @@
 
 package io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec
 
+import groovy.transform.CompileStatic
+
 /**
  * These path elements can be used with {@link WithCodec} to target individual nested type parameters with a codec.
  */
+@CompileStatic
 enum WithCodecPath {
     /**
      * Targets the type held by a {@link List}.

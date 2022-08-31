@@ -17,6 +17,7 @@
 
 package io.github.lukebemish.groovyduvet.wrapper.qsl.extension.client
 
+import groovy.transform.CompileStatic
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.client.renderer.RenderType
@@ -24,6 +25,7 @@ import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.material.Fluid
 import org.quiltmc.qsl.block.extensions.api.client.BlockRenderLayerMap
 
+@CompileStatic
 @Environment(EnvType.CLIENT)
 class RenderExtension {
     static RenderType leftShift(RenderType layer, Block block) {

@@ -23,7 +23,6 @@ import java.lang.annotation.ElementType
 import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy
 import java.lang.annotation.Target
-
 /**
  * Allows codecs to be specified for types which {@link CodecSerializable} would otherwise not be able to use. This
  * annotation takes two arguments; a closure which provides the annotation to use, and an optional list that defines

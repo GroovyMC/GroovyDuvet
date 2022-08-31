@@ -17,6 +17,7 @@
 
 package io.github.lukebemish.groovyduvet.wrapper.minecraft.api.chat
 
+import groovy.transform.CompileStatic
 import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.ClickEvent
 import net.minecraft.network.chat.HoverEvent
@@ -24,6 +25,7 @@ import net.minecraft.network.chat.Style
 import net.minecraft.network.chat.TextColor
 import net.minecraft.resources.ResourceLocation
 
+@CompileStatic
 class StyleBuilder {
     Style style = Style.EMPTY
 

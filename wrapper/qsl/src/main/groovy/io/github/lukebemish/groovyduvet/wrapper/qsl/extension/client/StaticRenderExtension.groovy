@@ -17,14 +17,18 @@
 
 package io.github.lukebemish.groovyduvet.wrapper.qsl.extension.client
 
+import groovy.transform.CompileStatic
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.client.renderer.ItemBlockRenderTypes
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.material.Fluid
+import net.minecraft.world.level.material.FluidState
 import org.quiltmc.qsl.block.extensions.api.client.BlockRenderLayerMap
 
+@CompileStatic
 @Environment(EnvType.CLIENT)
 class StaticRenderExtension {
     static void putAt(ItemBlockRenderTypes type, Block block, RenderType layer) {
@@ -35,11 +39,19 @@ class StaticRenderExtension {
         BlockRenderLayerMap.put(layer, fluid)
     }
 
-    static void putAt(ItemBlockRenderTypes type, Block block, RenderType layer) {
-        BlockRenderLayerMap.put(layer, block)
+    static RenderType getAt(ItemBlockRenderTypes type, Block block) {
+        ItemBlockRenderTypes.getChunkRenderType(block.defaultBlockState())
     }
 
-    static void putAt(ItemBlockRenderTypes type, Fluid fluid, RenderType layer) {
-        BlockRenderLayerMap.put(layer, fluid)
+    static RenderType getAt(ItemBlockRenderTypes type, Fluid fluid) {
+        ItemBlockRenderTypes.getRenderLayer(fluid.defaultFluidState())
+    }
+
+    static RenderType getAt(ItemBlockRenderTypes type, BlockState state) {
+        ItemBlockRenderTypes.getChunkRenderType(state)
+    }
+
+    static RenderType getAt(ItemBlockRenderTypes type, FluidState fluid) {
+        ItemBlockRenderTypes.getRenderLayer(fluid)
     }
 }
