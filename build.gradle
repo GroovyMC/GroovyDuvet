@@ -74,10 +74,6 @@ subprojects.findAll { !(it.name in ['wrapper'])  }.each { p ->
             filesMatching('META-INF/groovy/') {
                 expand "version": version
             }
-
-            filesMatching('META-INF/groovyduvet/') {
-                expand "version": version
-            }
         }
     }
 }
