@@ -28,9 +28,7 @@ ModsDotGroovy.make {
         intermediate_mappings = "net.fabricmc:intermediary"
         dependencies {
             quiltLoader = ">=${this.quiltLoaderVersion}"
-            // See https://github.com/QuiltMC/quilt-loader/issues/110
-            minecraft = ">=${this.minecraftVersion}"
-            minecraft = "<1.${this.minecraftVersion.split(/\./)[1] as int+1}.0"
+            minecraft = "~${this.minecraftVersion}"
             groovyduvet_core = ">=${this.version}"
             groovyduvet_wrapper_minecraft = ">=${this.version}"
             groovyduvet_wrapper_qsl = ">=${this.version}"

@@ -31,9 +31,7 @@ ModsDotGroovy.make {
         ]
         dependencies {
             quiltLoader = ">=${this.quiltLoaderVersion}"
-            // See https://github.com/QuiltMC/quilt-loader/issues/110
-            minecraft = ">=${this.minecraftVersion}"
-            minecraft = "<1.${this.minecraftVersion.split(/\./)[1] as int+1}.0"
+            minecraft = "~${this.minecraftVersion}"
         }
         displayUrl = 'https://github.com/lukebemish/groovyduvet'
         entrypoints {

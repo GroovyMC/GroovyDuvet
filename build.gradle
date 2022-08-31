@@ -21,7 +21,7 @@ subprojects.findAll { !(it.name in ['wrapper','forge'])  }.each { p ->
         apply plugin: 'io.github.groovymc.modsdotgroovy'
 
         modsDotGroovy {
-            dslVersion = '1.1.1'
+            dslVersion = '1.1.3'
             platform 'quilt'
         }
 
