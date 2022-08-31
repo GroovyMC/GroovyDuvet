@@ -27,11 +27,11 @@ import org.quiltmc.qsl.block.extensions.api.client.BlockRenderLayerMap
 
 @Environment(EnvType.CLIENT)
 class StaticRenderExtension {
-    static void leftShift(ItemBlockRenderTypes type, RenderType layer, Block block) {
+    static void putAt(ItemBlockRenderTypes type, RenderType layer, Block block) {
         BlockRenderLayerMap.put(layer, block)
     }
 
-    static void leftShift(ItemBlockRenderTypes type, RenderType layer, Fluid fluid) {
+    static void putAt(ItemBlockRenderTypes type, RenderType layer, Fluid fluid) {
         BlockRenderLayerMap.put(layer, fluid)
     }
 }
