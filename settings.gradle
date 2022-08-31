@@ -26,5 +26,6 @@ include 'core'
 include 'fatjar'
 include 'test'
 include 'wrapper:minecraft'
+include 'wrapper:qsl'
 
 include 'forge'

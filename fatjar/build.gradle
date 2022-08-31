@@ -16,6 +16,10 @@ dependencies {
     include project(':wrapper:minecraft')
     compileOnly project( path: ':wrapper:minecraft', configuration: 'namedElements' )
     runtimeOnly project(':wrapper:minecraft')
+
+    include project(':wrapper:qsl')
+    compileOnly project( path: ':wrapper:qsl', configuration: 'namedElements' )
+    runtimeOnly project(':wrapper:qsl')
 }
 
 jar {

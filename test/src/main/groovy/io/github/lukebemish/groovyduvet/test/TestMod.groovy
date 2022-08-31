@@ -21,12 +21,16 @@ import com.mojang.serialization.Codec
 import groovy.json.JsonOutput
 import groovy.transform.*
 import io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.*
+import net.minecraft.ChatFormatting
 import net.minecraft.core.Direction
 import net.minecraft.core.Registry
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.Style
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.valueproviders.IntProvider
 import net.minecraft.util.valueproviders.UniformInt
 import net.minecraft.world.level.block.Blocks
+import org.quiltmc.qsl.networking.api.EntityTrackingEvents
 
 @Immutable(knownImmutableClasses = [Optional])
 @CodecSerializable
@@ -105,3 +109,10 @@ println JsonOutput.prettyPrint(JsonOutput.toJson(map))
 println CodecRetriever[TestTupleCodecBuilder].decode(ObjectOps.instance,map).getOrThrow(false, {})
 
 println Registry.BLOCK[new ResourceLocation('stone')]
+
+EntityTrackingEvents.START_TRACKING.register { entity, player ->
+    player.sendSystemMessage Component.literal("Test") << Style.of {
+        style ChatFormatting.DARK_BLUE
+        strikethrough = true
+    }
+}
