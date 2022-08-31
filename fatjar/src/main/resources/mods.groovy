@@ -33,6 +33,7 @@ ModsDotGroovy.make {
             minecraft = "<1.${this.minecraftVersion.split(/\./)[1] as int+1}.0"
             groovyduvet_core = ">=${this.version}"
             groovyduvet_wrapper_minecraft = ">=${this.version}"
+            groovyduvet_wrapper_qsl = ">=${this.version}"
         }
         displayUrl = 'https://github.com/lukebemish/groovyduvet'
         logoFile = 'assets/groovyduvet/icon.png'

@@ -19,11 +19,11 @@ ModsDotGroovy.make {
     issueTrackerUrl = 'https://github.com/lukebemish/groovyduvet/issues'
     license = 'LGPL-3.0-or-later'
     mod {
-        modId = 'groovyduvet_wrapper_qsl'
+        modId = 'groovyduvet_wrapper_minecraft'
         version = this.version
         group = this.group
-        displayName = 'GroovyDuvet: QSL Wrappers'
-        description = 'Wrapper module for GroovyDuvet with wrappers for the Quilt Standard Libraries'
+        displayName = 'GroovyDuvet: Minecraft Wrappers'
+        description = 'Wrapper module for GroovyDuvet with platform-independent wrappers'
         author 'Luke Bemish'
         intermediate_mappings = "net.fabricmc:intermediary"
         dependencies {
