@@ -1,4 +1,3 @@
 moduleName = groovyduvet-qsl-extensions
 moduleVersion = ${version}
 extensionClasses = io.github.lukebemish.groovyduvet.wrapper.qsl.extension.event.EventExtension,io.github.lukebemish.groovyduvet.wrapper.qsl.extension.client.RenderExtension
-staticExtensionClasses = io.github.lukebemish.groovyduvet.wrapper.qsl.extension.client.StaticRenderExtension
