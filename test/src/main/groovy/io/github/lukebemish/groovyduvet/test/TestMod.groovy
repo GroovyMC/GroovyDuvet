@@ -110,9 +110,10 @@ println CodecRetriever[TestTupleCodecBuilder].decode(ObjectOps.instance,map).get
 
 println Registry.BLOCK[new ResourceLocation('stone')]
 
-EntityTrackingEvents.START_TRACKING.register { entity, player ->
-    player.sendSystemMessage(Component.literal("Test") << Style.of {
+//noinspection GroovyAssignabilityCheck
+EntityTrackingEvents.START_TRACKING << { entity, player ->
+    player.sendSystemMessage Component.literal("Test") << Style.of {
         style ChatFormatting.DARK_BLUE
         strikethrough = true
-    })
+    }
 }
