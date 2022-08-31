@@ -35,7 +35,7 @@ ModsDotGroovy.make {
         }
         displayUrl = 'https://github.com/lukebemish/groovyduvet'
         entrypoints {
-            init = adapted {
+            client_init = adapted {
                 adapter = 'groovyduvet'
                 value = 'io.github.lukebemish.groovyduvet.test.TestMod'
             }

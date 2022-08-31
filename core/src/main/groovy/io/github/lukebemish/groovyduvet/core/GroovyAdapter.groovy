@@ -15,10 +15,10 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.lukebemish.groovyduvet.core.impl
+package io.github.lukebemish.groovyduvet.core
 
 import groovy.transform.CompileStatic
-import io.github.lukebemish.groovyduvet.core.impl.mappings.MetaclassMappingsProvider
+import io.github.lukebemish.groovyduvet.core.mappings.MetaclassMappingsProvider
 import org.codehaus.groovy.runtime.MethodClosure
 import org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation
 import org.codehaus.groovy.runtime.typehandling.GroovyCastException

@@ -27,7 +27,7 @@ ModsDotGroovy.make {
         author 'Luke Bemish'
         intermediate_mappings = "net.fabricmc:intermediary"
         language_adapters = [
-                'groovyduvet': 'io.github.lukebemish.groovyduvet.core.impl.GroovyAdapter'
+                'groovyduvet': 'io.github.lukebemish.groovyduvet.core.GroovyAdapter'
         ]
         dependencies {
             quiltLoader = ">=${this.quiltLoaderVersion}"
@@ -39,7 +39,7 @@ ModsDotGroovy.make {
         entrypoints {
             pre_launch = adapted {
                 adapter = 'groovyduvet'
-                value = 'io.github.lukebemish.groovyduvet.core.impl.ExtensionLoader'
+                value = 'io.github.lukebemish.groovyduvet.core.ExtensionLoader'
             }
         }
     }

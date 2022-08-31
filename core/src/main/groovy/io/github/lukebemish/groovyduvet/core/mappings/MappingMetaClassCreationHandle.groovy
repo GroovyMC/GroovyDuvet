@@ -15,7 +15,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.lukebemish.groovyduvet.core.impl.mappings
+package io.github.lukebemish.groovyduvet.core.mappings
 
 import groovy.transform.CompileStatic
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap

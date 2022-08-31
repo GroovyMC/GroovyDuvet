@@ -1,4 +1,4 @@
-package io.github.lukebemish.groovyduvet.wrapper.qsl.extension
+package io.github.lukebemish.groovyduvet.wrapper.qsl.extension.event
 
 import groovy.transform.CompileStatic
 import org.quiltmc.qsl.base.api.event.Event

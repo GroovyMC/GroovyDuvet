@@ -15,9 +15,10 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.lukebemish.groovyduvet.core.impl
+package io.github.lukebemish.groovyduvet.core
 
 import groovy.transform.CompileStatic
+import net.fabricmc.api.EnvType
 import org.codehaus.groovy.reflection.CachedClass
 import org.codehaus.groovy.runtime.m12n.ExtensionModule
 import org.codehaus.groovy.runtime.m12n.ExtensionModuleScanner
@@ -25,12 +26,17 @@ import org.codehaus.groovy.runtime.metaclass.MetaClassRegistryImpl
 import org.quiltmc.loader.api.ModContainer
 import org.quiltmc.loader.api.QuiltLoader
 import org.quiltmc.loader.api.entrypoint.PreLaunchEntrypoint
+import org.quiltmc.loader.api.minecraft.MinecraftQuiltLoader
 
 import java.nio.file.Files
 import java.nio.file.Path
 
 @CompileStatic
 class ExtensionLoader implements PreLaunchEntrypoint {
+    public static final String CLIENT_FILE = "META-INF/groovyduvet/client.extensions";
+    public static final String COMMON_FILE = "META-INF/groovyduvet/common.extensions";
+    public static final String SERVER_FILE = "META-INF/groovyduvet/server.extensions";
+
     @Override
     void onPreLaunch(ModContainer mod) {
         if (GroovySystem.metaClassRegistry instanceof MetaClassRegistryImpl) {
@@ -55,12 +61,12 @@ class ExtensionLoader implements PreLaunchEntrypoint {
                 }
             }, ExtensionLoader.classLoader)
             QuiltLoader.allMods.each {
-                Path path = it.getPath(ExtensionModuleScanner.MODULE_META_INF_FILE)
-                if (Files.exists(path)) {
-                    Properties properties = new Properties()
-                    properties.load(path.newReader())
-                    scanner.scanExtensionModuleFromProperties(properties)
-                    registry.registerExtensionModuleFromProperties(properties, ExtensionLoader.classLoader, map)
+                loadFromPath(ExtensionModuleScanner.MODULE_META_INF_FILE, it, scanner, registry, map)
+                loadFromPath(COMMON_FILE, it, scanner, registry, map)
+                if (MinecraftQuiltLoader.environmentType == EnvType.CLIENT) {
+                    loadFromPath(CLIENT_FILE, it, scanner, registry, map)
+                } else if (MinecraftQuiltLoader.environmentType == EnvType.SERVER) {
+                    loadFromPath(SERVER_FILE, it, scanner, registry, map)
                 }
             }
             map.each {key, value ->
@@ -68,6 +74,16 @@ class ExtensionLoader implements PreLaunchEntrypoint {
                     key.addNewMopMethods(value)
                 } catch (Exception ignored) {}
             }
+        }
+    }
+
+    private void loadFromPath(String resource, ModContainer it, ExtensionModuleScanner scanner, MetaClassRegistryImpl registry, LinkedHashMap<CachedClass, List<MetaMethod>> map) {
+        Path path = it.getPath(resource)
+        if (Files.exists(path)) {
+            Properties properties = new Properties()
+            properties.load(path.newReader())
+            scanner.scanExtensionModuleFromProperties(properties)
+            registry.registerExtensionModuleFromProperties(properties, ExtensionLoader.classLoader, map)
         }
     }
 }

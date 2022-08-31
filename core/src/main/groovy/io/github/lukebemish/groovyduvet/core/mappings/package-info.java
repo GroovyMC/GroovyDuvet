@@ -1,4 +1,4 @@
 @ApiStatus.Internal
-package io.github.lukebemish.groovyduvet.core.impl;
+package io.github.lukebemish.groovyduvet.core.mappings;
 
 import org.jetbrains.annotations.ApiStatus;

@@ -1,0 +1,3 @@
+moduleName = groovyduvet-qsl-extensions-client
+moduleVersion = ${version}
+extensionClasses = io.github.lukebemish.groovyduvet.wrapper.qsl.extension.client.RenderExtension
