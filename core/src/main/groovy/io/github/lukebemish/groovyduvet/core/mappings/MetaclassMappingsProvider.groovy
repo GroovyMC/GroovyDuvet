@@ -21,12 +21,15 @@ import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
 import groovy.json.JsonSlurper
 import groovy.transform.CompileStatic
+import groovy.transform.stc.POJO
 import net.fabricmc.api.EnvType
 import net.fabricmc.mappingio.MappedElementKind
 import net.fabricmc.mappingio.MappingVisitor
 import net.fabricmc.mappingio.format.ProGuardReader
 import org.apache.commons.codec.binary.Hex
+import org.quiltmc.loader.api.ModContainer
 import org.quiltmc.loader.api.QuiltLoader
+import org.quiltmc.loader.api.entrypoint.PreLaunchEntrypoint
 import org.quiltmc.loader.api.minecraft.MinecraftQuiltLoader
 import org.quiltmc.loader.impl.QuiltLoaderImpl
 import org.slf4j.Logger
@@ -39,9 +42,9 @@ import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 
 @CompileStatic
-class MetaclassMappingsProvider {
+@POJO
+class MetaclassMappingsProvider implements PreLaunchEntrypoint {
     private static final String OFFICIAL_NAMESPACE = 'official'
-    private static final String RUNTIME_NAMESPACE = QuiltLoader.mappingResolver.currentRuntimeNamespace
     private static final String PISTON_META = 'https://piston-meta.mojang.com/mc/game/version_manifest_v2.json'
     private static final Path CACHE_DIR = QuiltLoader.gameDir.resolve('mod_data/groovyduvet')
     private static final String MC_VERSION = QuiltLoaderImpl.INSTANCE.gameProvider.rawGameVersion
@@ -49,6 +52,13 @@ class MetaclassMappingsProvider {
     private static final Path VERSION_FILE = CACHE_DIR.resolve('version.json')
     private static final JsonSlurper JSON_SLURPER = new JsonSlurper()
     private static final Logger LOGGER = LoggerFactory.getLogger(MetaclassMappingsProvider)
+
+    @Override
+    void onPreLaunch(ModContainer mod) {
+        if (!QuiltLoader.developmentEnvironment) {
+            setup()
+        }
+    }
 
     static setup() {
         final URL url = new URL(PISTON_META)

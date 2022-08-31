@@ -18,14 +18,12 @@
 package io.github.lukebemish.groovyduvet.core
 
 import groovy.transform.CompileStatic
-import io.github.lukebemish.groovyduvet.core.mappings.MetaclassMappingsProvider
+import groovy.transform.stc.POJO
 import org.codehaus.groovy.runtime.MethodClosure
 import org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation
 import org.codehaus.groovy.runtime.typehandling.GroovyCastException
-import org.quiltmc.loader.api.LanguageAdapter
 import org.quiltmc.loader.api.LanguageAdapterException
 import org.quiltmc.loader.api.ModContainer
-import org.quiltmc.loader.api.QuiltLoader
 import org.quiltmc.loader.impl.launch.common.QuiltLauncherBase
 
 import java.lang.reflect.Constructor
@@ -33,14 +31,8 @@ import java.lang.reflect.Method
 import java.lang.reflect.Modifier
 
 @CompileStatic
-class GroovyAdapter implements LanguageAdapter {
-    GroovyAdapter() {
-        if (!QuiltLoader.developmentEnvironment) {
-            MetaclassMappingsProvider.setup()
-        }
-    }
-
-    @Override
+@POJO
+class GroovyAdapterImpl implements GroovyAdapter.DelegatedLanguageAdapter {
     <T> T create(ModContainer mod, String value, Class<T> type) throws LanguageAdapterException {
         String [] parts = value.split('::')
 

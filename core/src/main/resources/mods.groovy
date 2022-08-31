@@ -35,10 +35,16 @@ ModsDotGroovy.make {
         }
         displayUrl = 'https://github.com/lukebemish/groovyduvet'
         entrypoints {
-            pre_launch = adapted {
-                adapter = 'groovyduvet'
-                value = 'io.github.lukebemish.groovyduvet.core.ExtensionLoader'
-            }
+            pre_launch = [
+                    adapted {
+                        adapter = 'groovyduvet'
+                        value = 'io.github.lukebemish.groovyduvet.core.DevExtensionLoader'
+                    },
+                    adapted {
+                        adapter = 'groovyduvet'
+                        value = 'io.github.lukebemish.groovyduvet.core.mappings.MetaclassMappingsProvider'
+                    }
+            ]
         }
     }
     modmenu = [
