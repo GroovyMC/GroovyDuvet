@@ -32,14 +32,14 @@ public class MetaInfExtensionModuleMixin {
     @Inject(method = "newModule", at = @At("HEAD"))
     private static void groovyduvet$modifyProperties(Properties properties, ClassLoader classLoader, CallbackInfoReturnable<MetaInfExtensionModule> cir) {
         if (properties.getProperty(ExtensionSideChecker.INSTANCE_CLASSES) != null)
-            properties.setProperty(ExtensionSideChecker.INSTANCE_CLASSES, String.join(",", Arrays.stream(properties.getProperty(ExtensionSideChecker.INSTANCE_CLASSES).split(",")).map(s -> {
+            properties.setProperty(ExtensionSideChecker.INSTANCE_CLASSES, String.join(",", Arrays.stream(properties.getProperty(ExtensionSideChecker.INSTANCE_CLASSES).split("[,; ]")).map(s -> {
                 s = s.trim();
                 if (s.isEmpty() || ExtensionSideChecker.checkSidedness(s, classLoader))
                     return s;
                 return "";
             }).toList()));
         if (properties.getProperty(ExtensionSideChecker.STATIC_CLASSES) != null)
-            properties.setProperty(ExtensionSideChecker.STATIC_CLASSES, String.join(",", Arrays.stream(properties.getProperty(ExtensionSideChecker.STATIC_CLASSES).split(",")).map(s -> {
+            properties.setProperty(ExtensionSideChecker.STATIC_CLASSES, String.join(",", Arrays.stream(properties.getProperty(ExtensionSideChecker.STATIC_CLASSES).split("[,; ]")).map(s -> {
                 s = s.trim();
                 if (s.isEmpty() || ExtensionSideChecker.checkSidedness(s, classLoader))
                     return s;
