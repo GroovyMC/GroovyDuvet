@@ -16,7 +16,7 @@
  */
 
 ModsDotGroovy.make {
-    issueTrackerUrl = 'https://github.com/lukebemish/groovyduvet/issues'
+    issueTrackerUrl = 'https://github.com/GroovyMC/groovyduvet/issues'
     license = 'LGPL-3.0-or-later'
     mod {
         modId = 'groovyduvet_test'
@@ -31,7 +31,7 @@ ModsDotGroovy.make {
             minecraft = "~${this.minecraftVersion}"
             groovyduvet = ">=${this.version}"
         }
-        displayUrl = 'https://github.com/lukebemish/groovyduvet'
+        displayUrl = 'https://github.com/GroovyMC/groovyduvet'
         entrypoints {
             client_init = adapted {
                 adapter = 'groovyduvet'

@@ -16,7 +16,7 @@
  */
 
 ModsDotGroovy.make {
-    issueTrackerUrl = 'https://github.com/lukebemish/groovyduvet/issues'
+    issueTrackerUrl = 'https://github.com/GroovyMC/groovyduvet/issues'
     license = 'LGPL-3.0-or-later'
     mod {
         modId = 'groovyduvet'
@@ -33,7 +33,7 @@ ModsDotGroovy.make {
             groovyduvet_wrapper_minecraft = ">=${this.version}"
             groovyduvet_wrapper_qsl = ">=${this.version}"
         }
-        displayUrl = 'https://github.com/lukebemish/groovyduvet'
+        displayUrl = 'https://github.com/GroovyMC/groovyduvet'
         logoFile = 'assets/groovyduvet/icon.png'
     }
     modmenu = ['badges':['library']]

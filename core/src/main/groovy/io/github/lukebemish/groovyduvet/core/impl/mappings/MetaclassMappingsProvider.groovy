@@ -26,7 +26,6 @@ import net.fabricmc.api.EnvType
 import net.fabricmc.mappingio.MappedElementKind
 import net.fabricmc.mappingio.MappingVisitor
 import net.fabricmc.mappingio.format.ProGuardReader
-import org.apache.commons.codec.binary.Hex
 import org.quiltmc.loader.api.ModContainer
 import org.quiltmc.loader.api.QuiltLoader
 import org.quiltmc.loader.api.entrypoint.PreLaunchEntrypoint
@@ -94,13 +93,43 @@ class MetaclassMappingsProvider implements PreLaunchEntrypoint {
 
         if (Files.exists(VERSION_FILE)) {
             byte[] existingSha1 = calcSha1(VERSION_FILE)
-            byte[] knownSha1 = Hex.decodeHex(sha1)
-            if (Arrays.equals(knownSha1, existingSha1)) return
+            try {
+                byte[] knownSha1 = decodeHex(sha1)
+                if (Arrays.equals(knownSha1, existingSha1)) return
+            } catch (Exception ignored) {}
         }
 
         try (InputStream versionStream = new URL((String) versionMeta.url).openStream()) {
             Files.copy(versionStream, VERSION_FILE, StandardCopyOption.REPLACE_EXISTING)
         }
+    }
+
+    private static byte[] decodeHex(String original) {
+        char[] chars = original.chars
+        byte[] out = new byte[chars.length >> 1]
+
+        final int len = chars.length;
+
+        if ((len & 0x01) != 0) {
+            throw new RuntimeException("Cannot decode odd number of characters!");
+        }
+
+        // two characters form the hex value.
+        for (int i = 0, j = 0; j < len; i++) {
+            int digit = Character.digit(chars[j], 16)
+            if (digit == -1)
+                throw new RuntimeException("Illegal non-hex character!")
+            int f = digit << 4
+            j++
+            digit = Character.digit(chars[j], 16)
+            if (digit == -1)
+                throw new RuntimeException("Illegal non-hex character!")
+            f = f | digit
+            j++
+            out[i] = (byte) (f & 0xFF)
+        }
+
+        return out
     }
 
     private static void checkAndUpdateOfficialFile() throws IOException {
@@ -116,8 +145,10 @@ class MetaclassMappingsProvider implements PreLaunchEntrypoint {
 
         if (Files.exists(OFFICIAL_FILE)) {
             byte[] existingSha1 = calcSha1(OFFICIAL_FILE)
-            byte[] knownSha1 = Hex.decodeHex(sha1)
-            if (Arrays.equals(knownSha1, existingSha1)) return
+            try {
+                byte[] knownSha1 = decodeHex(sha1)
+                if (Arrays.equals(knownSha1, existingSha1)) return
+            } catch (Exception ignored) {}
         }
 
         try (InputStream officialStream = new URL(url).openStream()) {
