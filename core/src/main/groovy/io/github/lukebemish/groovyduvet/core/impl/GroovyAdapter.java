@@ -15,9 +15,8 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.lukebemish.groovyduvet.core;
+package io.github.lukebemish.groovyduvet.core.impl;
 
-import com.google.common.base.Suppliers;
 import org.quiltmc.loader.api.LanguageAdapter;
 import org.quiltmc.loader.api.LanguageAdapterException;
 import org.quiltmc.loader.api.ModContainer;
@@ -27,15 +26,27 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.function.Supplier;
 
 public class GroovyAdapter implements LanguageAdapter {
-    private final Supplier<DelegatedLanguageAdapter> adapter = Suppliers.memoize(() -> {
-        try {
-            Class<?> adapterImpl =
-                    Class.forName("io.github.lukebemish.groovyduvet.core.GroovyAdapterImpl", true, QuiltLauncherBase.getLauncher().getTargetClassLoader());
-            return ((DelegatedLanguageAdapter) adapterImpl.getConstructor().newInstance());
-        } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeLanguageAdapterException(new LanguageAdapterException(e));
+    private final Supplier<DelegatedLanguageAdapter> adapter = new Supplier<>() {
+        DelegatedLanguageAdapter adapter;
+        volatile boolean initialized = false;
+        @Override
+        public DelegatedLanguageAdapter get() {
+            if (initialized) {
+                return adapter;
+            }
+            synchronized (this) {
+                initialized = true;
+                try {
+                    Class<?> adapterImpl =
+                            Class.forName("io.github.lukebemish.groovyduvet.core.impl.GroovyAdapterImpl", true, QuiltLauncherBase.getLauncher().getTargetClassLoader());
+                    adapter = ((DelegatedLanguageAdapter) adapterImpl.getConstructor().newInstance());
+                } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                    throw new RuntimeLanguageAdapterException(new LanguageAdapterException(e));
+                }
+            }
+            return adapter;
         }
-    });
+    };
 
     @Override
     public <T> T create(ModContainer mod, String value, Class<T> type) throws LanguageAdapterException {

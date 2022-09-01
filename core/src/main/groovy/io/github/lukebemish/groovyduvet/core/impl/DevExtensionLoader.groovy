@@ -15,7 +15,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.lukebemish.groovyduvet.core
+package io.github.lukebemish.groovyduvet.core.impl
 
 import groovy.transform.CompileStatic
 import groovy.transform.stc.POJO
