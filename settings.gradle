@@ -12,10 +12,6 @@ pluginManagement {
             name = "TheModdingInquisition"
             url = 'https://maven.moddinginquisition.org/releases'
         }
-        maven {
-            name = 'Minecraft Forge'
-            url = 'https://maven.minecraftforge.net/'
-        }
         gradlePluginPortal()
     }
 }
@@ -27,5 +23,3 @@ include 'fatjar'
 include 'test'
 include 'wrapper:minecraft'
 include 'wrapper:qsl'
-
-include 'forge'
