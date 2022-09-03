@@ -32,7 +32,7 @@ dependencies {
     modImplementation libs.qsl
 
     modImplementation("io.github.lukebemish.groovyduvet:fatjar")
-    runtimeOnly("io.github.lukebemish.groovyduvet:groovyduvet-groovy")
+    runtimeOnly("io.github.lukebemish.groovyduvet:groovy")
 }
 
 jar {
