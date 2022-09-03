@@ -17,8 +17,12 @@ repositories {
 
 dependencies {
     modImplementation 'io.github.lukebemish.groovyduvet:groovyduvet:<version>'
+    runtimeOnly 'io.github.lukebemish.groovyduvet:groovyduvet-groovy:<version>'
 }
 ```
+
+The `runtimeOnly` dependency on `groovyduvet-groovy` is necessary so that the groovy runtime will be loaded on the same
+classloader at runtime in the development environment as it will be at runtime in production.
 
 Then, use the `groovyduvet` language adapter for your groovy entrypoints. Entrypoints can target classes, static fields, or static methods that extend
 the entrypoint type just like usual; GroovyDuvet can also target local variables inside of scripts. The script will be run, and the variable will be
@@ -41,6 +45,7 @@ For a template mod using GroovyDuvet, see: [quilt-template-mod-groovy](https://g
  * ginq
  * toml
  * json
+ * xml
 
 ## Support
 If you are having issues using GroovyDuvet or wish to discuss contributions to the project, you may either open an issue or PR on this repo or go to the `groovy-mc` channel here: <https://discord.gg/Em7b3dv4Nk>
