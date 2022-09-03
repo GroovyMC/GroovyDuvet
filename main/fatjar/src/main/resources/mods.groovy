@@ -7,24 +7,22 @@ ModsDotGroovy.make {
     issueTrackerUrl = 'https://github.com/GroovyMC/groovyduvet/issues'
     license = 'LGPL-3.0-or-later'
     mod {
-        modId = 'groovyduvet_test'
+        modId = 'groovyduvet'
         version = this.version
         group = this.group
-        displayName = 'GroovyDuvet Test Mod'
-        description = 'Test Mod for GroovyDuvet'
+        displayName = 'GroovyDuvet'
+        description = 'Language adapter and wrapper libraries for Groovy mods on Quilt'
         author 'Luke Bemish'
         intermediate_mappings = "net.fabricmc:intermediary"
         dependencies {
             quiltLoader = ">=${this.quiltLoaderVersion}"
             minecraft = "~${this.minecraftVersion}"
-            groovyduvet = ">=${this.version}"
+            groovyduvet_core = ">=${this.version}"
+            commongroovylibrary = ">=${this.libs.versions.cgl}"
+            groovyduvet_wrapper_qsl = ">=${this.version}"
         }
         displayUrl = 'https://github.com/GroovyMC/groovyduvet'
-        entrypoints {
-            client_init = adapted {
-                adapter = 'groovyduvet'
-                value = 'io.github.lukebemish.groovyduvet.test.TestMod'
-            }
-        }
+        logoFile = 'assets/groovyduvet/icon.png'
     }
+    modmenu = ['badges':['library']]
 }

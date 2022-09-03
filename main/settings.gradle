@@ -1,0 +1,32 @@
+pluginManagement {
+    repositories {
+        maven {
+            name = "Quilt"
+            url = uri("https://maven.quiltmc.org/repository/release")
+        }
+        maven {
+            name = "Fabric"
+            url = uri("https://maven.fabricmc.net/")
+        }
+        maven {
+            name = "TheModdingInquisition"
+            url = 'https://maven.moddinginquisition.org/releases'
+        }
+        gradlePluginPortal()
+    }
+}
+
+rootProject.name = 'groovyduvet'
+
+dependencyResolutionManagement {
+    versionCatalogs {
+        libs {
+            from(files("${rootDir}/../gradle/libs.versions.toml"))
+        }
+    }
+}
+
+include 'core'
+include 'fatjar'
+include 'wrapper:qsl'
+include 'groovy'

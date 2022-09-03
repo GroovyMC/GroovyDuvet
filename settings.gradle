@@ -1,25 +1,13 @@
 pluginManagement {
-    repositories {
-        maven {
-            name = "Quilt"
-            url = uri("https://maven.quiltmc.org/repository/release")
-        }
-        maven {
-            name = "Fabric"
-            url = uri("https://maven.fabricmc.net/")
-        }
-        maven {
-            name = "TheModdingInquisition"
-            url = 'https://maven.moddinginquisition.org/releases'
-        }
-        gradlePluginPortal()
-    }
+    includeBuild('main')
 }
 
-rootProject.name = 'groovyduvet'
+rootProject.name = 'groovyduvet-meta'
 
-include 'core'
-include 'fatjar'
-include 'test'
-include 'wrapper:minecraft'
-include 'wrapper:qsl'
+includeBuild('main') {
+    dependencySubstitution {
+        substitute module('io.github.lukebemish.groovyduvet:fatjar') using project(':fatjar')
+        substitute module('io.github.lukebemish.groovyduvet:groovyduvet-groovy') using project(':groovy')
+    }
+}
+includeBuild('test')

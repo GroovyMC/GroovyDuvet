@@ -1,25 +1,20 @@
 /*
- * Copyright (C) 2022 Luke Bemish
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program; if not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2022 Luke Bemish, GroovyMC, and contributors
+ * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
 package io.github.lukebemish.groovyduvet.test
 
+
+import blue.endless.jankson.JsonGrammar
+import com.electronwill.nightconfig.core.UnmodifiableCommentedConfig
+import com.electronwill.nightconfig.toml.TomlWriter
 import com.mojang.serialization.Codec
 import groovy.json.JsonOutput
 import groovy.transform.*
+import io.github.groovymc.cgl.api.codec.JanksonOps
+import io.github.groovymc.cgl.api.codec.TomlConfigOps
+import io.github.groovymc.cgl.api.codec.comments.Comment
 import io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.*
 import net.minecraft.ChatFormatting
 import net.minecraft.core.Direction
@@ -102,7 +97,7 @@ class TestTupleCodecBuilder {
     final int int17
 }
 
-final map = CodecRetriever[TestTupleCodecBuilder].encodeStart(ObjectOps.instance,
+final map = TestTupleCodecBuilder.$CODEC.encodeStart(ObjectOps.instance,
         new TestTupleCodecBuilder(1,2,3,4,5,6,7,8,9,
                 10,11,12,13,14,15,16,17,18)).getOrThrow(false, {})
 println JsonOutput.prettyPrint(JsonOutput.toJson(map))
@@ -117,3 +112,46 @@ EntityTrackingEvents.START_TRACKING << { entity, player ->
         strikethrough = true
     }
 }
+
+@CompileStatic
+@TupleConstructor
+@CodecSerializable
+class TestStruct {
+    /**
+     * Comment inside list
+     */
+    int value
+}
+
+@CompileStatic
+@TupleConstructor
+@CodecSerializable
+class TestCommentedCodec {
+    /**
+     * A test comment
+     */
+    String value
+
+    /** Another test comment */
+    int intValue
+
+    @Comment('Another comment')
+    float floatValue
+
+    /**
+     * List comments
+     */
+    List<TestStruct> testList
+}
+
+final toml = TestCommentedCodec.$CODEC.encodeStart(TomlConfigOps.COMMENTED,
+        new TestCommentedCodec('Stuff',5,3.0,[new TestStruct(3),new TestStruct(5)])).getOrThrow(false, {})
+println new TomlWriter().writeToString(toml as UnmodifiableCommentedConfig)
+
+final jankson = TestCommentedCodec.$CODEC.encodeStart(JanksonOps.COMMENTED,
+        new TestCommentedCodec('Stuff',5,3.0,[new TestStruct(3),new TestStruct(5)])).getOrThrow(false, {})
+println jankson.toJson(JsonGrammar.builder().withComments(true)
+        .bareSpecialNumerics(true)
+        .printTrailingCommas(true)
+        .printUnquotedKeys(true)
+        .build())

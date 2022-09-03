@@ -1,4 +1,0 @@
-moduleName = groovyduvet-minecraft-extensions
-moduleVersion = ${version}
-extensionClasses = io.github.lukebemish.groovyduvet.wrapper.minecraft.extension.registry.RegistryExtension,io.github.lukebemish.groovyduvet.wrapper.minecraft.extension.math.ArithmeticExtension,io.github.lukebemish.groovyduvet.wrapper.minecraft.extension.chat.ComponentExtension
-staticExtensionClasses = io.github.lukebemish.groovyduvet.wrapper.minecraft.extension.chat.StyleExtension

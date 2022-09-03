@@ -9,6 +9,7 @@ groovy = "4.0.4"
 mappingio = "0.3.0"
 quilt_loom = "0.12.+"
 jackson = "2.13.3"
+cgl = "0.1.0"
 
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
@@ -18,6 +19,8 @@ qsl = { module = "org.quiltmc:qsl", version.ref = "qsl" }
 mappingio = { module = "net.fabricmc:mapping-io", version.ref = "mappingio" }
 
 quilt_loom = { module = "org.quiltmc:loom", version.ref = "quilt_loom" }
+
+cgl = { module = "io.github.groovymc.cgl:cgl-1.19.2-quilt", version.ref = "cgl" }
 
 groovy = { module = "org.apache.groovy:groovy", version.ref = "groovy" }
 groovy_contracts = { module = "org.apache.groovy:groovy-contracts", version.ref = "groovy" }
@@ -31,6 +34,7 @@ groovy_dateutil = { module = "org.apache.groovy:groovy-dateutil", version.ref = 
 groovy_ginq = { module = "org.apache.groovy:groovy-ginq", version.ref = "groovy" }
 groovy_toml = { module = "org.apache.groovy:groovy-toml", version.ref = "groovy" }
 groovy_json = { module = "org.apache.groovy:groovy-json", version.ref = "groovy" }
+groovy_xml = { module = "org.apache.groovy:groovy-xml", version.ref = "groovy" }
 
 jackson_core = { module = "com.fasterxml.jackson.core:jackson-core", version.ref = "jackson" }
 jackson_annotations = { module = "com.fasterxml.jackson.core:jackson-annotations", version.ref = "jackson" }
