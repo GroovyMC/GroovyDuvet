@@ -1,3 +1,5 @@
+plugins
+
 archivesBaseName ="${rootProject.name}-core"
 
 configurations {
@@ -27,6 +29,8 @@ dependencies {
     includeApi libs.jackson.annotations
     includeApi libs.jackson.databind
     includeApi libs.jackson.dataformat.toml
+
+    modImplementation 'io.github.lukebemish.groovyduvet:mdg'
 }
 
 publishing {

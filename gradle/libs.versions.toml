@@ -10,6 +10,7 @@ mappingio = "0.3.0"
 quilt_loom = "1.0.+"
 jackson = "2.13.3"
 cgl = "0.1.0"
+mdg = "1.1.3"
 
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }

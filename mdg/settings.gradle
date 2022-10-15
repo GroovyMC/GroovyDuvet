@@ -16,7 +16,7 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'groovyduvet'
+rootProject.name = 'groovyduvet-wrapper-mdg'
 
 dependencyResolutionManagement {
     versionCatalogs {
@@ -25,14 +25,3 @@ dependencyResolutionManagement {
         }
     }
 }
-
-includeBuild('../mdg') {
-    dependencySubstitution {
-        substitute module('io.github.lukebemish.groovyduvet:mdg') using project(':')
-    }
-}
-
-include 'core'
-include 'fatjar'
-include 'wrapper:qsl'
-include 'groovy'

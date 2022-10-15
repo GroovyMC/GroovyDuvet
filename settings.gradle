@@ -4,6 +4,11 @@ pluginManagement {
 
 rootProject.name = 'groovyduvet-meta'
 
+includeBuild('mdg') {
+    dependencySubstitution {
+        substitute module('io.github.lukebemish.groovyduvet:mdg') using project(':')
+    }
+}
 includeBuild('main') {
     dependencySubstitution {
         substitute module('io.github.lukebemish.groovyduvet:fatjar') using project(':fatjar')

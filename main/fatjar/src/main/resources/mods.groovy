@@ -20,6 +20,7 @@ ModsDotGroovy.make {
             groovyduvet_core = ">=${this.version}"
             commongroovylibrary = ">=${this.libs.versions.cgl}"
             groovyduvet_wrapper_qsl = ">=${this.version}"
+            groovyduvet_wrapper_mdg = ">=${this.version}"
         }
         displayUrl = 'https://github.com/GroovyMC/groovyduvet'
         logoFile = 'assets/groovyduvet/icon.png'

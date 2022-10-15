@@ -14,6 +14,9 @@ dependencies {
     compileOnly project( path: ':wrapper:qsl', configuration: 'namedElements' )
     runtimeOnly project(':wrapper:qsl')
 
+    include 'io.github.lukebemish.groovyduvet:mdg'
+    implementation 'io.github.lukebemish.groovyduvet:mdg'
+
     include libs.cgl
     modApi libs.cgl
 }
