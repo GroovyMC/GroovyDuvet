@@ -155,3 +155,19 @@ println jankson.toJson(JsonGrammar.builder().withComments(true)
         .printTrailingCommas(true)
         .printUnquotedKeys(true)
         .build())
+
+/**
+ * Pending CGL update:
+@CompileStatic
+@CodecSerializable(allowDefaultValues = true, camelToSnake = true)
+@TupleConstructor(defaults = true)
+class TestDefaultValues {
+    String value = "stuff"
+    int intValue = 5
+    float floatValue = 3.0
+}
+
+println TestDefaultValues.$CODEC.encodeStart(ObjectOps.instance, new TestDefaultValues()).getOrThrow(false, {})
+println TestDefaultValues.$CODEC.encodeStart(ObjectOps.instance, new TestDefaultValues("another_test")).getOrThrow(false, {})
+println TestDefaultValues.$CODEC.encodeStart(ObjectOps.instance, new TestDefaultValues("test",3)).getOrThrow(false, {})
+*/

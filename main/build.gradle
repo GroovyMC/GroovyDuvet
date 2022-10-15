@@ -23,6 +23,10 @@ allprojects {
             name = "TheModdingInquisition"
             url = 'https://maven.moddinginquisition.org/releases'
         }
+        maven {
+            name = 'ParchmentMC'
+            url = 'https://maven.parchmentmc.org'
+        }
     }
 
     license {
