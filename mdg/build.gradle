@@ -41,10 +41,12 @@ configurations {
 
 dependencies {
     compileOnly libs.groovy
-
     transformCompileOnly libs.groovy
 
     relocateSource "io.github.groovymc.modsdotgroovy:dsl:${libs.versions.mdg.get()}:sources"
+
+    transformCompileOnly 'org.jetbrains:annotations:23.0.0'
+    compileOnly 'org.jetbrains:annotations:23.0.0'
 }
 
 tasks.named('compileGroovy',GroovyCompile) {

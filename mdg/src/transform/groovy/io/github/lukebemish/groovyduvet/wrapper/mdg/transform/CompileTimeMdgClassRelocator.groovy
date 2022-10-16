@@ -11,11 +11,16 @@ import groovy.transform.stc.ClosureParams
 import org.codehaus.groovy.ast.*
 import org.codehaus.groovy.ast.expr.ConstantExpression
 import org.codehaus.groovy.ast.expr.Expression
+import org.codehaus.groovy.ast.expr.FieldExpression
 import org.codehaus.groovy.ast.expr.ListExpression
+import org.codehaus.groovy.ast.stmt.ReturnStatement
 import org.codehaus.groovy.control.CompilePhase
 import org.codehaus.groovy.control.SourceUnit
 import org.codehaus.groovy.transform.ASTTransformation
 import org.codehaus.groovy.transform.GroovyASTTransformation
+import org.jetbrains.annotations.ApiStatus
+
+import java.lang.reflect.Modifier
 
 import static org.codehaus.groovy.ast.ClassHelper.makeWithoutCaching
 
@@ -23,6 +28,7 @@ import static org.codehaus.groovy.ast.ClassHelper.makeWithoutCaching
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
 class CompileTimeMdgClassRelocator implements ASTTransformation {
     static final ClassNode CLOSURE_PARAMS = makeWithoutCaching(ClosureParams)
+    static final ClassNode INTERNAL = makeWithoutCaching(ApiStatus.Internal)
 
     @Override
     void visit(ASTNode[] nodes, SourceUnit source) {
@@ -37,6 +43,23 @@ class CompileTimeMdgClassRelocator implements ASTTransformation {
     @TupleConstructor
     private static class ParameterVisitor extends ClassCodeVisitorSupport {
         SourceUnit sourceUnit
+
+        @Override
+        void visitField(FieldNode node) {
+            if (node.owner.name == 'io.github.groovymc.modsdotgroovy.dsl.ModsDotGroovy' && node.name == 'data') {
+                var method = new MethodNode(
+                        'getData',
+                        Modifier.PUBLIC,
+                        node.type,
+                        Parameter.EMPTY_ARRAY,
+                        ClassNode.EMPTY_ARRAY,
+                        new ReturnStatement(new FieldExpression(node))
+                )
+                method.addAnnotation(INTERNAL)
+                node.owner.addMethod(method)
+            }
+            super.visitField(node)
+        }
 
         @Override
         void visitMethod(MethodNode node) {
