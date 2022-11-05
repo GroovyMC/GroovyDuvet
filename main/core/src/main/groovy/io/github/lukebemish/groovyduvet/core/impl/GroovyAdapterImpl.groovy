@@ -46,7 +46,7 @@ class GroovyAdapterImpl implements GroovyAdapter.DelegatedLanguageAdapter {
                         Method method = methods.get(0)
                         int numParams = method.parameters.size()
 
-                        Constructor ctor = c.getDeclaredConstructor()
+                        Constructor ctor = c.getConstructor()
 
                         return (T) DefaultTypeTransformation.castToType({ Object... args ->
                             Script script = (Script) ctor.newInstance()
@@ -61,9 +61,10 @@ class GroovyAdapterImpl implements GroovyAdapter.DelegatedLanguageAdapter {
                         throw new LanguageAdapterException("Scripts evaluated without a local variable to capture may only be used for entrypoints with a single abstract method!")
                     }
                 } else {
-                    Script script = (Script) c.getDeclaredConstructor().newInstance()
+                    Script script = (Script) c.getConstructor().newInstance()
+                    script.binding = new Binding(['entrypointType':type])
                     script.run()
-                    return (T) DefaultTypeTransformation.castToType(script.evaluate(parts[1]), type)
+                    return (T) DefaultTypeTransformation.castToType(script.getProperty(parts[1]), type)
                 }
             } catch (Exception e) {
                 throw new LanguageAdapterException(e)
@@ -72,7 +73,7 @@ class GroovyAdapterImpl implements GroovyAdapter.DelegatedLanguageAdapter {
 
         if (parts.size() == 1) {
             try {
-                Object o = c.getDeclaredConstructor().newInstance()
+                Object o = c.getConstructor().newInstance()
                 return (T) DefaultTypeTransformation.castToType(o,type)
             } catch (Exception e) {
                 throw new LanguageAdapterException(e)
@@ -99,7 +100,12 @@ class GroovyAdapterImpl implements GroovyAdapter.DelegatedLanguageAdapter {
             throw new LanguageAdapterException("Could not find ${value}!")
         }
 
-        MethodClosure closure = new MethodClosure(c, parts[1])
+        final MethodClosure closure
+        if (methods.every {!it.static}) {
+            Object o = c.getConstructor().newInstance()
+            closure = new MethodClosure(o, parts[1])
+        } else
+            closure = new MethodClosure(c, parts[1])
 
         try {
             return (T) DefaultTypeTransformation.castToType(closure, type)
