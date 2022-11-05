@@ -64,7 +64,18 @@ class GroovyAdapterImpl implements GroovyAdapter.DelegatedLanguageAdapter {
                     Script script = (Script) c.getConstructor().newInstance()
                     script.binding = new Binding(['entrypointType':type])
                     script.run()
-                    return (T) DefaultTypeTransformation.castToType(script.getProperty(parts[1]), type)
+                    Object o
+                    try {
+                        o = script.getProperty(parts[1])
+                    } catch (MissingPropertyException ignored) {
+                        //noinspection GroovyUnusedCatchParameter
+                        try {
+                            o = script.binding.getVariable(parts[1])
+                        } catch (MissingPropertyException ignored2) {
+                            throw new LanguageAdapterException("Could not find local variable ${parts[1]} in script entrypoint ${parts[0]}.")
+                        }
+                    }
+                    return (T) DefaultTypeTransformation.castToType(o, type)
                 }
             } catch (Exception e) {
                 throw new LanguageAdapterException(e)
