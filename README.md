@@ -26,10 +26,10 @@ classloader at runtime in the development environment as it will be at runtime i
 
 Then, use the `groovyduvet` language adapter for your groovy entrypoints. Entrypoints can target classes, static fields, or static methods that extend
 the entrypoint type just like usual; GroovyDuvet can also target local variables inside of scripts. The script will be run, and the variable will be
-extracted. If the entrypoint class has exactly one abstract method, GroovyDuvet can also target closures, through any of the previous methods, or entire
+extracted; for this to work, the local variable must have the `@Field` annotation. If the entrypoint class has exactly one abstract method, GroovyDuvet can also target closures, through any of the previous methods, or entire
 scripts, where the method arguments are fed into the script as local variables going `arg0`, `arg1`, etc.
 
-For a template mod using GroovyDuvet, see: [quilt-template-mod-groovy](https://github.com/lukebemish/quilt-template-mod-groovy/). For an example of using GroovyDuvet in a multiloader project, see: [Multiloader-Groovy-Template](github.com/lukebemish/Multiloader-Groovy-Template)
+For a template mod using GroovyDuvet, see: [quilt-template-mod-groovy](https://github.com/lukebemish/quilt-template-mod-groovy/). For an example of using GroovyDuvet in a multiloader project, see: [Multiloader-Groovy-Template](https://github.com/lukebemish/Multiloader-Groovy-Template)
 
 ## Included Groovy Modules
 
