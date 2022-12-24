@@ -29,6 +29,8 @@ dependencyResolutionManagement {
 includeBuild('../main') {
     dependencySubstitution {
         substitute module('io.github.lukebemish.groovyduvet:fatjar') using project(':fatjar')
+        substitute module('io.github.lukebemish.groovyduvet:core') using project(':core')
+        substitute module('io.github.lukebemish.groovyduvet:wrapper-qsl') using project(':wrapper:qsl')
         substitute module('io.github.lukebemish.groovyduvet:groovy') using project(':groovy')
     }
 }

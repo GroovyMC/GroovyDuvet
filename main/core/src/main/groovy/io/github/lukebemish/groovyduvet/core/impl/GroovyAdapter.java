@@ -49,7 +49,7 @@ public class GroovyAdapter implements LanguageAdapter {
     }
 
     public interface DelegatedLanguageAdapter {
-        <T> T create(ModContainer mod, String value, Class<T> type);
+        <T> T create(ModContainer mod, String value, Class<T> type) throws LanguageAdapterException;
     }
 
     private static class RuntimeLanguageAdapterException extends RuntimeException {

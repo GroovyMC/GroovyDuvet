@@ -5,7 +5,6 @@
 
 package io.github.lukebemish.groovyduvet.test
 
-
 import blue.endless.jankson.JsonGrammar
 import com.electronwill.nightconfig.core.UnmodifiableCommentedConfig
 import com.electronwill.nightconfig.toml.TomlWriter
@@ -13,12 +12,13 @@ import com.mojang.serialization.Codec
 import groovy.json.JsonOutput
 import groovy.transform.*
 import io.github.groovymc.cgl.api.codec.JanksonOps
+import io.github.groovymc.cgl.api.codec.ObjectOps
 import io.github.groovymc.cgl.api.codec.TomlConfigOps
 import io.github.groovymc.cgl.api.codec.comments.Comment
-import io.github.lukebemish.groovyduvet.wrapper.minecraft.api.codec.*
+import io.github.groovymc.cgl.api.transform.codec.*
 import net.minecraft.ChatFormatting
 import net.minecraft.core.Direction
-import net.minecraft.core.Registry
+import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 import net.minecraft.resources.ResourceLocation
@@ -61,7 +61,7 @@ class Test2 {
 
 final json = CodecRetriever[Test2].encodeStart(ObjectOps.instance, new Test2(
         new Test(12,"stuff",[UniformInt.of(1,2)],Optional.of(UniformInt.of(4,5))),
-        Registry.BLOCK.getKey(Blocks.DIRT),
+        BuiltInRegistries.BLOCK.getKey(Blocks.DIRT),
         [new Test3(new char[] {'t','e','s','t'})],
         UniformInt.of(3,6)
 )).getOrThrow(false, {})
@@ -103,7 +103,7 @@ final map = TestTupleCodecBuilder.$CODEC.encodeStart(ObjectOps.instance,
 println JsonOutput.prettyPrint(JsonOutput.toJson(map))
 println CodecRetriever[TestTupleCodecBuilder].decode(ObjectOps.instance,map).getOrThrow(false, {})
 
-println Registry.BLOCK[new ResourceLocation('stone')]
+println BuiltInRegistries.BLOCK[new ResourceLocation('stone')]
 
 //noinspection GroovyAssignabilityCheck
 EntityTrackingEvents.START_TRACKING << { entity, player ->
@@ -156,10 +156,9 @@ println jankson.toJson(JsonGrammar.builder().withComments(true)
         .printUnquotedKeys(true)
         .build())
 
-/**
- * Pending CGL update:
+
 @CompileStatic
-@CodecSerializable(allowDefaultValues = true, camelToSnake = true)
+@CodecSerializable
 @TupleConstructor(defaults = true)
 class TestDefaultValues {
     String value = "stuff"
@@ -170,4 +169,3 @@ class TestDefaultValues {
 println TestDefaultValues.$CODEC.encodeStart(ObjectOps.instance, new TestDefaultValues()).getOrThrow(false, {})
 println TestDefaultValues.$CODEC.encodeStart(ObjectOps.instance, new TestDefaultValues("another_test")).getOrThrow(false, {})
 println TestDefaultValues.$CODEC.encodeStart(ObjectOps.instance, new TestDefaultValues("test",3)).getOrThrow(false, {})
-*/

@@ -35,8 +35,11 @@ dependencies {
 
     modImplementation libs.qsl
 
-    modImplementation("io.github.lukebemish.groovyduvet:fatjar")
-    runtimeOnly("io.github.lukebemish.groovyduvet:groovy")
+    modImplementation("io.github.lukebemish.groovyduvet:fatjar") { transitive = false }
+    modImplementation("io.github.lukebemish.groovyduvet:core") { transitive = false }
+    modImplementation("io.github.lukebemish.groovyduvet:wrapper-qsl") { transitive = false }
+    modImplementation libs.cgl
+    runtimeOnly("io.github.lukebemish.groovyduvet:groovy") { transitive = false }
 }
 
 jar {

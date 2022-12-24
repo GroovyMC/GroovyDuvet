@@ -77,6 +77,11 @@ subprojects.findAll { !(it.name in ['wrapper'])  }.each { p ->
             modCompileOnly libs.jackson.annotations
             modCompileOnly libs.jackson.databind
             modCompileOnly libs.jackson.dataformat.toml
+
+            annotationProcessor libs.autoextension
+            annotationProcessor libs.autoservice
+            compileOnly libs.autoextension
+            compileOnly libs.autoservice
         }
 
         jar {
@@ -107,6 +112,8 @@ subprojects.findAll { !(it.name in ['wrapper'])  }.each { p ->
         tasks.withType(GroovyCompile) {
             groovyOptions.optimizationOptions.indy = true
             groovyOptions.optimizationOptions.groovydoc = true
+            it.groovyOptions.javaAnnotationProcessing = true
+            it.exclude('mods.groovy')
         }
 
         rootProject.groovydoc {
@@ -116,6 +123,15 @@ subprojects.findAll { !(it.name in ['wrapper'])  }.each { p ->
         }
 
         p.tasks.groovydoc.enabled = false
+
+        tasks.compileGroovy { t ->
+            p.afterEvaluate {
+                t.options.compilerArgs += [
+                        "-Aautoextension.name=${p.archivesBaseName}",
+                        "-Aautoextension.version=${version}"
+                ]
+            }
+        }
     }
 }
 

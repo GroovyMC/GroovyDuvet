@@ -5,12 +5,14 @@
 
 package io.github.lukebemish.groovyduvet.wrapper.qsl.extension.event
 
+import dev.lukebemish.autoextension.AutoExtension
 import groovy.transform.CompileStatic
 
 import net.minecraft.resources.ResourceLocation
 import org.quiltmc.qsl.base.api.event.Event
 
 @CompileStatic
+@AutoExtension
 class EventExtension {
     static <T> T call(Event<T> event) {
         return event.invoker()

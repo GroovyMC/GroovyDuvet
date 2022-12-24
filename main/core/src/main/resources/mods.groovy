@@ -18,7 +18,7 @@ ModsDotGroovy.make {
                 'groovyduvet': 'io.github.lukebemish.groovyduvet.core.impl.GroovyAdapter'
         ]
         dependencies {
-            quiltloader = ">=${this.quiltLoaderVersion}"
+            quiltLoader = ">=${this.quiltLoaderVersion}"
             minecraft = "~${this.minecraftVersion}"
         }
         displayUrl = 'https://github.com/GroovyMC/groovyduvet'

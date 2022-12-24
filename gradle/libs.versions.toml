@@ -10,6 +10,8 @@ mappingio = "0.3.0"
 quilt_loom = "1.+"
 jackson = "2.13.4"
 cgl = "0.2.0"
+autoservice = "1.0.1"
+autoextension = "0.1.1"
 
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
@@ -40,6 +42,9 @@ jackson_core = { module = "com.fasterxml.jackson.core:jackson-core", version.ref
 jackson_annotations = { module = "com.fasterxml.jackson.core:jackson-annotations", version.ref = "jackson" }
 jackson_databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
 jackson_dataformat_toml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-toml", version.ref = "jackson" }
+
+autoservice = { module = "com.google.auto.service:auto-service", version.ref = "autoservice" }
+autoextension = { module = "dev.lukebemish.autoextension:autoextension", version.ref = "autoextension" }
 
 [plugins]
 quilt_loom = { id = "org.quiltmc.loom", version.ref = "quilt_loom" }
