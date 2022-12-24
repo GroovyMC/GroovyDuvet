@@ -15,7 +15,7 @@ ModsDotGroovy.make {
         author 'Luke Bemish'
         intermediate_mappings = "net.fabricmc:intermediary"
         dependencies {
-            quiltLoader = ">=${this.quiltLoaderVersion}"
+            quiltloader = ">=${this.quiltLoaderVersion}"
             minecraft = "~${this.minecraftVersion}"
         }
         displayUrl = 'https://github.com/GroovyMC/groovyduvet'

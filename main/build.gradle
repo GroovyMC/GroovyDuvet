@@ -130,7 +130,7 @@ configurations {
 dependencies {
     implementation libs.groovy
 
-    groovydocInclude("io.github.groovymc.cgl:cgl-1.19.2:${libs.versions.cgl.get()}:sources") {
+    groovydocInclude("io.github.groovymc.cgl:cgl-1.19.3:${libs.versions.cgl.get()}:sources") {
         transitive = false
     }
 }
