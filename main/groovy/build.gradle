@@ -23,6 +23,10 @@ tasks.withType(AbstractRemapJarTask) {
     targetNamespace = "named"
 }
 
+tasks.withType(GenerateModuleMetadata) {
+    enabled = false
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {

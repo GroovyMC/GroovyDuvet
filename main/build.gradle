@@ -53,9 +53,7 @@ subprojects.findAll { !(it.name in ['wrapper'])  }.each { p ->
                 officialMojangMappings()
                 parchment("org.parchmentmc.data:parchment-${libs.versions.parchment.minecraft.get()}:${libs.versions.parchment.mappings.get()}@zip")
             }
-            modImplementation libs.quilt.loader
-
-            modImplementation libs.qsl
+            modCompileOnly libs.quilt.loader
 
             modCompileOnly libs.mappingio
 
@@ -131,6 +129,15 @@ subprojects.findAll { !(it.name in ['wrapper'])  }.each { p ->
                         "-Aautoextension.version=${version}"
                 ]
             }
+        }
+    }
+}
+
+subprojects.findAll { !(it.name in ['wrapper', 'groovy'])  }.each { p ->
+    p.with {
+        dependencies {
+            modImplementation libs.quilt.loader
+            modImplementation libs.qsl
         }
     }
 }
