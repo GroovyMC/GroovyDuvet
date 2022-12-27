@@ -1,6 +1,6 @@
 plugins {
-    id 'com.modrinth.minotaur' version '2.+'
-    id 'com.matthewprenger.cursegradle' version '1.4.0'
+    id 'com.matthewprenger.cursegradle' version '1.+'
+    id "com.modrinth.minotaur" version "2.+"
 }
 
 archivesBaseName = "${rootProject.name}"
@@ -54,9 +54,9 @@ publishing {
     }
 }
 
-curseforge {
-    if (System.getenv('CURSEFORGE_KEY') != null) {
-        apiKey = System.getenv('CURSEFORGE_KEY')
+if (project.hasProperty("curseforge_key")) {
+    curseforge {
+        apiKey = project.curseforge_key
         project {
             id = '665821'
             releaseType = "${project.releaseType}"
@@ -69,23 +69,24 @@ curseforge {
                 requiredDependency 'qsl'
             }
         }
-    }
-    options {
-        forgeGradleIntegration = false
+        options {
+            forgeGradleIntegration = true
+        }
     }
 }
 
-if (System.getenv("MODRINTH_KEY") !== null) {
+if (project.hasProperty("modrinth_key")) {
     modrinth {
-        token = System.getenv("MODRINTH_KEY")
-        projectId = "groovyduvet"
-        versionNumber = project.version
+        token = project.modrinth_key
+        projectId = 'groovyduvet'
+        versionNumber = "$project.version"
         versionType = "${project.releaseType}"
+        detectLoaders = false
         uploadFile = remapJar
         gameVersions = ["${libs.versions.minecraft.get()}"]
-        loaders = ["quilt"]
+        loaders = ['quilt']
         dependencies {
-            required.project "qsl"
+            required.project 'qsl'
         }
     }
 }
