@@ -12,7 +12,6 @@ import org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation
 import org.codehaus.groovy.runtime.typehandling.GroovyCastException
 import org.quiltmc.loader.api.LanguageAdapterException
 import org.quiltmc.loader.api.ModContainer
-import org.quiltmc.loader.impl.launch.common.QuiltLauncherBase
 
 import java.lang.reflect.Constructor
 import java.lang.reflect.Method
@@ -21,6 +20,7 @@ import java.lang.reflect.Modifier
 @CompileStatic
 @POJO
 class GroovyAdapterImpl implements GroovyAdapter.DelegatedLanguageAdapter {
+
     <T> T create(ModContainer mod, String value, Class<T> type) throws LanguageAdapterException {
         String [] parts = value.split('::')
 
@@ -32,7 +32,7 @@ class GroovyAdapterImpl implements GroovyAdapter.DelegatedLanguageAdapter {
 
         try {
             //TODO: see if there's any recommended alternative to QuiltLauncherBase here
-            c = Class.forName(parts[0], true, QuiltLauncherBase.getLauncher().getTargetClassLoader())
+            c = Class.forName(parts[0], true, GroovyAdapter.KNOT_LOADER)
         } catch (ClassNotFoundException e) {
             throw new LanguageAdapterException(e)
         }

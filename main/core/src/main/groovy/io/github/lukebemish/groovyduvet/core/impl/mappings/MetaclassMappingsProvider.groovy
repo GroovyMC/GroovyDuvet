@@ -22,11 +22,15 @@ import org.quiltmc.loader.impl.QuiltLoaderImpl
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
+import java.net.http.HttpClient
+import java.net.http.HttpRequest
+import java.net.http.HttpResponse
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
+import java.util.zip.GZIPInputStream
 
 @CompileStatic
 @POJO
@@ -35,10 +39,13 @@ class MetaclassMappingsProvider implements PreLaunchEntrypoint {
     private static final String PISTON_META = 'https://piston-meta.mojang.com/mc/game/version_manifest_v2.json'
     private static final Path CACHE_DIR = QuiltLoader.gameDir.resolve('mod_data/groovyduvet')
     private static final String MC_VERSION = QuiltLoaderImpl.INSTANCE.gameProvider.rawGameVersion
-    private static final Path OFFICIAL_FILE = CACHE_DIR.resolve('official.txt')
-    private static final Path VERSION_FILE = CACHE_DIR.resolve('version.json')
+    private static final Path OFFICIAL_FILE = CACHE_DIR.resolve("official_${MC_VERSION}.txt")
+    private static final Path VERSION_FILE = CACHE_DIR.resolve("version_${MC_VERSION}.json")
     private static final JsonSlurper JSON_SLURPER = new JsonSlurper()
     private static final Logger LOGGER = LoggerFactory.getLogger(MetaclassMappingsProvider)
+
+    @Lazy
+    private static volatile HttpClient client = HttpClient.newBuilder().build()
 
     @Override
     void onPreLaunch(ModContainer mod) {
@@ -48,20 +55,29 @@ class MetaclassMappingsProvider implements PreLaunchEntrypoint {
     }
 
     static setup() {
-        final URL url = new URL(PISTON_META)
-        try {
-            Map manifestMeta = (Map) JSON_SLURPER.parse(url)
-            LOGGER.info("Starting runtime mappings setup...")
+        LOGGER.info('Starting runtime mappings setup...')
+        if (Files.exists(VERSION_FILE)) {
+            LOGGER.info('Found cached version file; attempting to load mappings...')
+            try {
+                loadLayeredMappings()
+                LOGGER.info('Finished runtime mappings setup.')
+                return // success
+            } catch (Exception e) {
+                LOGGER.warn('Failed to load cached version file; attempting to download mappings...', e)
+            }
+        }
+        try (InputStream manifestInput = downloadFile(PISTON_META)) {
+            Map manifestMeta = (Map) JSON_SLURPER.parse(manifestInput)
             try {
                 Map versionMeta = manifestMeta.versions.find { (it as Map)['id'] == MC_VERSION } as Map
                 if (!Files.exists(CACHE_DIR)) Files.createDirectories(CACHE_DIR)
-                LOGGER.info("Found version metadata from piston-meta.")
+                LOGGER.info('Found version metadata from piston-meta.')
                 checkAndUpdateVersionFile(versionMeta)
-                LOGGER.info("version.json is up to date.")
+                LOGGER.info('version.json is up to date.')
                 checkAndUpdateOfficialFile()
-                LOGGER.info("Official mappings are up to date.")
+                LOGGER.info('Official mappings are up to date.')
                 loadLayeredMappings()
-                LOGGER.info("Finished runtime mappings setup.")
+                LOGGER.info('Finished runtime mappings setup.')
             } catch (IOException e) {
                 // Error state, I couldn't make mappings.
                 throw e
@@ -70,9 +86,8 @@ class MetaclassMappingsProvider implements PreLaunchEntrypoint {
                 throw e
             }
         } catch (IOException e) {
-            LOGGER.info("Couldn't connect to piston-meta. Looking for cached file instead.")
-            loadLayeredMappings()
-            LOGGER.info("Finished runtime mappings setup.")
+            LOGGER.error('Couldn\'t connect to piston-meta and cached mappings either do not exist or have the wrong checksum.')
+            throw new RuntimeException(e)
         }
     }
 
@@ -87,7 +102,7 @@ class MetaclassMappingsProvider implements PreLaunchEntrypoint {
             } catch (Exception ignored) {}
         }
 
-        try (InputStream versionStream = new URL((String) versionMeta.url).openStream()) {
+        try (InputStream versionStream = downloadFile(versionMeta.url as String)) {
             Files.copy(versionStream, VERSION_FILE, StandardCopyOption.REPLACE_EXISTING)
         }
     }
@@ -139,7 +154,7 @@ class MetaclassMappingsProvider implements PreLaunchEntrypoint {
             } catch (Exception ignored) {}
         }
 
-        try (InputStream officialStream = new URL(url).openStream()) {
+        try (InputStream officialStream = downloadFile(url)) {
             Files.copy(officialStream, OFFICIAL_FILE, StandardCopyOption.REPLACE_EXISTING)
         }
     }
@@ -167,6 +182,26 @@ class MetaclassMappingsProvider implements PreLaunchEntrypoint {
         final visitor = new LoadingVisitor(mapper.mojToObf)
         ProGuardReader.read(Files.newBufferedReader(OFFICIAL_FILE), visitor)
         MappingMetaClassCreationHandle.applyCreationHandle(visitor.build())
+    }
+
+    /**
+     * Downloads a file from the given URI, with GZip if the server supports it.
+     * @param url
+     * @return InputStream
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    private static InputStream downloadFile(final String url) throws IOException, InterruptedException {
+        final HttpRequest request = HttpRequest.newBuilder(new URI(url))
+                .setHeader('Accept-Encoding', 'gzip')
+                .GET()
+                .build()
+        final HttpResponse<InputStream> response = client.send(request, HttpResponse.BodyHandlers.ofInputStream())
+        if (response.statusCode() !== 200)
+            throw new IOException("Failed to download file from \"$url\" (${response.statusCode()})")
+
+        final boolean isGzipEncoded = response.headers().firstValue('Content-Encoding').orElse('') == 'gzip'
+        return isGzipEncoded ? new GZIPInputStream(response.body()) : response.body()
     }
 
     private static class LoadingVisitor implements MappingVisitor {

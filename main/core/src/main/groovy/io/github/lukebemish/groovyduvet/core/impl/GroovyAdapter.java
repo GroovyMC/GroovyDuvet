@@ -8,14 +8,13 @@ package io.github.lukebemish.groovyduvet.core.impl;
 import org.quiltmc.loader.api.LanguageAdapter;
 import org.quiltmc.loader.api.LanguageAdapterException;
 import org.quiltmc.loader.api.ModContainer;
-import org.quiltmc.loader.impl.launch.common.QuiltLauncherBase;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.function.Supplier;
-import java.util.regex.Pattern;
 
 public class GroovyAdapter implements LanguageAdapter {
-    private final Pattern groovyJarMatcher = Pattern.compile("org.apache.groovy/groovy/[0-9.]+/");
+
+    static final ClassLoader KNOT_LOADER = GroovyAdapter.class.getClassLoader();
     private final Supplier<DelegatedLanguageAdapter> adapter = new Supplier<>() {
         DelegatedLanguageAdapter adapter;
         volatile boolean initialized = false;
@@ -28,7 +27,7 @@ public class GroovyAdapter implements LanguageAdapter {
                 initialized = true;
                 try {
                     Class<?> adapterImpl =
-                            Class.forName("io.github.lukebemish.groovyduvet.core.impl.GroovyAdapterImpl", true, QuiltLauncherBase.getLauncher().getTargetClassLoader());
+                            Class.forName("io.github.lukebemish.groovyduvet.core.impl.GroovyAdapterImpl", true, KNOT_LOADER);
                     adapter = ((DelegatedLanguageAdapter) adapterImpl.getConstructor().newInstance());
                 } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException |
                          IllegalAccessException | InvocationTargetException e) {
