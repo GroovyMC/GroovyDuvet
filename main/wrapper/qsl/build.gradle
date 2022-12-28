@@ -7,7 +7,7 @@ dependencies {
 
 publishing {
     publications {
-        internal(MavenPublication) {
+        mavenJava(MavenPublication) {
             groupId project.group
             artifactId project.archivesBaseName
             version project.version
