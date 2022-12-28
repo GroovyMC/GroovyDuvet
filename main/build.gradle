@@ -161,8 +161,12 @@ subprojects.findAll { !(it.name in ['wrapper', 'groovy'])  }.each { p ->
             }
         }
 
+        tasks.jar.finalizedBy(remapFullJar)
+
         artifacts {
-            fullJars(remapFullJar)
+            fullJars(remapFullJar.archiveFile) {
+                builtBy remapFullJar
+            }
         }
     }
 }

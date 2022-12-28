@@ -5,12 +5,20 @@ plugins {
 
 archivesBaseName = "${rootProject.name}"
 
+configurations {
+    includeFull {
+        canBeConsumed = false
+        canBeResolved = true
+    }
+    include.extendsFrom includeFull
+}
+
 dependencies {
-    include project(path: ':core', configuration: 'fullJars')
+    includeFull project(path: ':core', configuration: 'fullJars')
     compileOnly project( path: ':core', configuration: 'namedElements' )
     runtimeOnly project(':core')
 
-    include project(path: ':wrapper:qsl', configuration: 'fullJars')
+    includeFull project(path: ':wrapper:qsl', configuration: 'fullJars')
     compileOnly project( path: ':wrapper:qsl', configuration: 'namedElements' )
     runtimeOnly project(':wrapper:qsl')
 
