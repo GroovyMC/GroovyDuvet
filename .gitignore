@@ -21,6 +21,3 @@ build
 eclipse
 run
 *.hprof
-
-main/gradle/*
-test/gradle/*

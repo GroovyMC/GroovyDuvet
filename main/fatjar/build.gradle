@@ -15,7 +15,9 @@ dependencies {
     runtimeOnly project(':wrapper:qsl')
 
     include libs.cgl
-    modApi libs.cgl
+    modApi(libs.cgl) {
+        exclude group: 'org.apache.groovy'
+    }
 }
 
 jar {
@@ -39,6 +41,7 @@ publishing {
             artifactId project.archivesBaseName
             version project.version
             from components.java
+            artifact remapPartialJar
             artifact rootProject.tasks.groovydocJar
         }
     }

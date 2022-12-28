@@ -18,14 +18,6 @@ pluginManagement {
 
 rootProject.name = 'groovyduvet'
 
-dependencyResolutionManagement {
-    versionCatalogs {
-        libs {
-            from(files("${rootDir}/../gradle/libs.versions.toml"))
-        }
-    }
-}
-
 include 'core'
 include 'fatjar'
 include 'wrapper:qsl'

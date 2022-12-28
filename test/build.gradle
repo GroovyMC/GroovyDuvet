@@ -35,10 +35,15 @@ dependencies {
 
     modImplementation libs.qsl
 
+    compileOnly libs.groovy
+    compileOnly libs.groovy.json
+
     modImplementation("io.github.lukebemish.groovyduvet:fatjar") { transitive = false }
     modImplementation("io.github.lukebemish.groovyduvet:core") { transitive = false }
     modImplementation("io.github.lukebemish.groovyduvet:wrapper-qsl") { transitive = false }
-    modImplementation libs.cgl
+    modImplementation(libs.cgl) {
+        exclude group: 'org.apache.groovy'
+    }
     runtimeOnly("io.github.lukebemish.groovyduvet:groovy") { transitive = false }
 }
 

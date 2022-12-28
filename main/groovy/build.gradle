@@ -2,6 +2,23 @@ archivesBaseName = "${rootProject.name}-groovy"
 
 dependencies {
     include libs.groovy
+    include libs.groovy.contracts
+    include libs.groovy.datetime
+    include libs.groovy.nio
+    include libs.groovy.macro
+    include libs.groovy.macro.library
+    include libs.groovy.templates
+    include libs.groovy.xml
+    include libs.groovy.typecheckers
+    include libs.groovy.dateutil
+    include libs.groovy.ginq
+    include libs.groovy.toml
+    include libs.groovy.json
+
+    include libs.jackson.core
+    include libs.jackson.annotations
+    include libs.jackson.databind
+    include libs.jackson.dataformat.toml
 }
 
 jar {

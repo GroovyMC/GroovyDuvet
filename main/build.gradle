@@ -133,11 +133,32 @@ subprojects.findAll { !(it.name in ['wrapper'])  }.each { p ->
     }
 }
 
+import net.fabricmc.loom.task.RemapJarTask
+
 subprojects.findAll { !(it.name in ['wrapper', 'groovy'])  }.each { p ->
     p.with {
         dependencies {
             modImplementation libs.quilt.loader
             modImplementation libs.qsl
+        }
+
+        tasks.remapJar.with {
+            it.archiveClassifier.set 'full'
+        }
+
+        tasks.register("remapPartialJar", RemapJarTask) {
+            it.targetNamespace = "intermediary"
+            it.inputFile = tasks.jar.archiveFile
+            it.dependsOn tasks.jar
+            it.archiveClassifier.set ''
+            it.addNestedDependencies = false
+        }
+
+        components.java.withVariantsFromConfiguration(configurations.runtimeElements) {
+            skip()
+        }
+        components.java.withVariantsFromConfiguration(configurations.apiElements) {
+            skip()
         }
     }
 }

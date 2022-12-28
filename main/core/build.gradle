@@ -36,6 +36,7 @@ publishing {
             artifactId project.archivesBaseName
             version project.version
             from components.java
+            artifact remapPartialJar
         }
     }
     repositories {
