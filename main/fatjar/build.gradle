@@ -6,11 +6,11 @@ plugins {
 archivesBaseName = "${rootProject.name}"
 
 dependencies {
-    include project(':core')
+    include project(path: ':core', configuration: 'fullJars')
     compileOnly project( path: ':core', configuration: 'namedElements' )
     runtimeOnly project(':core')
 
-    include project(':wrapper:qsl')
+    include project(path: ':wrapper:qsl', configuration: 'fullJars')
     compileOnly project( path: ':wrapper:qsl', configuration: 'namedElements' )
     runtimeOnly project(':wrapper:qsl')
 
@@ -41,7 +41,6 @@ publishing {
             artifactId project.archivesBaseName
             version project.version
             from components.java
-            artifact remapPartialJar
             artifact rootProject.tasks.groovydocJar
         }
     }
@@ -65,7 +64,7 @@ if (project.hasProperty("curseforge_key")) {
             releaseType = "${project.releaseType}"
             addGameVersion "${libs.versions.minecraft.get()}"
             addGameVersion 'Quilt'
-            mainArtifact(remapJar) {
+            mainArtifact(remapFullJar) {
                 displayName = "GroovyDuvet v$project.version"
             }
             relations {
@@ -85,7 +84,7 @@ if (project.hasProperty("modrinth_key")) {
         versionNumber = "$project.version"
         versionType = "${project.releaseType}"
         detectLoaders = false
-        uploadFile = remapJar
+        uploadFile = remapFullJar
         gameVersions = ["${libs.versions.minecraft.get()}"]
         loaders = ['quilt']
         dependencies {

@@ -143,22 +143,26 @@ subprojects.findAll { !(it.name in ['wrapper', 'groovy'])  }.each { p ->
         }
 
         tasks.remapJar.with {
-            it.archiveClassifier.set 'full'
-        }
-
-        tasks.register("remapPartialJar", RemapJarTask) {
-            it.targetNamespace = "intermediary"
-            it.inputFile = tasks.jar.archiveFile
-            it.dependsOn tasks.jar
-            it.archiveClassifier.set ''
             it.addNestedDependencies = false
         }
 
-        components.java.withVariantsFromConfiguration(configurations.runtimeElements) {
-            skip()
+        tasks.register("remapFullJar", RemapJarTask) {
+            it.targetNamespace = "intermediary"
+            it.inputFile = tasks.jar.archiveFile
+            it.dependsOn tasks.jar
+            it.archiveClassifier.set 'full'
+            it.addNestedDependencies = true
         }
-        components.java.withVariantsFromConfiguration(configurations.apiElements) {
-            skip()
+
+        configurations {
+            fullJars {
+                canBeConsumed = true
+                canBeResolved = false
+            }
+        }
+
+        artifacts {
+            fullJars(remapFullJar)
         }
     }
 }
