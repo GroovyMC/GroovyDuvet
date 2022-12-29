@@ -13,6 +13,10 @@ configurations {
     include.extendsFrom includeFull
 }
 
+machete {
+    additionalTasks.add("remapFullJar")
+}
+
 dependencies {
     includeFull project(path: ':core', configuration: 'fullJars')
     compileOnly project( path: ':core', configuration: 'namedElements' )

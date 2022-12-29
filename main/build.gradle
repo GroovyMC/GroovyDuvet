@@ -5,6 +5,7 @@ plugins {
     alias libs.plugins.quilt.loom apply false
     id 'org.cadixdev.licenser' version '0.6.1'
     id 'io.github.groovymc.modsdotgroovy' version '1.1.1' apply false
+    id 'io.github.p03w.machete' version '1.2.0' apply false
 }
 
 static String getGitCommit() {
@@ -167,6 +168,20 @@ subprojects.findAll { !(it.name in ['wrapper', 'groovy'])  }.each { p ->
             fullJars(remapFullJar.archiveFile) {
                 builtBy remapFullJar
             }
+        }
+    }
+}
+
+subprojects.findAll { it.name in ['fatjar', 'groovy']  }.each { p ->
+    p.with {
+        apply plugin: 'io.github.p03w.machete'
+
+        machete {
+            json.enabled = false
+            png.enabled = false
+            xml.enabled = false
+            lvtStriping.enabled = false
+            sourceFileStriping.enabled = false
         }
     }
 }
