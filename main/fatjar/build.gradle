@@ -1,3 +1,6 @@
+import groovy.json.JsonBuilder
+import groovy.json.JsonSlurper
+
 plugins {
     id 'com.matthewprenger.cursegradle' version '1.+'
     id "com.modrinth.minotaur" version "2.+"
@@ -10,11 +13,6 @@ configurations {
         canBeConsumed = false
         canBeResolved = true
     }
-    include.extendsFrom includeFull
-}
-
-machete {
-    additionalTasks.add("remapFullJar")
 }
 
 dependencies {
@@ -30,6 +28,66 @@ dependencies {
     modApi(libs.cgl) {
         exclude group: 'org.apache.groovy'
     }
+}
+
+tasks.remapFullJar.with {
+    it.archiveClassifier.set 'full-partial'
+}
+
+tasks.register("updateModsJson", DefaultTask) {
+    dependsOn tasks.remapFullJar
+
+    inputs.file(tasks.remapFullJar.archiveFile)
+
+    doLast {
+
+        def json = new JsonSlurper().parseText(file("${buildDir}/META-INF/quilt.mod.json").text)
+        json['jars'] = (json['jars']?[]) + configurations.includeFull.files.collect { it.name }
+        file("${buildDir}/META-INF/quilt.mod.json").text = new JsonBuilder(json).toPrettyString()
+    }
+}
+
+tasks.register("extractQuiltModsJson", Copy) {
+    dependsOn configurations.includeFull
+    dependsOn tasks.remapFullJar
+
+    from(zipTree(tasks.remapFullJar.archiveFile)) {
+        include('quilt.mod.json')
+    }
+    into("${buildDir}/extractQuiltModsJson/")
+
+    doLast {
+        def qmjFile = file("${buildDir}/extractQuiltModsJson/quilt.mod.json")
+        if (qmjFile.exists()) {
+            def json = new JsonSlurper().parseText(qmjFile.text)
+            json?.quilt_loader = (json?.quilt_loader?:[:])
+            json?.quilt_loader?.jars = (json?.quilt_loader?.jars?:[]) + configurations.includeFull.files.collect { "META-INF/jars/${it.name}" }
+            file("${buildDir}/extractQuiltModsJson/quilt.mod.json").text = new JsonBuilder(json).toPrettyString()
+        }
+    }
+}
+
+tasks.register("prepareFullJar", Jar) {
+    from(zipTree(tasks.remapFullJar.archiveFile)) {
+        exclude('quilt.mod.json')
+    }
+    dependsOn tasks.remapFullJar
+    dependsOn tasks.extractQuiltModsJson
+    dependsOn configurations.includeFull
+    archiveClassifier.set 'full'
+
+    metaInf {
+        into 'jars'
+        from configurations.includeFull
+    }
+
+    from(fileTree("${buildDir}/extractQuiltModsJson")) {
+        include('quilt.mod.json')
+    }
+}
+
+machete {
+    additionalTasks.add("prepareFullJar")
 }
 
 jar {
@@ -76,7 +134,7 @@ if (project.hasProperty("curseforge_key")) {
             releaseType = "${project.releaseType}"
             addGameVersion "${libs.versions.minecraft.get()}"
             addGameVersion 'Quilt'
-            mainArtifact(remapFullJar) {
+            mainArtifact(tasks.prepareFullJar) {
                 displayName = "GroovyDuvet v$project.version"
             }
             relations {
@@ -84,7 +142,7 @@ if (project.hasProperty("curseforge_key")) {
             }
         }
         options {
-            forgeGradleIntegration = true
+            forgeGradleIntegration = false
         }
     }
 }
@@ -96,7 +154,7 @@ if (project.hasProperty("modrinth_key")) {
         versionNumber = "$project.version"
         versionType = "${project.releaseType}"
         detectLoaders = false
-        uploadFile = remapFullJar
+        uploadFile = tasks.prepareFullJar
         gameVersions = ["${libs.versions.minecraft.get()}"]
         loaders = ['quilt']
         dependencies {
