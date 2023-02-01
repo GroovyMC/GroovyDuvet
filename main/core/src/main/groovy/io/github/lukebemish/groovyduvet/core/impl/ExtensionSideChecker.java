@@ -21,11 +21,16 @@ public class ExtensionSideChecker {
     private ExtensionSideChecker() {}
     public static final String INSTANCE_CLASSES = "extensionClasses";
     public static final String STATIC_CLASSES = "staticExtensionClasses";
-    static final String ONLYIN = "Lnet/minecraftforge/api/distmarker/OnlyIn;";
-    static final String ENVIRONMENT = "Lnet/fabricmc/api/Environment;";
-    static final String EXTENSION = "Lio/github/groovymc/cgl/extension/EnvironmentExtension;";
+    private static final String ONLYIN = "Lnet/minecraftforge/api/distmarker/OnlyIn;";
+    private static final String ENVIRONMENT = "Lnet/fabricmc/api/Environment;";
+    private static final String EXTENSION = "Lio/github/groovymc/cgl/api/extension/EnvironmentExtension;";
+    private static final String SERVER_ONLY = "Lorg/quiltmc/loader/api/minecraft/DedicatedServerOnly;";
+    private static final String CLIENT_ONLY = "Lorg/quiltmc/loader/api/minecraft/ClientOnly;";
 
-    static final Logger LOGGER = LogUtils.getLogger();
+    private static final String skipOnClient = "Skipping extension class {} as we are on the client";
+    private static final String skipOnServer = "Skipping extension class {} as we are on the server";
+
+    private static final Logger LOGGER = LogUtils.getLogger();
 
     public static boolean checkSidedness(String className, ClassLoader classLoader) {
         AtomicBoolean isOnDist = new AtomicBoolean(true);
@@ -45,20 +50,29 @@ public class ExtensionSideChecker {
                                     if (s.equals("SERVER") || s.equals("DEDICATED_SERVER")) {
                                         isOnDist.set(MinecraftQuiltLoader.getEnvironmentType() == EnvType.SERVER);
                                         if (MinecraftQuiltLoader.getEnvironmentType() == EnvType.CLIENT)
-                                            LOGGER.info("Skipping extension class {} as we are on the client", className);
+                                            LOGGER.info(skipOnClient, className);
                                     } else if (s.equals("CLIENT")) {
                                         isOnDist.set(MinecraftQuiltLoader.getEnvironmentType() == EnvType.CLIENT);
                                         if (MinecraftQuiltLoader.getEnvironmentType() == EnvType.SERVER)
-                                            LOGGER.info("Skipping extension class {} as we are on the server", className);
+                                            LOGGER.info(skipOnServer, className);
                                     }
                                 }
                             }
                         };
+                    } else if (desc.equals(SERVER_ONLY)) {
+                        isOnDist.set(MinecraftQuiltLoader.getEnvironmentType() == EnvType.SERVER);
+                        if (MinecraftQuiltLoader.getEnvironmentType() == EnvType.CLIENT)
+                            LOGGER.info(skipOnClient, className);
+                    } else if (desc.equals(CLIENT_ONLY)) {
+                        isOnDist.set(MinecraftQuiltLoader.getEnvironmentType() == EnvType.CLIENT);
+                        if (MinecraftQuiltLoader.getEnvironmentType() == EnvType.SERVER)
+                            LOGGER.info(skipOnServer, className);
                     }
                     return super.visitAnnotation(desc, visible);
                 }
             }, ClassReader.SKIP_CODE);
         } catch (Exception e) {
+            LOGGER.error("Failed to check side  dness of class {}", className, e);
             isOnDist.set(false);
         }
 
