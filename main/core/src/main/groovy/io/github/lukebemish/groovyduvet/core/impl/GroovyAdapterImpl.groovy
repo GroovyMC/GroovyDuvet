@@ -31,7 +31,6 @@ class GroovyAdapterImpl implements GroovyAdapter.DelegatedLanguageAdapter {
         Class<?> c
 
         try {
-            //TODO: see if there's any recommended alternative to QuiltLauncherBase here
             c = Class.forName(parts[0], true, GroovyAdapter.KNOT_LOADER)
         } catch (ClassNotFoundException e) {
             throw new LanguageAdapterException(e)

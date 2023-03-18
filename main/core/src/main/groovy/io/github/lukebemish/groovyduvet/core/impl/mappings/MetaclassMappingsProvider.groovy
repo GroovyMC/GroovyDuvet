@@ -18,7 +18,6 @@ import org.quiltmc.loader.api.ModContainer
 import org.quiltmc.loader.api.QuiltLoader
 import org.quiltmc.loader.api.entrypoint.PreLaunchEntrypoint
 import org.quiltmc.loader.api.minecraft.MinecraftQuiltLoader
-import org.quiltmc.loader.impl.QuiltLoaderImpl
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -38,7 +37,7 @@ class MetaclassMappingsProvider implements PreLaunchEntrypoint {
     private static final String OFFICIAL_NAMESPACE = 'official'
     private static final String PISTON_META = 'https://piston-meta.mojang.com/mc/game/version_manifest_v2.json'
     private static final Path CACHE_DIR = QuiltLoader.gameDir.resolve('mod_data/groovyduvet')
-    private static final String MC_VERSION = QuiltLoaderImpl.INSTANCE.gameProvider.rawGameVersion
+    private static final String MC_VERSION = QuiltLoader.getRawGameVersion()
     private static final Path OFFICIAL_FILE = CACHE_DIR.resolve("official_${MC_VERSION}.txt")
     private static final Path VERSION_FILE = CACHE_DIR.resolve("version_${MC_VERSION}.json")
     private static final JsonSlurper JSON_SLURPER = new JsonSlurper()

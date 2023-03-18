@@ -17,11 +17,11 @@ configurations {
 
 dependencies {
     includeFull project(path: ':core', configuration: 'fullJars')
-    compileOnly project( path: ':core', configuration: 'namedElements' )
+    compileOnlyApi project( path: ':core', configuration: 'namedElements' )
     runtimeOnly project(':core')
 
     includeFull project(path: ':wrapper:qsl', configuration: 'fullJars')
-    compileOnly project( path: ':wrapper:qsl', configuration: 'namedElements' )
+    compileOnlyApi project( path: ':wrapper:qsl', configuration: 'namedElements' )
     runtimeOnly project(':wrapper:qsl')
 
     include libs.cgl

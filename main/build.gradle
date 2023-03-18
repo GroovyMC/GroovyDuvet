@@ -44,7 +44,7 @@ subprojects.findAll { !(it.name in ['wrapper'])  }.each { p ->
         apply plugin: 'io.github.groovymc.modsdotgroovy'
 
         modsDotGroovy {
-            dslVersion = '1.1.3'
+            dslVersion = '1.3.0'
             platform 'quilt'
         }
 
@@ -55,27 +55,6 @@ subprojects.findAll { !(it.name in ['wrapper'])  }.each { p ->
                 parchment("org.parchmentmc.data:parchment-${libs.versions.parchment.minecraft.get()}:${libs.versions.parchment.mappings.get()}@zip")
             }
             modCompileOnly libs.quilt.loader
-
-            modCompileOnly libs.mappingio
-
-            modCompileOnly libs.groovy
-            modCompileOnly libs.groovy.contracts
-            modCompileOnly libs.groovy.datetime
-            modCompileOnly libs.groovy.nio
-            modCompileOnly libs.groovy.macro
-            modCompileOnly libs.groovy.macro.library
-            modCompileOnly libs.groovy.templates
-            modCompileOnly libs.groovy.typecheckers
-            modCompileOnly libs.groovy.dateutil
-            modCompileOnly libs.groovy.ginq
-            modCompileOnly libs.groovy.toml
-            modCompileOnly libs.groovy.json
-            modCompileOnly libs.groovy.xml
-
-            modCompileOnly libs.jackson.core
-            modCompileOnly libs.jackson.annotations
-            modCompileOnly libs.jackson.databind
-            modCompileOnly libs.jackson.dataformat.toml
 
             annotationProcessor libs.autoextension
             annotationProcessor libs.autoservice
@@ -195,7 +174,7 @@ configurations {
 dependencies {
     implementation libs.groovy
 
-    groovydocInclude("io.github.groovymc.cgl:cgl-1.19.3:${libs.versions.cgl.get()}:sources") {
+    groovydocInclude("io.github.groovymc.cgl:cgl-1.19.4:${libs.versions.cgl.get()}:sources") {
         transitive = false
     }
 }
