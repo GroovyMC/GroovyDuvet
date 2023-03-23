@@ -9,7 +9,7 @@ groovy = "4.0.10"
 mappingio = "0.3.0"
 quilt_loom = "1.1.+"
 jackson = "2.14.2"
-cgl = "0.2.3"
+cgl = "0.2.4"
 autoservice = "1.0.1"
 autoextension = "0.1.1"
 
