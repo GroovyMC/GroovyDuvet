@@ -10,6 +10,7 @@ import com.google.common.collect.HashBiMap
 import groovy.json.JsonSlurper
 import groovy.transform.CompileStatic
 import groovy.transform.stc.POJO
+import io.github.lukebemish.groovyduvet.core.impl.compile.ClassMappings
 import net.fabricmc.api.EnvType
 import net.fabricmc.mappingio.MappedElementKind
 import net.fabricmc.mappingio.MappingVisitor
@@ -110,10 +111,10 @@ class MetaclassMappingsProvider implements PreLaunchEntrypoint {
         char[] chars = original.chars
         byte[] out = new byte[chars.length >> 1]
 
-        final int len = chars.length;
+        final int len = chars.length
 
         if ((len & 0x01) != 0) {
-            throw new RuntimeException("Cannot decode odd number of characters!");
+            throw new RuntimeException("Cannot decode odd number of characters!")
         }
 
         // two characters form the hex value.
@@ -161,7 +162,7 @@ class MetaclassMappingsProvider implements PreLaunchEntrypoint {
     private static byte[] calcSha1(Path file) throws FileNotFoundException,
             IOException, NoSuchAlgorithmException {
 
-        MessageDigest sha1 = MessageDigest.getInstance("SHA-1");
+        MessageDigest sha1 = MessageDigest.getInstance("SHA-1")
         try (InputStream input = Files.newInputStream(file)) {
             byte[] buffer = new byte[8192]
             int len = input.read(buffer)
@@ -207,8 +208,11 @@ class MetaclassMappingsProvider implements PreLaunchEntrypoint {
         // runtime class name (with dots) to map of moj -> runtime names
         final Map<String, Map<String, List<String>>> methods = [:]
         final Map<String, Map<String, String>> fields = [:]
+        // moj class name to runtime class name
+        final Map<String, String> classes = [:]
 
         String lastClassObf
+        String lastClassMoj
         String lastMethodMoj
         String lastMethodDesc
         String lastFieldMoj
@@ -227,6 +231,7 @@ class MetaclassMappingsProvider implements PreLaunchEntrypoint {
 
         @Override
         boolean visitClass(String srcName) throws IOException {
+            lastClassMoj = srcName.replace('/','.')
             return true
         }
 
@@ -259,6 +264,7 @@ class MetaclassMappingsProvider implements PreLaunchEntrypoint {
             switch (targetKind) {
                 case MappedElementKind.CLASS:
                     lastClassObf = name.replace('/','.')
+                    classes.put(lastClassMoj, getRuntimeClassName())
                     break
                 case MappedElementKind.METHOD:
                     methods.computeIfAbsent(getRuntimeClassName(), {[:]})
@@ -303,6 +309,7 @@ class MetaclassMappingsProvider implements PreLaunchEntrypoint {
         }
 
         LoadedMappings build() {
+            ClassMappings.addMappings(classes, methods, fields)
             return new LoadedMappings(methods, fields)
         }
     }
