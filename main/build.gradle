@@ -23,18 +23,18 @@ static String getGitCommit() {
 def topProject = project
 
 configurations {
-    janksonResolve
+    jacksonResolve
 }
 
 dependencies {
-    janksonResolve libs.groovy.toml
+    jacksonResolve libs.groovy.toml
 }
 
 allprojects {
     configurations.configureEach {
         resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-            if (details.requested.version == '<jankson-resolve>') {
-                details.useVersion rootProject.configurations.janksonResolve.resolvedConfiguration.resolvedArtifacts.find {
+            if (details.requested.version == '<jackson-resolve>') {
+                details.useVersion rootProject.configurations.jacksonResolve.resolvedConfiguration.resolvedArtifacts.find {
                     it.moduleVersion.id.group == details.requested.group && it.moduleVersion.id.name == details.requested.name
                 }.moduleVersion.id.version
             }
