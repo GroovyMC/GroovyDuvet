@@ -177,6 +177,8 @@ subprojects.findAll { it.name in ['fatjar', 'groovy']  }.each { p ->
             xml.enabled = false
             lvtStriping.enabled = false
             sourceFileStriping.enabled = false
+            ignoredTasks.add("jar")
+            additionalTasks.add("remapJar")
         }
     }
 }
