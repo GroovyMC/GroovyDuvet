@@ -11,6 +11,8 @@ registries:
 updates:
   - package-ecosystem: "gradle"
     directory: "/main"
+    registries:
+      - maven-central
     schedule:
       interval: "weekly"
     allow:
