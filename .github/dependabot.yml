@@ -4,6 +4,10 @@
 # https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
 
 version: 2
+registries:
+  maven-central:
+    type: maven-repository
+    url: https://repo.maven.apache.org/maven2/
 updates:
   - package-ecosystem: "gradle"
     directory: "/main"
