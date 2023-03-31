@@ -1,9 +1,21 @@
+buildscript {
+    dependencies {
+        classpath libs.tinyremapper
+    }
+}
+
 plugins {
     id 'groovy'
     id 'maven-publish'
     alias libs.plugins.quilt.loom
     id 'org.cadixdev.licenser' version '0.6.1'
     id 'io.github.groovymc.modsdotgroovy' version '1.1.1'
+}
+
+loom {
+    runs.each {
+        it.vmArgs '-Dnet.fabricmc.tinyremapper.knownindybsm=org/codehaus/groovy/vmplugin/v8/IndyInterface'
+    }
 }
 
 version = '1.1.0'
@@ -14,7 +26,19 @@ modsDotGroovy {
     platform 'quilt'
 }
 
+configurations.configureEach {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        if (details.requested.module.with {it?.name == 'tiny-remapper' && it?.group == 'net.fabricmc'}) {
+            details.useTarget libs.tinyremapper
+        }
+    }
+}
+
 repositories {
+    maven {
+        name = "Luke's Maven"
+        url = 'https://maven.lukebemish.dev/releases'
+    }
     maven {
         name = "TheModdingInquisition"
         url = 'https://maven.moddinginquisition.org/releases'

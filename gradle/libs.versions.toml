@@ -13,6 +13,8 @@ cgl = "0.2.5"
 autoservice = "1.0.1"
 autoextension = "0.1.1"
 
+tinyremapper = "0.8.6+lukebemish.1+local"
+
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
 quilt_loader = { module = "org.quiltmc:quilt-loader", version.ref = "quilt_loader" }
@@ -23,6 +25,8 @@ mappingio = { module = "net.fabricmc:mapping-io", version.ref = "mappingio" }
 quilt_loom = { module = "org.quiltmc:loom", version.ref = "quilt_loom" }
 
 cgl = { module = "io.github.groovymc.cgl:cgl-1.19.4-quilt", version.ref = "cgl" }
+
+tinyremapper = { module = "net.fabricmc:tiny-remapper", version.ref = "tinyremapper" }
 
 groovy = { module = "org.apache.groovy:groovy", version.ref = "groovy" }
 groovy_contracts = { module = "org.apache.groovy:groovy-contracts", version.ref = "groovy" }
