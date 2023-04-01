@@ -212,6 +212,7 @@ subprojects.findAll { !(it.name in ['wrapper', 'groovy'])  }.each { p ->
 
 subprojects.findAll { it.name in ['fatjar', 'groovy']  }.each { p ->
     p.with {
+        project.rootProject.buildDir.mkdirs()
         apply plugin: libs.plugins.machete.get().pluginId
 
         machete {
