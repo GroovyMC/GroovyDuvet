@@ -69,3 +69,9 @@ publishing {
         }
     }
 }
+
+['publishMavenJavaPublicationToMavenLocal', 'publishMavenJavaPublicationToModdingInquisitionMavenRepoRepository'].each {
+    tasks.named(it) {
+        dependsOn tasks.optimizeOutputsOfRemapJar
+    }
+}
