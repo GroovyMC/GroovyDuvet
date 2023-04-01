@@ -24,10 +24,20 @@ updates:
     schedule:
       interval: "weekly"
     allow:
+      # Bundled
       - dependency-name: "org.apache.groovy:groovy*"
       - dependency-name: "net.fabricmc:mapping-io"
       - dependency-name: "com.google.auto.service:auto-service"
       - dependency-name: "dev.lukebemish.autoextension:autoextension"
+      - dependency-name: "dev.lukebemish.autoextension:autoextension"
+      - dependency-name: "dev.lukebemish.autoextension:autoextension"
+      # Plugins
+      - dependency-name: "org.quiltmc.loom"
+      - dependency-name: "org.quiltmc.gradle.licenser"
+      - dependency-name: "io.github.groovymc.modsdotgroovy"
+      - dependency-name: "io.github.p03w.machete"
+      # MDG DSL
+      - dependency-name: "io.github.groovymc.modsdotgroovy:dsl"
     ignore:
       - dependency-name: "org.apache.groovy:groovy*"
         update-types: ["version-update:semver-major", "version-update:semver-minor"]
