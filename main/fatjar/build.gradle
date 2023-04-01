@@ -132,7 +132,7 @@ publishing {
 }
 
 curseforge {
-    apiKey = project.curseforge_key ?: System.getenv('CURSEFORGE_TOKEN')
+    apiKey = rootProject.findProperty('curseforge_key') ?: System.getenv('CURSEFORGE_TOKEN') ?: ''
     project {
         id = '665821'
         releaseType = "${rootProject.ext.versionBasedReleaseType}"
@@ -154,7 +154,7 @@ curseforge {
 tasks.curseforge.dependsOn rootProject.tasks.changelog
 
 modrinth {
-    token = project.modrinth_key ?: System.getenv('MODRINTH_TOKEN')
+    token = rootProject.findProperty('modrinth_key') ?: System.getenv('MODRINTH_TOKEN') ?: ''
     projectId = 'groovyduvet'
     versionNumber = "$project.version"
     versionType = "${rootProject.ext.versionBasedReleaseType}"
