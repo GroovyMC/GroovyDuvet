@@ -262,9 +262,3 @@ task groovydocJar(type: Jar, dependsOn: groovydoc ) {
 
 tasks.build.dependsOn(tasks.groovydocJar)
 tasks.jar.enabled = false
-
-subprojects { it ->
-    it.beforeEvaluate {
-        println "Configuring ${it.name}"
-    }
-}

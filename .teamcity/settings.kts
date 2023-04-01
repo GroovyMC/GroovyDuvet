@@ -68,39 +68,35 @@ object GroovyMC_groovyduvet_Build : BuildType({
 
     steps {
         gradle {
-            jvmArgs = "-Xmx3G -XX:+UseLargePages -XX:LargePageSizeInBytes=2m"
+            jvmArgs = "-Xmx3G"
             workingDir = "main"
             useGradleWrapper = true
             name = "Configure TeamCity information"
             tasks = "configureTeamCity"
-            gradleParams = "-Porg.gradle.daemon=true"
         }
 
         gradle {
-            jvmArgs = "-Xmx3G -XX:+UseLargePages -XX:LargePageSizeInBytes=2m"
+            jvmArgs = "-Xmx3G"
             workingDir = "main"
             useGradleWrapper = true
             name = "Clean build directory"
             tasks = "clean"
-            gradleParams = "-Porg.gradle.daemon=true"
         }
 
         gradle {
-            jvmArgs = "-Xmx3G -XX:+UseLargePages -XX:LargePageSizeInBytes=2m"
+            jvmArgs = "-Xmx3G"
             workingDir = "main"
             useGradleWrapper = true
             name = "Build Gradle Project"
             tasks = "build"
-            gradleParams = "-Porg.gradle.daemon=true"
         }
 
         gradle {
-            jvmArgs = "-Xmx3G -XX:+UseLargePages -XX:LargePageSizeInBytes=2m"
+            jvmArgs = "-Xmx3G"
             workingDir = "main"
             useGradleWrapper = true
             name = "Publish Gradle Project"
             tasks = "publish curseforge modrinth"
-            gradleParams = "-Porg.gradle.daemon=true"
         }
     }
 })
