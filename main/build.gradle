@@ -11,6 +11,28 @@ plugins {
     alias libs.plugins.quilt.licenser apply false
     alias libs.plugins.mdg.plugin apply false
     alias libs.plugins.machete apply false
+    alias libs.plugins.simpleci
+}
+
+rootProject.ext.mavenLoginUser = (System.getenv('MAVEN_USER') ?: findProperty('inquisitionMavenUser')) ?: ''
+rootProject.ext.mavenLoginPassword = (System.getenv('MAVEN_PASSWORD') ?: findProperty('inquisitionMavenPassword')) ?: ''
+
+tasks.changelog {
+    gitDir = rootProject.file('../')
+    start = '2.1.1'
+}
+
+import org.eclipse.jgit.api.Git
+
+versioning {
+    fromTag.set('2.1.1')
+}
+final calculatedVersion = Git.open(rootProject.file("../")).withCloseable {
+    versioning.calculateVersion(it) { cm, info -> }
+}
+project.ext.versionBasedReleaseType = calculatedVersion.alphaBeta.betaNumber != -1 ? 'beta' : (calculatedVersion.alphaBeta.alphaNumber != -1 ? 'alpha' : 'release')
+allprojects { Project proj ->
+    println("${proj.name} version: ${proj.version = calculatedVersion.toString()}")
 }
 
 allprojects {
@@ -234,7 +256,7 @@ groovydoc {
 }
 
 task groovydocJar(type: Jar, dependsOn: groovydoc ) {
-    classifier 'javadoc' // must use javadoc classifier to be able to deploy to Sonatype
+    archiveClassifier.set 'javadoc'
     from groovydoc.destinationDir
 }
 
