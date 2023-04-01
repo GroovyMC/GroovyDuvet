@@ -1,0 +1,47 @@
+name: Release
+concurrency: ci-${{ github.ref }}
+on:
+  [workflow_dispatch]
+#  push:
+#    branches:
+#      - 1.*.*
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: 17
+          cache: 'gradle'
+      - name: Check if Julia is already available in the PATH
+        id: julia_in_path
+        run: which julia
+        continue-on-error: true
+      - name: Install Julia, but only if it is not already available in the PATH
+        uses: julia-actions/setup-julia@v1
+        with:
+          version: '1'
+          arch: ${{ runner.arch }}
+        if: steps.julia_in_path.outcome != 'success'
+      - name: "Add the General registry via Git"
+        run: |
+          import Pkg
+          ENV["JULIA_PKG_SERVER"] = ""
+          Pkg.Registry.add("General")
+        shell: julia --color=yes {0}
+      - name: "Install SimpleCI"
+        run: |
+          import Pkg
+          Pkg.add(url="https://github.com/lukebemish/SimpleCI.jl", rev="main")
+        shell: julia --color=yes {0}
+      - name: "Run SimpleCI"
+        run: |
+          import SimpleCI
+          SimpleCI.main(configpath = "publish.hrse")
+        shell: julia --color=yes {0}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

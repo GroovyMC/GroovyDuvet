@@ -1,0 +1,21 @@
+steps:
+  (
+    type: gradle
+    name: "Configure version from plugin"
+    workingdir: main
+    tasks:
+      configureTeamCity
+  )
+  (
+    type: gradle
+    name: "Clean and build"
+    workingdir: main
+    tasks:
+      clean
+      build
+  )
+  (;
+    type: tagversion
+    name: "Tag built version"
+  ;)
+filter: "(?i)^\\[no-?_?ci"
