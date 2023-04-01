@@ -152,7 +152,7 @@ curseforge {
 }
 
 tasks.curseforge.dependsOn rootProject.tasks.changelog
-tasks.curseforge.dependsOn tasks.prepareFullJar
+tasks.curseforge.dependsOn tasks.optimizeOutputsOfPrepareFullJar
 
 modrinth {
     token = rootProject.findProperty('modrinth_key') ?: System.getenv('MODRINTH_TOKEN') ?: ''
@@ -173,7 +173,7 @@ modrinth {
 
 tasks.named('modrinth') {
     dependsOn(rootProject.tasks.changelog)
-    dependsOn(tasks.prepareFullJar)
+    dependsOn(tasks.optimizeOutputsOfPrepareFullJar)
 }
 
 tasks.named('generateMetadataFileForMavenJavaPublication') {
