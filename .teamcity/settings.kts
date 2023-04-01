@@ -5,7 +5,6 @@ import jetbrains.buildServer.configs.kotlin.buildFeatures.Swabra
 import jetbrains.buildServer.configs.kotlin.buildFeatures.commitStatusPublisher
 import jetbrains.buildServer.configs.kotlin.buildFeatures.swabra
 import jetbrains.buildServer.configs.kotlin.buildSteps.gradle
-import jetbrains.buildServer.configs.kotlin.buildSteps.script
 import jetbrains.buildServer.configs.kotlin.project
 import jetbrains.buildServer.configs.kotlin.triggers.vcs
 import jetbrains.buildServer.configs.kotlin.ui.add
@@ -68,27 +67,34 @@ object GroovyMC_groovyduvet_Build : BuildType({
     }
 
     steps {
-        script {
-            name = "Enter main project directory"
-            scriptContent = "cd main"
-        }
-
         gradle {
+            workingDir = "main"
+            useGradleWrapper = true
+            gradleWrapperPath = "gradlew"
             name = "Configure TeamCity information"
             tasks = "configureTeamCity"
         }
 
         gradle {
+            workingDir = "main"
+            useGradleWrapper = true
+            gradleWrapperPath = "gradlew"
             name = "Clean build directory"
             tasks = "clean"
         }
 
         gradle {
+            workingDir = "main"
+            useGradleWrapper = true
+            gradleWrapperPath = "gradlew"
             name = "Build Gradle Project"
             tasks = "build"
         }
 
         gradle {
+            workingDir = "main"
+            useGradleWrapper = true
+            gradleWrapperPath = "gradlew"
             name = "Publish Gradle Project"
             tasks = "publish curseforge modrinth"
         }
