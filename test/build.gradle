@@ -81,11 +81,6 @@ jar {
     }
 }
 
-license {
-    header = project.file('../header.txt')
-    exclude '**/package-info.java'
-}
-
 tasks.withType(JavaCompile).configureEach {
     it.options.encoding = "UTF-8"
     it.options.release = 17

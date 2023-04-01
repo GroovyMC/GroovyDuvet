@@ -8,14 +8,18 @@ plugins {
     id 'groovy'
     id 'maven-publish'
     alias libs.plugins.quilt.loom apply false
-    alias libs.plugins.quilt.licenser
+    alias libs.plugins.quilt.licenser apply false
     alias libs.plugins.mdg.plugin apply false
     alias libs.plugins.machete apply false
 }
 
-license {
-    rule rootProject.file('../header.txt')
-    exclude '**/*.mcmeta'
+allprojects {
+    apply plugin: libs.plugins.quilt.licenser.get().pluginId
+
+    license {
+        rule rootProject.file('../header.txt')
+        exclude '**/*.mcmeta'
+    }
 }
 
 static String getGitCommit() {

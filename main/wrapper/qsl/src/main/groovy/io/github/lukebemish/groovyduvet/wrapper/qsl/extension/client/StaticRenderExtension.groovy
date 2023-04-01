@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Luke Bemish, GroovyMC, and contributors
+ * Copyright (C) 2022-2023 Luke Bemish, GroovyMC, and contributors
  * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
