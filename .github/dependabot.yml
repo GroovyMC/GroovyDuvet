@@ -8,6 +8,12 @@ registries:
   maven-central:
     type: maven-repository
     url: https://repo.maven.apache.org/maven2/
+  fabricmc:
+    type: maven-repository
+    url: https://maven.fabricmc.net/
+  quiltmc:
+    type: maven-repository
+    url: https://maven.quiltmc.org/repository/release/
 updates:
   - package-ecosystem: "gradle"
     directory: "/main"
@@ -16,7 +22,12 @@ updates:
     schedule:
       interval: "weekly"
     allow:
-      - dependency-name: "org.apache.groovy:groovy"
+      - dependency-name: "org.apache.groovy:groovy*"
+      - dependency-name: "net.fabricmc:mapping-io"
+      - dependency-name: "com.google.auto.service:auto-service"
+      - dependency-name: "dev.lukebemish.autoextension:autoextension"
     ignore:
-      - dependency-name: "org.apache.groovy:groovy"
+      - dependency-name: "org.apache.groovy:groovy*"
         update-types: ["version-update:semver-major", "version-update:semver-minor"]
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
