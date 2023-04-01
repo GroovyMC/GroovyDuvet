@@ -70,7 +70,6 @@ object GroovyMC_groovyduvet_Build : BuildType({
         gradle {
             workingDir = "main"
             useGradleWrapper = true
-            gradleWrapperPath = "gradlew"
             name = "Configure TeamCity information"
             tasks = "configureTeamCity"
         }
@@ -78,7 +77,6 @@ object GroovyMC_groovyduvet_Build : BuildType({
         gradle {
             workingDir = "main"
             useGradleWrapper = true
-            gradleWrapperPath = "gradlew"
             name = "Clean build directory"
             tasks = "clean"
         }
@@ -86,7 +84,6 @@ object GroovyMC_groovyduvet_Build : BuildType({
         gradle {
             workingDir = "main"
             useGradleWrapper = true
-            gradleWrapperPath = "gradlew"
             name = "Build Gradle Project"
             tasks = "build"
         }
@@ -94,7 +91,6 @@ object GroovyMC_groovyduvet_Build : BuildType({
         gradle {
             workingDir = "main"
             useGradleWrapper = true
-            gradleWrapperPath = "gradlew"
             name = "Publish Gradle Project"
             tasks = "publish curseforge modrinth"
         }
