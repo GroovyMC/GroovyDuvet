@@ -1,6 +1,3 @@
-//TODO: Remove
-println "Reached start of :groovy build.gradle"
-
 archivesBaseName = "${rootProject.name}-groovy"
 
 dependencies {
@@ -72,6 +69,3 @@ publishing {
         }
     }
 }
-
-//TODO: Remove
-println "Reached end of :groovy build.gradle"

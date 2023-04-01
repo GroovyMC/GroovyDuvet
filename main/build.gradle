@@ -42,8 +42,6 @@ allprojects {
         rule rootProject.file('../header.txt')
         exclude '**/*.mcmeta'
     }
-    //TODO: remove
-    println 'Ran first allprojects block'
 }
 
 static String getGitCommit() {
@@ -72,8 +70,6 @@ allprojects {
             }
         }
     }
-    //TODO: remove
-    println 'Ran second allprojects block'
 }
 
 allprojects {
@@ -99,8 +95,6 @@ allprojects {
             url = 'https://maven.parchmentmc.org'
         }
     }
-    //TODO: remove
-    println 'Ran third allprojects block'
 }
 
 subprojects.findAll { !(it.name in ['wrapper'])  }.each { p ->
@@ -177,8 +171,6 @@ subprojects.findAll { !(it.name in ['wrapper'])  }.each { p ->
                 ]
             }
         }
-        //TODO: remove
-        println 'Ran first subprojects block'
     }
 }
 
@@ -215,8 +207,6 @@ subprojects.findAll { !(it.name in ['wrapper', 'groovy'])  }.each { p ->
                 builtBy remapFullJar
             }
         }
-        //TODO: remove
-        println 'Ran second subprojects block'
     }
 }
 
@@ -233,8 +223,6 @@ subprojects.findAll { it.name in ['fatjar', 'groovy']  }.each { p ->
             ignoredTasks.add("jar")
             additionalTasks.add("remapJar")
         }
-        //TODO: remove
-        println 'Ran third subprojects block'
     }
 }
 
@@ -275,5 +263,8 @@ task groovydocJar(type: Jar, dependsOn: groovydoc ) {
 tasks.build.dependsOn(tasks.groovydocJar)
 tasks.jar.enabled = false
 
-//TODO: Remove
-println "Reached end of main build.gradle"
+subprojects { it ->
+    it.beforeEvaluate {
+        println "Configuring ${it.name}"
+    }
+}
