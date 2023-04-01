@@ -2,8 +2,8 @@ import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
 
 plugins {
-    id 'com.matthewprenger.cursegradle' version '1.+'
-    id "com.modrinth.minotaur" version "2.+"
+    alias libs.plugins.cursegradle
+    alias libs.plugins.minotaur
 }
 
 archivesBaseName = "${rootProject.name}"
@@ -112,6 +112,11 @@ publishing {
             version project.version
             from components.java
             artifact rootProject.tasks.groovydocJar
+            artifact(rootProject.changelog.output.get().asFile) {
+                it.builtBy rootProject.changelog
+                it.extension = 'txt'
+                it.classifier = 'changelog'
+            }
         }
     }
     repositories {
@@ -119,46 +124,52 @@ publishing {
             name = 'ModdingInquisitionMavenRepo'
             url = 'https://maven.moddinginquisition.org/releases'
             credentials {
-                username = findProperty('inquisitionMavenUser') ?: ''
-                password = findProperty('inquisitionMavenPassword') ?: ''
+                username = rootProject.ext.mavenLoginUser
+                password = rootProject.ext.mavenLoginPassword
             }
         }
     }
 }
 
-if (project.hasProperty("curseforge_key")) {
-    curseforge {
-        apiKey = project.curseforge_key
-        project {
-            id = '665821'
-            releaseType = "${project.releaseType}"
-            addGameVersion "${libs.versions.minecraft.get()}"
-            addGameVersion 'Quilt'
-            mainArtifact(tasks.prepareFullJar) {
-                displayName = "GroovyDuvet v$project.version"
-            }
-            relations {
-                requiredDependency 'qsl'
-            }
+curseforge {
+    apiKey = project.curseforge_key ?: System.getenv('CURSEFORGE_TOKEN')
+    project {
+        id = '665821'
+        releaseType = "${rootProject.ext.versionBasedReleaseType}"
+        addGameVersion "${libs.versions.minecraft.get()}"
+        addGameVersion 'Quilt'
+        mainArtifact(tasks.prepareFullJar) {
+            displayName = "GroovyDuvet v$project.version"
         }
-        options {
-            forgeGradleIntegration = false
+        relations {
+            requiredDependency 'qsl'
         }
+        changelog = rootProject.tasks.changelog.output.asFile.get()
+    }
+    options {
+        forgeGradleIntegration = false
     }
 }
 
-if (project.hasProperty("modrinth_key")) {
-    modrinth {
-        token = project.modrinth_key
-        projectId = 'groovyduvet'
-        versionNumber = "$project.version"
-        versionType = "${project.releaseType}"
-        detectLoaders = false
-        uploadFile = tasks.prepareFullJar
-        gameVersions = ["${libs.versions.minecraft.get()}"]
-        loaders = ['quilt']
-        dependencies {
-            required.project 'qsl'
-        }
+tasks.curseforge.dependsOn rootProject.tasks.changelog
+
+modrinth {
+    token = project.modrinth_key ?: System.getenv('MODRINTH_TOKEN')
+    projectId = 'groovyduvet'
+    versionNumber = "$project.version"
+    versionType = "${rootProject.ext.versionBasedReleaseType}"
+    detectLoaders = false
+    uploadFile = tasks.prepareFullJar
+    gameVersions = ["${libs.versions.minecraft.get()}"]
+    loaders = ['quilt']
+    changelog.set(rootProject.tasks.changelog.output.map {
+        it.asFile.text
+    })
+    dependencies {
+        required.project 'qsl'
     }
+}
+
+tasks.named('modrinth') {
+    dependsOn(rootProject.tasks.changelog)
 }

@@ -36,6 +36,11 @@ publishing {
             artifactId project.archivesBaseName
             version project.version
             from components.java
+            artifact(rootProject.changelog.output.get().asFile) {
+                it.builtBy rootProject.changelog
+                it.extension = 'txt'
+                it.classifier = 'changelog'
+            }
         }
     }
     repositories {
@@ -43,8 +48,8 @@ publishing {
             name = 'ModdingInquisitionMavenRepo'
             url = 'https://maven.moddinginquisition.org/releases'
             credentials {
-                username = findProperty('inquisitionMavenUser') ?: ''
-                password = findProperty('inquisitionMavenPassword') ?: ''
+                username = rootProject.ext.mavenLoginUser
+                password = rootProject.ext.mavenLoginPassword
             }
         }
     }

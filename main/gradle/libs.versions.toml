@@ -16,6 +16,9 @@ autoextension = "0.1.1"
 mdg_plugin = "1.1.2"
 mdg_dsl = "1.3.0"
 machete = "1.2.0"
+simpleci = "0.1.21"
+minotaur = "2.7.5"
+cursegradle = "1.4.0"
 
 tinyremapper = "0.8.6+lukebemish.1+local"
 
@@ -61,3 +64,7 @@ quilt_loom = { id = "org.quiltmc.loom", version.ref = "quilt_loom" }
 quilt_licenser = { id = "org.quiltmc.gradle.licenser", version.ref = "quilt_licenser" }
 mdg_plugin = { id = "io.github.groovymc.modsdotgroovy", version.ref = "mdg_plugin" }
 machete = { id = "io.github.p03w.machete", version.ref = "machete" }
+
+simpleci = { id = "io.github.groovymc.simpleci", version.ref = "simpleci" }
+cursegradle = { id = "com.matthewprenger.cursegradle", version.ref = "cursegradle" }
+minotaur = { id = "com.modrinth.minotaur", version.ref = "minotaur" }
