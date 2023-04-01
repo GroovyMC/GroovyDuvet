@@ -19,6 +19,8 @@ updates:
     directory: "/main"
     registries:
       - maven-central
+      - fabricmc
+      - quiltmc
     schedule:
       interval: "weekly"
     allow:
