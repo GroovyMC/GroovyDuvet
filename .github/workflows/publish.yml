@@ -21,3 +21,13 @@ jobs:
           build-root-directory: ./main
           arguments: checkLicenses build
           cache-read-only: ${{ !startsWith(github.ref, 'refs/heads/1.') }}
+      - uses: gradle/gradle-build-action@v2
+        with:
+          build-root-directory: ./main
+          arguments: publish curseforge modrinth
+          cache-read-only: ${{ !startsWith(github.ref, 'refs/heads/1.') }}
+        env:
+          MAVEN_USER: ${{ secrets.MAVEN_USER }}
+          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
