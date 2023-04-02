@@ -86,7 +86,7 @@ object GroovyMC_groovyduvet_Build : BuildType({
         }
 
         gradle {
-            jvmArgs = "-Xmx3G -XX:ErrorFile=/opt/buildagent/work/java_bad.log"
+            jvmArgs = "-Xmx3G"
             workingDir = "main"
             useGradleWrapper = true
             name = "Build Gradle Project"
