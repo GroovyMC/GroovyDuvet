@@ -18,7 +18,7 @@ jobs:
           java-version: 17
           cache: 'gradle'
       - uses: gradle/gradle-build-action@v2
-        build-root-directory: ./main
         with:
+          build-root-directory: ./main
           arguments: checkLicenses build
-        cache-read-only: ${{ !startsWith(github.ref, 'refs/heads/1.') }}
+          cache-read-only: ${{ !startsWith(github.ref, 'refs/heads/1.') }}
