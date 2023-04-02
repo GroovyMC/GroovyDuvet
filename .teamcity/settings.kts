@@ -48,12 +48,12 @@ object GroovyMC_groovyduvet_Build : BuildType({
     }
 
     features {
-        add {
+        /*add {
             swabra {
                 filesCleanup = Swabra.FilesCleanup.AFTER_BUILD
                 lockingProcesses = Swabra.LockingProcessPolicy.KILL
             }
-        }
+        }*/
         add {
             commitStatusPublisher {
                 publisher = github {
@@ -91,12 +91,12 @@ object GroovyMC_groovyduvet_Build : BuildType({
             tasks = "build"
         }
 
-        gradle {
+        /*gradle {
             jvmArgs = "-Xmx3G"
             workingDir = "main"
             useGradleWrapper = true
             name = "Publish Gradle Project"
             tasks = "publish curseforge modrinth"
-        }
+        }*/
     }
 })
