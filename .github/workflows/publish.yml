@@ -17,4 +17,8 @@ jobs:
           distribution: "temurin"
           java-version: 17
           cache: 'gradle'
-      - run: ./gradlew checkLicenses build
+      - uses: gradle/gradle-build-action@v2
+        working-directory: ./main
+        with:
+          arguments: checkLicenses build
+        cache-read-only: ${{ !startsWith(github.ref, 'refs/heads/1.') }}
