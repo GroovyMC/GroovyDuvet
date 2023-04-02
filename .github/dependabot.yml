@@ -32,10 +32,7 @@ updates:
       - dependency-name: "dev.lukebemish.autoextension:autoextension"
       - dependency-name: "dev.lukebemish.autoextension:autoextension"
       # Plugins
-      - dependency-name: "org.quiltmc.loom"
-      - dependency-name: "org.quiltmc.gradle.licenser"
       - dependency-name: "io.github.groovymc.modsdotgroovy"
-      - dependency-name: "io.github.p03w.machete"
       # MDG DSL
       - dependency-name: "io.github.groovymc.modsdotgroovy:dsl"
     ignore:
@@ -43,3 +40,21 @@ updates:
         update-types: ["version-update:semver-major", "version-update:semver-minor"]
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
+  - package-ecosystem: "gradle"
+    directory: "/main"
+    registries:
+      - maven-central
+      - fabricmc
+      - quiltmc
+    schedule:
+      interval: "weekly"
+    allow:
+      # Plugins
+      - dependency-name: "org.quiltmc.loom"
+      - dependency-name: "org.quiltmc.gradle.licenser"
+      - dependency-name: "io.github.p03w.machete"
+      - dependency-name: "io.github.groovymc.simpleci"
+      - dependency-name: "com.matthewprenger.cursegradle"
+      - dependency-name: "com.modrinth.minotaur"
+    commit-message:
+      prefix: "[skip ci] "
