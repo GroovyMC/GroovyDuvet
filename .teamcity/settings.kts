@@ -91,7 +91,7 @@ object GroovyMC_groovyduvet_Build : BuildType({
             useGradleWrapper = true
             name = "Build Gradle Project"
             tasks = "build"
-			gradleParams = "--scan --info --debug --stacktrace"
+			gradleParams = "--scan --info --debug --stacktrace -Porg.gradle.daemon=true"
         }
 
         /*gradle {
