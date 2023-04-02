@@ -48,12 +48,12 @@ object GroovyMC_groovyduvet_Build : BuildType({
     }
 
     features {
-        /*add {
+        add {
             swabra {
-                filesCleanup = Swabra.FilesCleanup.AFTER_BUILD
+                filesCleanup = Swabra.FilesCleanup.BEFORE_BUILD
                 lockingProcesses = Swabra.LockingProcessPolicy.KILL
             }
-        }*/
+        }
         add {
             commitStatusPublisher {
                 publisher = github {
@@ -68,30 +68,24 @@ object GroovyMC_groovyduvet_Build : BuildType({
 
     steps {
         gradle {
-            jvmArgs = "-Xmx3G"
             workingDir = "main"
             useGradleWrapper = true
             name = "Configure TeamCity information"
             tasks = "configureTeamCity"
-			gradleParams = "--scan --info --debug --stacktrace"
         }
 
         gradle {
-            jvmArgs = "-Xmx3G"
             workingDir = "main"
             useGradleWrapper = true
             name = "Clean build directory"
             tasks = "clean"
-			gradleParams = "--scan --info --debug --stacktrace"
         }
 
         gradle {
-            jvmArgs = "-Xmx3G"
             workingDir = "main"
             useGradleWrapper = true
             name = "Build Gradle Project"
             tasks = "build"
-			gradleParams = "--scan --info --debug --stacktrace -Porg.gradle.daemon=true"
         }
 
         /*gradle {
