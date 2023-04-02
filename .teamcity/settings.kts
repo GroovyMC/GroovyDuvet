@@ -68,31 +68,34 @@ object GroovyMC_groovyduvet_Build : BuildType({
 
     steps {
         gradle {
-            jvmArgs = "-Xmx3G -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
+            jvmArgs = "-Xmx3G"
             workingDir = "main"
-            useGradleWrapper = true
+            useGradleWrapper = false
+			dockerImage = "gradle:8.0.2-jdk17"
             name = "Configure TeamCity information"
             tasks = "configureTeamCity"
         }
 
         gradle {
-            jvmArgs = "-Xmx3G -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
+            jvmArgs = "-Xmx3G"
             workingDir = "main"
-            useGradleWrapper = true
+            useGradleWrapper = false
+			dockerImage = "gradle:8.0.2-jdk17"
             name = "Clean build directory"
             tasks = "clean"
         }
 
         gradle {
-            jvmArgs = "-Xmx3G -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
+            jvmArgs = "-Xmx3G"
             workingDir = "main"
-            useGradleWrapper = true
+            useGradleWrapper = false
+			dockerImage = "gradle:8.0.2-jdk17"
             name = "Build Gradle Project"
             tasks = "build"
         }
 
         /*gradle {
-            jvmArgs = "-Xmx3G -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
+            jvmArgs = "-Xmx3G"
             workingDir = "main"
             useGradleWrapper = true
             name = "Publish Gradle Project"
