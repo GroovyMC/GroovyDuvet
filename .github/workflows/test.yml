@@ -1,0 +1,19 @@
+name: Test
+concurrency: ci-${{ github.ref }}
+on: [workflow_dispatch, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: 17
+      - uses: gradle/gradle-build-action@v2
+        with:
+          build-root-directory: ./main
+          arguments: checkLicenses build
+          cache-read-only: ${{ !startsWith(github.ref, 'refs/heads/1.') }}
