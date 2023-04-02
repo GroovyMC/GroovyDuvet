@@ -70,28 +70,28 @@ object GroovyMC_groovyduvet_Build : BuildType({
         gradle {
             jvmArgs = "-Xmx3G"
             workingDir = "main"
-            useGradleWrapper = false
-			dockerImage = "gradle:8.0.2-jdk17"
+            useGradleWrapper = true
             name = "Configure TeamCity information"
             tasks = "configureTeamCity"
+			gradleParams = "--scan --info --debug --stacktrace"
         }
 
         gradle {
             jvmArgs = "-Xmx3G"
             workingDir = "main"
-            useGradleWrapper = false
-			dockerImage = "gradle:8.0.2-jdk17"
+            useGradleWrapper = true
             name = "Clean build directory"
             tasks = "clean"
+			gradleParams = "--scan --info --debug --stacktrace"
         }
 
         gradle {
             jvmArgs = "-Xmx3G"
             workingDir = "main"
-            useGradleWrapper = false
-			dockerImage = "gradle:8.0.2-jdk17"
+            useGradleWrapper = true
             name = "Build Gradle Project"
             tasks = "build"
+			gradleParams = "--scan --info --debug --stacktrace"
         }
 
         /*gradle {
