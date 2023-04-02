@@ -16,7 +16,6 @@ jobs:
         with:
           distribution: "temurin"
           java-version: 17
-          cache: 'gradle'
       - uses: gradle/gradle-build-action@v2
         with:
           build-root-directory: ./main
