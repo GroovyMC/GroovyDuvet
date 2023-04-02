@@ -67,7 +67,7 @@ object GroovyMC_groovyduvet_Build : BuildType({
     }
 
     steps {
-        /*gradle {
+        gradle {
             jvmArgs = "-Xmx3G"
             workingDir = "main"
             useGradleWrapper = true
@@ -97,6 +97,6 @@ object GroovyMC_groovyduvet_Build : BuildType({
             useGradleWrapper = true
             name = "Publish Gradle Project"
             tasks = "publish curseforge modrinth"
-        }*/
+        }
     }
 })
