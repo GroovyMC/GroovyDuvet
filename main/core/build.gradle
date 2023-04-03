@@ -4,6 +4,9 @@ configurations {
     includeApi
     modApi.extendsFrom includeApi
     include.extendsFrom includeApi
+    includeBundle
+    modCompileOnly.extendsFrom includeBundle
+    include.extendsFrom includeBundle
 }
 
 dependencies {
@@ -23,10 +26,10 @@ dependencies {
     includeApi libs.groovy.toml
     includeApi libs.groovy.json
 
-    includeApi libs.jackson.core
-    includeApi libs.jackson.annotations
-    includeApi libs.jackson.databind
-    includeApi libs.jackson.dataformat.toml
+    includeBundle libs.jackson.core
+    includeBundle libs.jackson.annotations
+    includeBundle libs.jackson.databind
+    includeBundle libs.jackson.dataformat.toml
 }
 
 publishing {
