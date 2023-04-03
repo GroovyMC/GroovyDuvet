@@ -72,6 +72,7 @@ object GroovyMC_groovyduvet_Build : BuildType({
             useGradleWrapper = true
             name = "Configure TeamCity information"
             tasks = "configureTeamCity"
+			jvmArgs = "-XX:+UseZST"
         }
 
         gradle {
@@ -79,6 +80,7 @@ object GroovyMC_groovyduvet_Build : BuildType({
             useGradleWrapper = true
             name = "Clean build directory"
             tasks = "clean"
+			jvmArgs = "-XX:+UseZST"
         }
 
         gradle {
@@ -86,6 +88,7 @@ object GroovyMC_groovyduvet_Build : BuildType({
             useGradleWrapper = true
             name = "Build Gradle Project"
             tasks = "build"
+			jvmArgs = "-XX:+UseZST"
         }
 
         /*gradle {
