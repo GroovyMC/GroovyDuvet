@@ -68,7 +68,6 @@ object GroovyMC_groovyduvet_Build : BuildType({
 
     steps {
         gradle {
-		    jvmArgs = "-Xms1G -Xmx3G"
             workingDir = "main"
             useGradleWrapper = true
             name = "Configure TeamCity information"
@@ -76,7 +75,6 @@ object GroovyMC_groovyduvet_Build : BuildType({
         }
 
         gradle {
-		    jvmArgs = "-Xms1G -Xmx3G"
             workingDir = "main"
             useGradleWrapper = true
             name = "Clean build directory"
@@ -84,7 +82,6 @@ object GroovyMC_groovyduvet_Build : BuildType({
         }
 
         gradle {
-		    jvmArgs = "-Xms1G -Xmx4G"
             workingDir = "main"
             useGradleWrapper = true
             name = "Build Gradle Project"
