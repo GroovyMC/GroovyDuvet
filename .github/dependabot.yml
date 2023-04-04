@@ -51,5 +51,6 @@ updates:
       - dependency-name: "*modsdotgroovy*"
         update-types: ["version-update:semver-major"]
   - package-ecosystem: "github-actions"
+    directory: "/"
     schedule:
       interval: "weekly"
