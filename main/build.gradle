@@ -249,6 +249,7 @@ subprojects.findAll { it.name in ['fatjar', 'groovy']  }.each { p ->
         }
 
         machete {
+            keepOriginal = true
             json.enabled = false
             png.enabled = false
             xml.enabled = false
