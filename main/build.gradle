@@ -45,10 +45,11 @@ allprojects {
     }
 
     afterEvaluate {
-        tasks.withType(AbstractArchiveTask).configureEach {
+        /* tasks.withType(AbstractArchiveTask).configureEach {
             preserveFileTimestamps = false
             reproducibleFileOrder = true
-        }
+            fileMode = dirMode = 0664
+        } */
     }
 }
 
@@ -144,7 +145,7 @@ subprojects.findAll { !(it.name in ['wrapper'])  }.each { p ->
             compileOnly libs.autoservice
         }
 
-        jar {
+        tasks.named('jar', Jar) {
             from(topProject.file("../LICENSE")) {
                 rename { "${it}-${archivesBaseName}" }
             }
@@ -248,7 +249,6 @@ subprojects.findAll { it.name in ['fatjar', 'groovy']  }.each { p ->
         }
 
         machete {
-            keepOriginal = true
             json.enabled = false
             png.enabled = false
             xml.enabled = false

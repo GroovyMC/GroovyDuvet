@@ -34,19 +34,6 @@ tasks.remapFullJar.with {
     it.archiveClassifier.set 'full-partial'
 }
 
-tasks.register("updateModsJson", DefaultTask) {
-    dependsOn tasks.remapFullJar
-
-    inputs.file(tasks.remapFullJar.archiveFile)
-
-    doLast {
-
-        def json = new JsonSlurper().parseText(file("${buildDir}/META-INF/quilt.mod.json").text)
-        json['jars'] = (json['jars']?[]) + configurations.includeFull.files.collect { it.name }
-        file("${buildDir}/META-INF/quilt.mod.json").text = new JsonBuilder(json).toPrettyString()
-    }
-}
-
 tasks.register("extractQuiltModsJson", Copy) {
     dependsOn configurations.includeFull
     dependsOn tasks.remapFullJar
@@ -68,17 +55,25 @@ tasks.register("extractQuiltModsJson", Copy) {
 }
 
 tasks.register("prepareFullJar", Jar) {
-    from(zipTree(tasks.remapFullJar.archiveFile)) {
-        exclude('quilt.mod.json')
-    }
     dependsOn tasks.remapFullJar
     dependsOn tasks.extractQuiltModsJson
     dependsOn configurations.includeFull
+
+    from(zipTree(tasks.remapFullJar.archiveFile)) {
+        exclude('quilt.mod.json')
+        exclude('META-INF/MANIFEST.MF')
+    }
     archiveClassifier.set 'full'
 
+    from(configurations.includeFull) {
+        into 'META-INF/jars'
+    }
+
     metaInf {
-        into 'jars'
-        from configurations.includeFull
+        from(tasks.remapFullJar.archiveFile) {
+            include('META-INF/MANIFEST.MF')
+            into '/'
+        }
     }
 
     from(fileTree("${buildDir}/extractQuiltModsJson")) {
