@@ -22,6 +22,7 @@ tasks.changelog {
     start = '2.1.1'
 }
 
+import net.fabricmc.loom.task.RemapJarTask
 import org.eclipse.jgit.api.Git
 
 versioning {
@@ -42,12 +43,32 @@ allprojects {
         rule rootProject.file('../header.txt')
         exclude '**/*.mcmeta'
     }
+
+    afterEvaluate {
+        tasks.withType(AbstractArchiveTask).configureEach {
+            preserveFileTimestamps = false
+            reproducibleFileOrder = true
+        }
+    }
 }
 
 static String getGitCommit() {
     def proc = 'git rev-parse --short HEAD'.execute()
     proc.waitFor()
-    return proc.exitValue()? "ERROR(${proc.exitValue()})" : proc.text.trim()
+    if (proc.exitValue()) {
+        throw new RuntimeException("Failed to get git commit: ERROR(${proc.exitValue()})")
+    }
+    return proc.text.trim()
+}
+
+static String getGitCommitDate() {
+    def procDate = 'git log -1 --format=%at'.execute()
+    procDate.waitFor()
+    if (procDate.exitValue()) {
+        throw new RuntimeException("Failed to get git commit time: ERROR(${procDate.exitValue()})")
+    }
+    long timestamp = procDate.text.trim() as long * 1000
+    return new Date(timestamp).format(/yyyy-MM-dd HH:mm:ssZ/, TimeZone.getTimeZone("UTC"))
 }
 
 def topProject = project
@@ -174,8 +195,6 @@ subprojects.findAll { !(it.name in ['wrapper'])  }.each { p ->
     }
 }
 
-import net.fabricmc.loom.task.RemapJarTask
-
 subprojects.findAll { !(it.name in ['wrapper', 'groovy'])  }.each { p ->
     p.with {
         dependencies {
@@ -215,7 +234,21 @@ subprojects.findAll { it.name in ['fatjar', 'groovy']  }.each { p ->
         project.rootProject.buildDir.mkdirs()
         apply plugin: libs.plugins.machete.get().pluginId
 
+        jar {
+            manifest.attributes([
+                'Specification-Title': 'GroovyDuvet',
+                'Specification-Vendor': 'Luke Bemish',
+                'Specification-Version': 1,
+                'Implementation-Title':"${archivesBaseName}",
+                'Implementation-Version': project.version,
+                'Implementation-Vendor' : 'Luke Bemish',
+                'Implementation-Commit-Time': getGitCommitDate(),
+                'Implementation-Commit': getGitCommit()
+            ])
+        }
+
         machete {
+            keepOriginal = true
             json.enabled = false
             png.enabled = false
             xml.enabled = false

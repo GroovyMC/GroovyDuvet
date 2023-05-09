@@ -21,20 +21,6 @@ dependencies {
     include libs.jackson.dataformat.toml
 }
 
-jar {
-    manifest.attributes([
-            'Specification-Title': 'GroovyDuvet',
-            'Specification-Vendor': 'Luke Bemish',
-            'Specification-Version': 1,
-            'Implementation-Title':"${archivesBaseName}",
-            'Implementation-Version': project.version,
-            'Implementation-Vendor' : 'Luke Bemish',
-            'Implementation-Timestamp': new Date().format(/yyyy-MM-dd'T'HH:mm:ssZ/),
-            'GitCommit': getGitCommit(),
-            'Automatic-Module-Name': 'io.github.lukebemish.groovyduvet'
-    ])
-}
-
 import net.fabricmc.loom.task.AbstractRemapJarTask
 tasks.withType(AbstractRemapJarTask) {
     targetNamespace = "named"
