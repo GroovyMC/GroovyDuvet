@@ -15,5 +15,10 @@ jobs:
       - uses: gradle/gradle-build-action@v2
         with:
           build-root-directory: ./main
-          arguments: checkLicenses build
+          arguments: checkLicenses build prepareFullJar
           cache-read-only: ${{ !startsWith(github.ref, 'refs/heads/1.') }}
+      - name: Archive mod artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: artifacts
+          path: main/fatjar/build/libs/groovyduvet-*-full.jar
