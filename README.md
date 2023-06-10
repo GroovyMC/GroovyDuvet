@@ -1,6 +1,7 @@
 # GroovyDuvet
 [![Version](https://img.shields.io/badge/dynamic/xml?style=for-the-badge&color=blue&label=Latest%20Version&prefix=v&query=metadata%2F%2Flatest&url=https%3A%2F%2Fmaven.moddinginquisition.org%2Freleases%2Forg%2Fgroovymc%2Fgroovyduvet%2Fgroovyduvet%2Fmaven-metadata.xml)](https://maven.moddinginquisition.org/#/releases/org/groovymc/groovyduvet/groovyduvet)
 [![Javadoc](https://img.shields.io/badge/dynamic/xml?style=for-the-badge&color=blue&label=Groovydocs&prefix=v&query=metadata%2F%2Flatest&url=https%3A%2F%2Fmaven.moddinginquisition.org%2Freleases%2Forg%2Fgroovymc%2Fgroovyduvet%2Fgroovyduvet%2Fmaven-metadata.xml)](https://maven.moddinginquisition.org/javadoc/releases/org/groovymc/groovyduvet/groovyduvet/latest)
+[![VersionCore](https://img.shields.io/badge/dynamic/xml?style=for-the-badge&color=blue&label=Lates%20Version%20-%20Core&prefix=v&query=metadata%2F%2Flatest&url=https%3A%2F%2Fmaven.moddinginquisition.org%2Freleases%2Forg%2Fgroovymc%2Fgroovyduvet%2Fgroovyduvet-core%2Fmaven-metadata.xml)](https://maven.moddinginquisition.org/#/releases/org/groovymc/groovyduvet/groovyduvet-core)
 
 GroovyDuvet is a Quilt language adapter for mods written in Groovy. It allows the use of scripts, classes, fields, or methods as entrypoints, provides
 mappings at runtime for dynamically compiled code, and provides wrappers and DSLs around Minecraft and QSL code for ease of development.
@@ -15,14 +16,21 @@ repositories {
     }
 }
 
+configurations {
+	localImplementation
+	runtimeClasspath.extendsFrom localImplementation
+	compileOnly.extendsFrom localImplementation
+}
+
 dependencies {
-    modImplementation 'io.github.lukebemish.groovyduvet:groovyduvet:<version>'
-    runtimeOnly 'io.github.lukebemish.groovyduvet:groovyduvet-groovy:<version>'
+    modImplementation 'org.groovymc.groovyduvet:groovyduvet:<version>'
+    localImplementation 'org.groovymc.groovyduvet:groovyduvet-core:<groovymc-core-version>'
 }
 ```
 
-The `runtimeOnly` dependency on `groovyduvet-groovy` is necessary so that the groovy runtime will be loaded on the same
-classloader at runtime in the development environment as it will be at runtime in production.
+The `localImplementation` configuration and dependency on `groovyduvet-core` is necessary so that the groovy runtime will be loaded on the same
+classloader at runtime in the development environment as it will be at runtime in production; the configuration, as set up above, ensures that
+the dependency will be marked properly within the generated module and pom files during publishing.
 
 Then, use the `groovyduvet` language adapter for your groovy entrypoints. Entrypoints can target classes, static fields, or static methods that extend
 the entrypoint type just like usual; GroovyDuvet can also target local variables inside of scripts. The script will be run, and the variable will be
