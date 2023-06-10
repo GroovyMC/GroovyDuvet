@@ -38,7 +38,7 @@ object GroovyMC_GroovyDuvet_Build : BuildType({
     triggers {
         vcs {
             triggerRules = "-:comment=\\[noci]:**"
-            branchFilter = "+:main"
+            branchFilter = "+:1.*"
         }
     }
 
