@@ -1,0 +1,48 @@
+[versions]
+# The latest versions are available at https://lambdaurora.dev/tools/import_quilt.html
+minecraft = "1.20"
+quilt_loader = "0.18.10"
+parchment_minecraft = "1.19.3"
+parchment_mappings = "2023.03.12"
+qsl = "6.0.1+1.20"
+quilt_loom = "1.2.3"
+quilt_licenser = "2.0.1"
+cgl = "0.3.5"
+autoservice = "1.0.1"
+autoextension = "0.1.1"
+mdg_plugin = "1.4.1"
+mdg_dsl = "1.5.0"
+machete = "2.0.1"
+simpleci = "0.2.3"
+minotaur = "2.7.5"
+cursegradle = "1.4.0"
+
+tinyremapper = "0.8.6+lukebemish.1+local"
+
+groovyduvet_core = "3.0.1"
+
+[libraries]
+minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
+quilt_loader = { module = "org.quiltmc:quilt-loader", version.ref = "quilt_loader" }
+qsl = { module = "org.quiltmc:qsl", version.ref = "qsl" }
+
+cgl = { module = "org.groovymc.cgl:cgl-1.20-quilt", version.ref = "cgl" }
+
+tinyremapper = { module = "net.fabricmc:tiny-remapper", version.ref = "tinyremapper" }
+
+autoservice = { module = "com.google.auto.service:auto-service", version.ref = "autoservice" }
+autoextension = { module = "dev.lukebemish.autoextension:autoextension", version.ref = "autoextension" }
+
+mdg_dsl = { module = "org.groovymc.modsdotgroovy:dsl", version.ref = "mdg_dsl" }
+
+groovyduvet_core = { module = "org.groovymc.groovyduvet:groovyduvet-core", version.ref = "groovyduvet_core" }
+
+[plugins]
+quilt_loom = { id = "org.quiltmc.loom", version.ref = "quilt_loom" }
+quilt_licenser = { id = "org.quiltmc.gradle.licenser", version.ref = "quilt_licenser" }
+mdg_plugin = { id = "org.groovymc.modsdotgroovy", version.ref = "mdg_plugin" }
+machete = { id = "io.github.p03w.machete", version.ref = "machete" }
+
+simpleci = { id = "org.groovymc.simpleci", version.ref = "simpleci" }
+cursegradle = { id = "com.matthewprenger.cursegradle", version.ref = "cursegradle" }
+minotaur = { id = "com.modrinth.minotaur", version.ref = "minotaur" }

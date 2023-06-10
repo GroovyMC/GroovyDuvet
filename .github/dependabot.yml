@@ -14,13 +14,17 @@ registries:
   quiltmc:
     type: maven-repository
     url: https://maven.quiltmc.org/repository/release/
+  moddinginquisition:
+    type: maven-repository
+    url: https://maven.moddinginquisition.org/releases/
 updates:
   - package-ecosystem: "gradle"
-    directory: "/main"
+    directory: "/"
     registries:
       - maven-central
       - fabricmc
       - quiltmc
+      - moddinginquisition
     schedule:
       interval: "weekly"
     allow:
@@ -30,13 +34,13 @@ updates:
       - dependency-name: "com.google.auto.service:auto-service"
       - dependency-name: "dev.lukebemish.autoextension:autoextension"
       # MDG
-      - dependency-name: "io.github.groovymc.modsdotgroovy"
-      - dependency-name: "io.github.groovymc.modsdotgroovy:dsl"
+      - dependency-name: "org.groovymc.modsdotgroovy"
+      - dependency-name: "org.groovymc.modsdotgroovy:dsl"
       # Plugins
       - dependency-name: "org.quiltmc.loom"
       - dependency-name: "org.quiltmc.gradle.licenser"
       - dependency-name: "io.github.p03w.machete"
-      - dependency-name: "io.github.groovymc.simpleci"
+      - dependency-name: "org.groovymc.simpleci"
       - dependency-name: "com.matthewprenger.cursegradle"
       - dependency-name: "com.modrinth.minotaur"
     ignore:
@@ -50,7 +54,3 @@ updates:
         update-types: ["version-update:semver-major"]
       - dependency-name: "*modsdotgroovy*"
         update-types: ["version-update:semver-major"]
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "weekly"
