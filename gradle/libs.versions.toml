@@ -14,7 +14,7 @@ mdg_plugin = "1.4.1"
 mdg_dsl = "1.5.0"
 machete = "2.0.1"
 simpleci = "0.2.3"
-minotaur = "2.7.5"
+minotaur = "2.8.0"
 cursegradle = "1.4.0"
 
 tinyremapper = "0.8.6+lukebemish.1+local"
