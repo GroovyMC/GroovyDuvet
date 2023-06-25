@@ -8,18 +8,18 @@ qsl = "6.0.1+1.20"
 quilt_loom = "1.2.3"
 quilt_licenser = "2.0.1"
 cgl = "0.3.8"
-autoservice = "1.0.1"
+autoservice = "1.1.1"
 autoextension = "0.1.1"
 mdg_plugin = "1.4.1"
 mdg_dsl = "1.5.0"
 machete = "2.0.1"
 simpleci = "0.2.3"
-minotaur = "2.7.5"
+minotaur = "2.8.1"
 cursegradle = "1.4.0"
 
 tinyremapper = "0.8.6+lukebemish.1+local"
 
-groovyduvet_core = "3.0.1"
+groovyduvet_core = "3.0.2"
 
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
