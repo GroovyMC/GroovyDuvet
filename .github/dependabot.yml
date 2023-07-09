@@ -39,7 +39,6 @@ updates:
       # Plugins
       - dependency-name: "org.quiltmc.loom"
       - dependency-name: "org.quiltmc.gradle.licenser"
-      - dependency-name: "io.github.p03w.machete"
       - dependency-name: "org.groovymc.simpleci"
       - dependency-name: "com.matthewprenger.cursegradle"
       - dependency-name: "com.modrinth.minotaur"

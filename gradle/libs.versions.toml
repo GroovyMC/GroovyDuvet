@@ -12,14 +12,13 @@ autoservice = "1.1.1"
 autoextension = "0.1.1"
 mdg_plugin = "1.4.1"
 mdg_dsl = "1.5.0"
-machete = "2.0.1"
 simpleci = "0.2.3"
 minotaur = "2.8.1"
 cursegradle = "1.4.0"
 
 tinyremapper = "0.8.6+lukebemish.1+local"
 
-groovyduvet_core = "3.0.2"
+groovyduvet_core = "3.0.3"
 
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
@@ -41,7 +40,6 @@ groovyduvet_core = { module = "org.groovymc.groovyduvet:groovyduvet-core", versi
 quilt_loom = { id = "org.quiltmc.loom", version.ref = "quilt_loom" }
 quilt_licenser = { id = "org.quiltmc.gradle.licenser", version.ref = "quilt_licenser" }
 mdg_plugin = { id = "org.groovymc.modsdotgroovy", version.ref = "mdg_plugin" }
-machete = { id = "io.github.p03w.machete", version.ref = "machete" }
 
 simpleci = { id = "org.groovymc.simpleci", version.ref = "simpleci" }
 cursegradle = { id = "com.matthewprenger.cursegradle", version.ref = "cursegradle" }

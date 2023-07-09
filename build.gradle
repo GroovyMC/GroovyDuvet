@@ -11,8 +11,6 @@ plugins {
     alias libs.plugins.quilt.loom
     alias libs.plugins.quilt.licenser
     alias libs.plugins.mdg.plugin
-    // TODO: re-enable machete once it's fixed
-    //alias libs.plugins.machete
     alias libs.plugins.simpleci
     alias libs.plugins.cursegradle
     alias libs.plugins.minotaur
