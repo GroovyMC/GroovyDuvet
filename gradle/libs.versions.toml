@@ -18,7 +18,7 @@ cursegradle = "1.4.0"
 
 tinyremapper = "0.8.6+lukebemish.1+local"
 
-groovyduvet_core = "3.0.3"
+groovyduvet_core = "3.0.4"
 
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
