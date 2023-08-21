@@ -7,13 +7,14 @@ buildscript {
 plugins {
     id 'groovy'
     id 'maven-publish'
-    id 'idea'
+    id 'signing'
     alias libs.plugins.quilt.loom
     alias libs.plugins.quilt.licenser
     alias libs.plugins.mdg.plugin
     alias libs.plugins.simpleci
     alias libs.plugins.cursegradle
     alias libs.plugins.minotaur
+    alias libs.plugins.nexuspublish
 }
 
 java {
@@ -88,14 +89,23 @@ repositories {
     maven {
         name = "Luke's Maven"
         url = 'https://maven.lukebemish.dev/releases'
+        content {
+            includeGroup 'net.fabricmc'
+        }
     }
     maven {
         name = "TheModdingInquisition"
         url = 'https://maven.moddinginquisition.org/releases'
+        content {
+            includeGroup 'org.groovymc.cgl'
+        }
     }
     maven {
         name = 'ParchmentMC'
         url = 'https://maven.parchmentmc.org'
+        content {
+            includeGroup 'org.parchmentmc.data'
+        }
     }
 }
 
@@ -232,22 +242,58 @@ publishing {
                 it.extension = 'txt'
                 it.classifier = 'changelog'
             }
-        }
-    }
-    repositories {
-        maven {
-            name = 'ModdingInquisitionMavenRepo'
-            url = 'https://maven.moddinginquisition.org/releases'
-            credentials {
-                username = mavenLoginUser
-                password = mavenLoginPassword
+
+            pom {
+                name = "GroovyDuvet"
+                packaging = 'jar'
+                description = 'Wrapper library for mods written in groovy for the quilt loader'
+                url = 'https://github.com/GroovyMC/GroovyDuvet'
+                inceptionYear = '2023'
+
+                licenses {
+                    license {
+                        name = 'LGPL 3.0 or later'
+                        url = 'https://opensource.org/license/lgpl-3-0/'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'groovymc'
+                        name = 'GroovyMC'
+                        email = 'holdings@groovymc.org'
+                        url = 'https://github.com/GroovyMC/'
+                    }
+                }
+                scm {
+                    connection='scm:git:git://github.com/GroovyMC/GroovyDuvet.git'
+                    url='https://github.com/GroovyMC/GroovyDuvet'
+                }
             }
         }
     }
 }
 
+nexusPublishing {
+    repositories {
+        sonatype {
+            username.set(System.getenv('SONATYPE_USER') ?: '')
+            password.set(System.getenv('SONATYPE_PASSWORD') ?: '')
+            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+        }
+    }
+}
+
+if (System.getenv('SONATYPE_USER')) {
+    signing {
+        final signingKey = System.getenv('SIGNING_KEY') ?: ''
+        final signingPassword = System.getenv('SIGNING_PASSWORD') ?: ''
+        useInMemoryPgpKeys(signingKey, signingPassword)
+        sign publishing.publications.mavenJava
+    }
+}
+
 curseforge {
-    apiKey = project.findProperty('curseforge_key') ?: System.getenv('CURSEFORGE_TOKEN') ?: ''
+    apiKey = System.getenv('CURSEFORGE_TOKEN') ?: ''
     project {
         id = '665821'
         releaseType = "${versionBasedReleaseType}"
@@ -271,7 +317,7 @@ tasks.named('curseforge') {
 }
 
 modrinth {
-    token = project.findProperty('modrinth_key') ?: System.getenv('MODRINTH_TOKEN') ?: ''
+    token = System.getenv('MODRINTH_TOKEN') ?: ''
     projectId = 'groovyduvet'
     versionNumber = "$project.version"
     versionType = "${versionBasedReleaseType}"

@@ -1,7 +1,6 @@
 # GroovyDuvet
-[![Version](https://img.shields.io/badge/dynamic/xml?style=for-the-badge&color=blue&label=Latest%20Version&prefix=v&query=metadata%2F%2Flatest&url=https%3A%2F%2Fmaven.moddinginquisition.org%2Freleases%2Forg%2Fgroovymc%2Fgroovyduvet%2Fgroovyduvet%2Fmaven-metadata.xml)](https://maven.moddinginquisition.org/#/releases/org/groovymc/groovyduvet/groovyduvet)
-[![Javadoc](https://img.shields.io/badge/dynamic/xml?style=for-the-badge&color=blue&label=Groovydocs&prefix=v&query=metadata%2F%2Flatest&url=https%3A%2F%2Fmaven.moddinginquisition.org%2Freleases%2Forg%2Fgroovymc%2Fgroovyduvet%2Fgroovyduvet%2Fmaven-metadata.xml)](https://maven.moddinginquisition.org/javadoc/releases/org/groovymc/groovyduvet/groovyduvet/latest)
-[![VersionCore](https://img.shields.io/badge/dynamic/xml?style=for-the-badge&color=blue&label=Latest%20Version%20-%20Core&prefix=v&query=metadata%2F%2Flatest&url=https%3A%2F%2Fmaven.moddinginquisition.org%2Freleases%2Forg%2Fgroovymc%2Fgroovyduvet%2Fgroovyduvet-core%2Fmaven-metadata.xml)](https://maven.moddinginquisition.org/#/releases/org/groovymc/groovyduvet/groovyduvet-core)
+[![Version](https://img.shields.io/maven-central/v/org.groovymc.groovyduvet/groovyduvet?style=for-the-badge&color=blue&label=Latest%20Version&prefix=v)](https://central.sonatype.com/artifact/org.groovymc.groovyduvet/groovyduvet/)
+[![VersionCore](https://img.shields.io/maven-central/v/org.groovymc.groovyduvet/groovyduvet-core?style=for-the-badge&color=blue&label=Latest%20Version%20-%20Core&prefix=v)](https://central.sonatype.com/artifact/org.groovymc.groovyduvet/groovyduvet-core/)
 
 GroovyDuvet is a Quilt language adapter for mods written in Groovy. It allows the use of scripts, classes, fields, or methods as entrypoints, provides
 mappings at runtime for dynamically compiled code, and provides wrappers and DSLs around Minecraft and QSL code for ease of development.
