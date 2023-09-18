@@ -17,10 +17,6 @@ jobs:
               with:
                   distribution: "temurin"
                   java-version: 17
-            - uses: gradle/gradle-build-action@v2
-              with:
-                  arguments: checkLicenses build
-                  cache-read-only: ${{ !startsWith(github.ref, 'refs/heads/1.') }}
             # note that if an equivalent to this is run on another branch, the following cache action should only restore
             - uses: actions/cache@v3
               with:
@@ -28,6 +24,10 @@ jobs:
                     .gradle/loom-cache
                   key: ${{ runner.os }}-gradle-${{ hashFiles('**/libs.versions.*', '**/*.gradle*', '**/gradle-wrapper.properties') }}
                   restore-keys: ${{ runner.os }}-gradle-
+            - uses: gradle/gradle-build-action@v2
+              with:
+                  arguments: checkLicenses build
+                  cache-read-only: ${{ !startsWith(github.ref, 'refs/heads/1.') }}
             - uses: gradle/gradle-build-action@v2
               with:
                   arguments: publish closeAndReleaseSonatypeStagingRepository modrinth curseforge
