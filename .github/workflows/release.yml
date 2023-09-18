@@ -37,5 +37,5 @@ jobs:
                   SONATYPE_PASSWORD: ${{ secrets.CENTRAL_MAVEN_PASSWORD }}
                   SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
                   SIGNING_PASSWORD: ${{ secrets.GPG_KEY_PASSWORD }}
-                  MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-                  CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+                  MODRINTH_TOKEN: ${{ secrets.MODRINTH_KEY }}
+                  CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_KEY }}
