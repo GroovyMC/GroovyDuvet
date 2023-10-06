@@ -1,9 +1,3 @@
-buildscript {
-    dependencies {
-        classpath libs.tinyremapper
-    }
-}
-
 plugins {
     id 'groovy'
     id 'maven-publish'
@@ -70,29 +64,13 @@ static String getGitCommitDate() {
     return new Date(timestamp).format(/yyyy-MM-dd HH:mm:ssZ/, TimeZone.getTimeZone("UTC"))
 }
 
-configurations.configureEach {
-    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-        if (details.requested.module.with {it?.name == 'tiny-remapper' && it?.group == 'net.fabricmc'}) {
-            details.useTarget libs.tinyremapper
-        }
-    }
-}
-
 loom {
     runs.each {
         it.source sourceSets.test
-        it.vmArgs '-Dnet.fabricmc.tinyremapper.knownindybsm=org/codehaus/groovy/vmplugin/v8/IndyInterface'
     }
 }
 
 repositories {
-    maven {
-        name = "Luke's Maven"
-        url = 'https://maven.lukebemish.dev/releases'
-        content {
-            includeGroup 'net.fabricmc'
-        }
-    }
     maven {
         name = "TheModdingInquisition"
         url = 'https://maven.moddinginquisition.org/releases'

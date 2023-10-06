@@ -10,9 +10,7 @@ mappings at runtime for dynamically compiled code, and provides wrappers and DSL
 To use, add the following to your `build.gradle`:
 ```gradle
 repositories {
-    maven {
-        url "https://maven.moddinginquisition.org/releases"
-    }
+    mavenCentral()
 }
 
 configurations {
