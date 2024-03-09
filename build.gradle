@@ -31,7 +31,7 @@ managedVersioning {
                 gradlew 'Publish', 'publish', 'closeAndReleaseSonatypeStagingRepository', 'curseforge', 'modrinth'
                 secret('CENTRAL_MAVEN_USER')
                 secret('CENTRAL_MAVEN_PASSWORD')
-                secret('GPG_GPG_SIGNING_KEY')
+                secret('GPG_SIGNING_KEY')
                 secret('GPG_KEY_PASSWORD')
                 secret('CURSEFORGE_KEY')
                 secret('MODRINTH_KEY')
