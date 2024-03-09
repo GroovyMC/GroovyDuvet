@@ -1,31 +1,26 @@
-/*
- * Copyright (C) 2022-2023 Luke Bemish, GroovyMC, and contributors
- * SPDX-License-Identifier: LGPL-3.0-or-later
- */
-
 package org.groovymc.groovyduvet.wrapper.extension.client
 
 import dev.lukebemish.autoextension.AutoExtension
 import groovy.transform.CompileStatic
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
 import net.minecraft.client.renderer.ItemBlockRenderTypes
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.material.Fluid
 import net.minecraft.world.level.material.FluidState
-import org.quiltmc.loader.api.minecraft.ClientOnly
-import org.quiltmc.qsl.block.extensions.api.client.BlockRenderLayerMap
+import org.groovymc.cgl.api.extension.EnvironmentExtension
 
 @CompileStatic
-@ClientOnly
+@EnvironmentExtension(EnvironmentExtension.Side.CLIENT)
 @AutoExtension(isStatic = true)
 class StaticRenderExtension {
     static void putAt(ItemBlockRenderTypes type, Block block, RenderType layer) {
-        BlockRenderLayerMap.put(layer, block)
+        BlockRenderLayerMap.INSTANCE.putBlock(block, layer)
     }
 
     static void putAt(ItemBlockRenderTypes type, Fluid fluid, RenderType layer) {
-        BlockRenderLayerMap.put(layer, fluid)
+        BlockRenderLayerMap.INSTANCE.putFluid(fluid, layer)
     }
 
     static RenderType getAt(ItemBlockRenderTypes type, Block block) {

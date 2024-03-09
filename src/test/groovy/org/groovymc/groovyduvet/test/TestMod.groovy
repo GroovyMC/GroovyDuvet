@@ -1,8 +1,3 @@
-/*
- * Copyright (C) 2022-2023 Luke Bemish, GroovyMC, and contributors
- * SPDX-License-Identifier: LGPL-3.0-or-later
- */
-
 package org.groovymc.groovyduvet.test
 
 import blue.endless.jankson.JsonGrammar
@@ -11,6 +6,7 @@ import com.electronwill.nightconfig.toml.TomlWriter
 import com.mojang.serialization.Codec
 import groovy.json.JsonOutput
 import groovy.transform.*
+import net.fabricmc.fabric.api.networking.v1.EntityTrackingEvents
 import org.groovymc.cgl.api.codec.JanksonOps
 import org.groovymc.cgl.api.codec.ObjectOps
 import org.groovymc.cgl.api.codec.TomlConfigOps
@@ -25,7 +21,6 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.valueproviders.IntProvider
 import net.minecraft.util.valueproviders.UniformInt
 import net.minecraft.world.level.block.Blocks
-import org.quiltmc.qsl.networking.api.EntityTrackingEvents
 
 @Immutable(knownImmutableClasses = [Optional])
 @CodecSerializable
@@ -33,8 +28,8 @@ import org.quiltmc.qsl.networking.api.EntityTrackingEvents
 class Test {
     int i
     String value
-    @WithCodec(value = { IntProvider.NON_NEGATIVE_CODEC }, path = WithCodecPath.LIST) List<IntProvider> ints
-    @WithCodec(value = { IntProvider.NON_NEGATIVE_CODEC }, path = WithCodecPath.OPTIONAL) Optional<IntProvider> maybeInt
+    @WithCodec(value = { IntProvider.NON_NEGATIVE_CODEC }, target = [0]) List<IntProvider> ints
+    @WithCodec(value = { IntProvider.NON_NEGATIVE_CODEC }, target = [0]) Optional<IntProvider> maybeInt
 }
 
 @KnownImmutable
@@ -106,12 +101,12 @@ println CodecRetriever[TestTupleCodecBuilder].decode(ObjectOps.instance,map).get
 println BuiltInRegistries.BLOCK[new ResourceLocation('stone')]
 
 //noinspection GroovyAssignabilityCheck
-EntityTrackingEvents.AFTER_START_TRACKING << { entity, player ->
+EntityTrackingEvents.START_TRACKING << ({ entity, player ->
     player.sendSystemMessage Component.literal("Test") << Style.of {
         style ChatFormatting.DARK_BLUE
         strikethrough = true
     }
-}
+} as EntityTrackingEvents.StartTracking)
 
 @CompileStatic
 @TupleConstructor
@@ -143,6 +138,8 @@ class TestCommentedCodec {
      */
     List<TestStruct> testList
 }
+
+println TestCommentedCodec.$CODEC
 
 final toml = TestCommentedCodec.$CODEC.encodeStart(TomlConfigOps.COMMENTED,
         new TestCommentedCodec('Stuff',5,3.0,[new TestStruct(3),new TestStruct(5)])).getOrThrow(false, {})

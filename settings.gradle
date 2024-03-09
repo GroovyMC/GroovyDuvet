@@ -1,19 +1,38 @@
 pluginManagement {
     repositories {
         maven {
-            name = "Quilt"
-            url = uri("https://maven.quiltmc.org/repository/release")
-        }
-        maven {
             name = "Fabric"
             url = uri("https://maven.fabricmc.net/")
         }
+        maven {
+            name = "Luke's Maven"
+            url = 'https://maven.lukebemish.dev/releases/'
+        }
+        mavenCentral()
         gradlePluginPortal()
     }
 }
 
+// Loom needs this version, foojay brings in an older one
+buildscript {
+    dependencies {
+        classpath("com.google.code.gson:gson:2.10.1")
+    }
+}
+
 plugins {
+    id 'com.gradle.enterprise' version '3.15'
     id 'org.gradle.toolchains.foojay-resolver-convention' version '0.7.0'
+}
+
+gradleEnterprise {
+    if (System.getenv('CI') != null) {
+        buildScan {
+            publishAlways()
+            termsOfServiceUrl = "https://gradle.com/terms-of-service"
+            termsOfServiceAgree = "yes"
+        }
+    }
 }
 
 rootProject.name = 'groovyduvet'

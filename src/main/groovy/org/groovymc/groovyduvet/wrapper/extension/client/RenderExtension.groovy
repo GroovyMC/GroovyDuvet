@@ -1,29 +1,24 @@
-/*
- * Copyright (C) 2022-2023 Luke Bemish, GroovyMC, and contributors
- * SPDX-License-Identifier: LGPL-3.0-or-later
- */
-
 package org.groovymc.groovyduvet.wrapper.extension.client
 
 import dev.lukebemish.autoextension.AutoExtension
 import groovy.transform.CompileStatic
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.material.Fluid
-import org.quiltmc.loader.api.minecraft.ClientOnly
-import org.quiltmc.qsl.block.extensions.api.client.BlockRenderLayerMap
+import org.groovymc.cgl.api.extension.EnvironmentExtension
 
 @CompileStatic
-@ClientOnly
+@EnvironmentExtension(EnvironmentExtension.Side.CLIENT)
 @AutoExtension
 class RenderExtension {
     static RenderType leftShift(RenderType layer, Block block) {
-        BlockRenderLayerMap.put(layer, block)
+        BlockRenderLayerMap.INSTANCE.putBlock(block, layer)
         return layer
     }
 
     static RenderType leftShift(RenderType layer, Fluid fluid) {
-        BlockRenderLayerMap.put(layer, fluid)
+        BlockRenderLayerMap.INSTANCE.putFluid(fluid, layer)
         return layer
     }
 }

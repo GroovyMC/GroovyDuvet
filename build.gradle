@@ -2,14 +2,47 @@ plugins {
     id 'groovy'
     id 'maven-publish'
     id 'signing'
-    alias libs.plugins.quilt.loom
-    alias libs.plugins.quilt.licenser
-    alias libs.plugins.mdg.plugin
-    alias libs.plugins.simpleci
-    alias libs.plugins.cursegradle
+    alias libs.plugins.fabric.loom
+    alias libs.plugins.mdg
+    alias libs.plugins.managedversioning
+    alias libs.plugins.curseforgegradle
     alias libs.plugins.minotaur
     alias libs.plugins.nexuspublish
 }
+
+managedVersioning {
+    versionFile.set rootProject.file('version.properties')
+
+    gitHubActions {
+        release {
+            prettyName.set 'Release'
+            workflowDispatch.set(true)
+            gradleJob {
+                name.set 'build'
+                step {
+                    setupGitUser()
+                }
+                readOnly.set false
+                gradlew 'Tag Release', 'tagRelease'
+                gradlew 'Build', 'build'
+                step {
+                    run.set 'git push && git push --tags'
+                }
+                gradlew 'Publish', 'publish', 'closeAndReleaseSonatypeStagingRepository', 'curseforge', 'modrinth'
+                secret('CENTRAL_MAVEN_USER')
+                secret('CENTRAL_MAVEN_PASSWORD')
+                secret('GPG_GPG_SIGNING_KEY')
+                secret('GPG_KEY_PASSWORD')
+                secret('CURSEFORGE_KEY')
+                secret('MODRINTH_KEY')
+            }
+        }
+    }
+}
+
+managedVersioning.apply()
+
+println "Building: $version"
 
 java {
     toolchain {
@@ -18,66 +51,21 @@ java {
     withSourcesJar()
 }
 
-final mavenLoginUser = (System.getenv('MAVEN_USER') ?: findProperty('inquisitionMavenUser')) ?: ''
-final mavenLoginPassword = (System.getenv('MAVEN_PASSWORD') ?: findProperty('inquisitionMavenPassword')) ?: ''
-
-tasks.changelog {
-    gitDir = projectDir
-    start = '2.1.1'
-}
-
 import net.fabricmc.loom.task.RemapJarTask
-import org.eclipse.jgit.api.Git
-
-versioning {
-    fromTag.set('2.1.1')
-}
-final calculatedVersion = Git.open(projectDir).withCloseable {
-    versioning.calculateVersion(it) { cm, info -> }
-}
-final versionBasedReleaseType = calculatedVersion.alphaBeta.betaNumber != -1 ? 'beta' : (calculatedVersion.alphaBeta.alphaNumber != -1 ? 'alpha' : 'release')
-allprojects { Project proj ->
-    println("${proj.name} version: ${proj.version = calculatedVersion.toString()}")
-}
-
-license {
-    rule project.file('header.txt')
-    exclude '**/*.mcmeta'
-}
-
-static String getGitCommit() {
-    def proc = 'git rev-parse --short HEAD'.execute()
-    proc.waitFor()
-    if (proc.exitValue()) {
-        throw new RuntimeException("Failed to get git commit: ERROR(${proc.exitValue()})")
-    }
-    return proc.text.trim()
-}
-
-static String getGitCommitDate() {
-    def procDate = 'git log -1 --format=%at'.execute()
-    procDate.waitFor()
-    if (procDate.exitValue()) {
-        throw new RuntimeException("Failed to get git commit time: ERROR(${procDate.exitValue()})")
-    }
-    long timestamp = procDate.text.trim() as long * 1000
-    return new Date(timestamp).format(/yyyy-MM-dd HH:mm:ssZ/, TimeZone.getTimeZone("UTC"))
-}
 
 loom {
+    mods {
+        groovyduvet_test {
+            sourceSet 'test'
+        }
+    }
+
     runs.each {
         it.source sourceSets.test
     }
 }
 
 repositories {
-    maven {
-        name = "TheModdingInquisition"
-        url = 'https://maven.moddinginquisition.org/releases'
-        content {
-            includeGroup 'org.groovymc.cgl'
-        }
-    }
     maven {
         name = 'ParchmentMC'
         url = 'https://maven.parchmentmc.org'
@@ -87,29 +75,31 @@ repositories {
     }
 }
 
-modsDotGroovy {
-    dslVersion = libs.versions.mdg.dsl.get()
-    platform 'quilt'
-    source.set sourceSets.main
-}
-
-import io.github.groovymc.modsdotgroovy.ConvertToQuiltJsonTask
-
-task ('testModsDotGroovyToQuiltJson', type: ConvertToQuiltJsonTask) {
-    input.set new File(sourceSets.test.resources.sourceDirectories.singleFile, 'mods.groovy')
-    output.set project.layout.buildDirectory.dir('testModsDotGroovyToQuiltJson').map {it.file('quilt.mod.json')}
-}
-
-processTestResources {
-    exclude 'mods.groovy'
-    dependsOn tasks.testModsDotGroovyToQuiltJson
-    from tasks.testModsDotGroovyToQuiltJson.output
-}
+sourceSets.test.modsDotGroovy.enable()
 
 configurations {
-    groovydocInclude
-    runtimePrivate
-    runtimeClasspath.extendsFrom(runtimePrivate)
+    javadocElements {
+        canBeConsumed = true
+        canBeResolved = false
+        attributes {
+            attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage.class, Usage.JAVA_RUNTIME))
+            attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category.class, Category.DOCUMENTATION))
+            attribute(Bundling.BUNDLING_ATTRIBUTE, objects.named(Bundling.class, Bundling.EXTERNAL))
+            attribute(DocsType.DOCS_TYPE_ATTRIBUTE, objects.named(DocsType.class, DocsType.JAVADOC))
+        }
+    }
+
+    groovydocInclude {
+        attributes {
+            attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category.class, Category.DOCUMENTATION))
+            attribute(DocsType.DOCS_TYPE_ATTRIBUTE, objects.named(DocsType.class, DocsType.SOURCES))
+        }
+        transitive = false
+    }
+
+    localApi
+    compileOnlyApi.extendsFrom localApi
+    runtimeClasspath.extendsFrom localApi
 }
 
 dependencies {
@@ -118,27 +108,23 @@ dependencies {
         officialMojangMappings()
         parchment("org.parchmentmc.data:parchment-${libs.versions.parchment.minecraft.get()}:${libs.versions.parchment.mappings.get()}@zip")
     }
-    modImplementation libs.quilt.loader
-    modImplementation libs.qsl
+
+    modImplementation libs.fabric.loader
+    modImplementation libs.fabric.api
 
     annotationProcessor libs.autoextension
     annotationProcessor libs.autoservice
     compileOnly libs.autoextension
     compileOnly libs.autoservice
 
-    compileOnlyApi libs.groovyduvet.core
+    localApi libs.groovyduvet.core
     include libs.groovyduvet.core
-    runtimePrivate libs.groovyduvet.core
 
     include libs.cgl
-    modApi(libs.cgl) {
-        exclude group: 'org.apache.groovy'
-    }
+    modApi libs.cgl
 
-    groovydocInclude("org.groovymc.cgl:cgl-${libs.versions.minecraft.get()}:${libs.versions.cgl.get()}:sources") {
-        transitive = false
-    }
-    groovydocInclude("org.groovymc.groovyduvet:groovyduvet-core:${libs.versions.groovyduvet.core.get()}:sources")
+    groovydocInclude libs.cgl
+    groovydocInclude libs.groovyduvet.core
 }
 
 tasks.named('jar', Jar) {
@@ -152,8 +138,8 @@ tasks.named('jar', Jar) {
             'Implementation-Title':"${archivesBaseName}",
             'Implementation-Version': project.version,
             'Implementation-Vendor' : 'Luke Bemish',
-            'Implementation-Commit-Time': getGitCommitDate(),
-            'Implementation-Commit': getGitCommit()
+            'Implementation-Commit-Time': managedVersioning.timestamp,
+            'Implementation-Commit': managedVersioning.hash
     ])
 }
 
@@ -174,6 +160,19 @@ tasks.register("remapFullJar", RemapJarTask) {
 }
 
 tasks.build.dependsOn(tasks.remapFullJar)
+
+tasks.register("devTestJar", Jar) {
+    from(sourceSets.test.output)
+    archiveClassifier.set 'test-dev'
+}
+
+tasks.register("testJar", RemapJarTask) {
+    it.targetNamespace = "intermediary"
+    it.inputFile = tasks.devTestJar.archiveFile
+    it.dependsOn tasks.devTestJar
+    it.archiveClassifier.set 'test'
+    it.addNestedDependencies = false
+}
 
 tasks.withType(GroovyCompile).configureEach {
     groovyOptions.optimizationOptions.indy = true
@@ -201,9 +200,18 @@ groovydoc {
 }
 
 tasks.register('groovydocJar', Jar) {
-    dependsOn groovydoc
-    archiveClassifier.set 'javadoc'
+    archiveClassifier = 'javadoc'
     from groovydoc.destinationDir
+    dependsOn(groovydoc)
+}
+
+artifacts {
+    javadocElements groovydocJar
+}
+
+project.components.named("java").configure {
+    AdhocComponentWithVariants javaComponent = (AdhocComponentWithVariants) it
+    javaComponent.addVariantsFromConfiguration(configurations.javadocElements) {}
 }
 
 tasks.build.dependsOn(tasks.groovydocJar)
@@ -211,20 +219,12 @@ tasks.build.dependsOn(tasks.groovydocJar)
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            groupId project.group
-            version project.version
             from components.java
-            artifact tasks.groovydocJar
-            artifact(tasks.changelog.output.get().asFile) {
-                it.builtBy tasks.changelog
-                it.extension = 'txt'
-                it.classifier = 'changelog'
-            }
 
             pom {
                 name = "GroovyDuvet"
                 packaging = 'jar'
-                description = 'Wrapper library for mods written in groovy for the quilt loader'
+                description = 'Wrapper library for mods written in groovy for the fabric loader'
                 url = 'https://github.com/GroovyMC/GroovyDuvet'
                 inceptionYear = '2023'
 
@@ -254,63 +254,57 @@ publishing {
 nexusPublishing {
     repositories {
         sonatype {
-            username.set(System.getenv('SONATYPE_USER') ?: '')
-            password.set(System.getenv('SONATYPE_PASSWORD') ?: '')
+            username.set(System.getenv('CENTRAL_MAVEN_USER') ?: '')
+            password.set(System.getenv('CENTRAL_MAVEN_PASSWORD') ?: '')
             nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
         }
     }
 }
 
-if (System.getenv('SONATYPE_USER')) {
+if (System.getenv('CENTRAL_MAVEN_USER')) {
     signing {
-        final signingKey = System.getenv('SIGNING_KEY') ?: ''
-        final signingPassword = System.getenv('SIGNING_PASSWORD') ?: ''
+        final signingKey = System.getenv('GPG_SIGNING_KEY') ?: ''
+        final signingPassword = System.getenv('GPG_KEY_PASSWORD') ?: ''
         useInMemoryPgpKeys(signingKey, signingPassword)
         sign publishing.publications.mavenJava
     }
 }
 
-curseforge {
-    apiKey = System.getenv('CURSEFORGE_TOKEN') ?: ''
-    project {
-        id = '665821'
-        releaseType = "${versionBasedReleaseType}"
-        addGameVersion "${libs.versions.minecraft.get()}"
-        addGameVersion 'Quilt'
-        mainArtifact(tasks.remapFullJar) {
-            displayName = "GroovyDuvet v$project.version"
+if (System.getenv('MODRINTH_KEY')) {
+    modrinth {
+        token = System.getenv('MODRINTH_KEY') ?: ''
+        projectId = 'groovyduvet'
+        versionNumber = "$project.version"
+        versionType = "${project.release_type}"
+        detectLoaders = false
+        uploadFile = tasks.remapFullJar
+        gameVersions = ["${libs.versions.minecraft.get()}"]
+        loaders = ['quilt', 'fabric']
+        dependencies {
+            required.project 'fabric-api'
         }
-        relations {
-            requiredDependency 'qsl'
-        }
-        changelog = tasks.changelog.output.asFile.get()
-    }
-    options {
-        forgeGradleIntegration = false
     }
 }
 
-tasks.named('curseforge') {
-    dependsOn tasks.changelog
-}
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
 
-modrinth {
-    token = System.getenv('MODRINTH_TOKEN') ?: ''
-    projectId = 'groovyduvet'
-    versionNumber = "$project.version"
-    versionType = "${versionBasedReleaseType}"
-    detectLoaders = false
-    uploadFile = tasks.remapFullJar
-    gameVersions = ["${libs.versions.minecraft.get()}"]
-    loaders = ['quilt']
-    changelog.set(tasks.changelog.output.map {
-        it.asFile.text
-    })
-    dependencies {
-        required.project 'qsl'
+if (System.getenv('CURSEFORGE_KEY')) {
+    tasks.register('curseforge', TaskPublishCurseForge) {
+        dependsOn tasks.remapFullJar
+        disableVersionDetection()
+        apiToken = System.getenv('CURSEFORGE_KEY')
+        def projectId = '665821'
+        def mainFile = upload(projectId, tasks.remapFullJar)
+        mainFile.displayName = "GroovyDuvet v$project.version"
+        mainFile.releaseType = "${project.release_type}"
+        mainFile.addModLoader('Fabric')
+        mainFile.addModLoader('Quilt')
+        mainFile.addGameVersion("${libs.versions.minecraft.get()}")
+        mainFile.changelog = ''
+        mainFile.addRequirement("fabric-api")
     }
-}
 
-tasks.named('modrinth') {
-    dependsOn(tasks.changelog)
+    afterEvaluate {
+        tasks.curseforge.dependsOn tasks.remapFullJar
+    }
 }

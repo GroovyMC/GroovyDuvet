@@ -1,44 +1,39 @@
 [versions]
 # The latest versions are available at https://lambdaurora.dev/tools/import_quilt.html
-minecraft = "1.20"
-quilt_loader = "0.18.10"
-parchment_minecraft = "1.19.3"
-parchment_mappings = "2023.03.12"
-qsl = "6.0.1+1.20"
-quilt_loom = "1.4.1"
-quilt_licenser = "2.0.1"
-cgl = "0.3.8"
+minecraft = "1.20.4"
+fabric_loader = "0.15.3"
+fabric_api = "0.92.0+1.20.4"
+parchment_minecraft = "1.20.2"
+parchment_mappings = "2023.12.10"
+fabric_loom = "1.5.8"
+cgl = "0.4.1"
 autoservice = "1.1.1"
 autoextension = "0.1.1"
-mdg_plugin = "1.4.1"
-mdg_dsl = "1.5.1"
-simpleci = "0.2.5"
+mdg = "2.0.0-beta.16"
 minotaur = "2.8.4"
-cursegradle = "1.4.0"
-nexuspublish = "1.3.0"
+curseforgegradle = "1.1.16"
+managedversioning = "1.2.8"
+nexuspublish = "2.0.0-rc-1"
 
-groovyduvet_core = "3.1.2"
+groovyduvet_core = "3.1.6"
 
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
-quilt_loader = { module = "org.quiltmc:quilt-loader", version.ref = "quilt_loader" }
-qsl = { module = "org.quiltmc:qsl", version.ref = "qsl" }
+fabric_loader = { module = "net.fabricmc:fabric-loader", version.ref = "fabric_loader" }
+fabric_api = { module = "net.fabricmc.fabric-api:fabric-api", version.ref = "fabric_api" }
 
-cgl = { module = "org.groovymc.cgl:cgl-1.20-quilt", version.ref = "cgl" }
+cgl = { module = "org.groovymc.cgl:cgl-1.20.4-fabric", version.ref = "cgl" }
 
 autoservice = { module = "com.google.auto.service:auto-service", version.ref = "autoservice" }
 autoextension = { module = "dev.lukebemish.autoextension:autoextension", version.ref = "autoextension" }
 
-mdg_dsl = { module = "org.groovymc.modsdotgroovy:dsl", version.ref = "mdg_dsl" }
-
 groovyduvet_core = { module = "org.groovymc.groovyduvet:groovyduvet-core", version.ref = "groovyduvet_core" }
 
 [plugins]
-quilt_loom = { id = "org.quiltmc.loom", version.ref = "quilt_loom" }
-quilt_licenser = { id = "org.quiltmc.gradle.licenser", version.ref = "quilt_licenser" }
-mdg_plugin = { id = "org.groovymc.modsdotgroovy", version.ref = "mdg_plugin" }
+fabric_loom = { id = "fabric-loom", version.ref = "fabric_loom" }
+mdg = { id = "org.groovymc.modsdotgroovy", version.ref = "mdg" }
 
-simpleci = { id = "org.groovymc.simpleci", version.ref = "simpleci" }
-cursegradle = { id = "com.matthewprenger.cursegradle", version.ref = "cursegradle" }
+managedversioning = { id = "dev.lukebemish.managedversioning", version.ref = "managedversioning" }
+curseforgegradle = { id = "net.darkhax.curseforgegradle", version.ref = "curseforgegradle" }
 minotaur = { id = "com.modrinth.minotaur", version.ref = "minotaur" }
 nexuspublish = { id = "io.github.gradle-nexus.publish-plugin", version.ref = "nexuspublish" }
