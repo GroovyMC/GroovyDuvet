@@ -20,8 +20,8 @@ configurations {
 }
 
 dependencies {
-    modImplementation 'org.groovymc.groovyduvet:groovyduvet:<version>'
-    localImplementation 'org.groovymc.groovyduvet:groovyduvet-core:<groovymc-core-version>'
+    modImplementation 'org.groovymc.groovyduvet:groovyduvet:<groovyduvet-version>'
+    localImplementation 'org.groovymc.groovyduvet:groovyduvet-core:<groovyduvet-core-version>'
 }
 ```
 
